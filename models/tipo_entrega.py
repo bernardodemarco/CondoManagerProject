@@ -1,12 +1,11 @@
 class TipoEntrega:
-    def __init__(self, tipo: str) -> None:
-        self.__tipo = tipo
+    def __init__(self, nome: str) -> None:
+        self.__nome = nome
 
     @property
-    def tipo(self) -> str:
-        return self.__tipo
+    def nome(self) -> str:
+        return self.__nome
     
-    @tipo.setter
-    def tipo(self, tipo: str) -> None:
-        self.__tipo = tipo
-    
+    @nome.setter
+    def nome(self, nome: str) -> None:
+        self.__nome = nome
