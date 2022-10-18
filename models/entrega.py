@@ -3,9 +3,6 @@ from morador import Morador
 from uuid import uuid4
 from datetime import date
 
-class Morador:
-    def __init__(self, nome) -> None:
-        self.nome = nome
 
 class Entrega:
     def __init__(self, tipo: TipoEntrega, destinatario: Morador) -> None:
