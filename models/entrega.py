@@ -1,7 +1,7 @@
 from tipo_entrega import TipoEntrega
-#from morador import Morador
+from morador import Morador
 from uuid import uuid4
-from datetime import date, datetime
+from datetime import date
 
 class Morador:
     def __init__(self, nome) -> None:
