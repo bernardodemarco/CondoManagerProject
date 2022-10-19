@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class Pessoa(ABC):
-    
     @abstractmethod
     def __init__(self, nome: str, cpf: str, telefone: int):
         self.__nome = nome
