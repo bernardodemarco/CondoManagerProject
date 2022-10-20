@@ -39,3 +39,6 @@ class ControladorCondominio(Controlador):
     def forca_incluir_condo(self):
         self.__tela_condominio.forca_incluir_condo()
         self.incluir_condo()
+
+    def retornar(self):
+        self.__controlador_sistema.abre_tela()

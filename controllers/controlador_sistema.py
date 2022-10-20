@@ -9,7 +9,7 @@ from views.tela_sistema import TelaSistema
 
 class ControladorSistema(Controlador):
 
-    def __init___(self):
+    def __init__(self):
         super().__init__()
         self.__controlador_condominio = ControladorCondominio(self)
         self.__controlador_conta = ControladorConta(self)
