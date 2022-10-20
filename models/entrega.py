@@ -1,5 +1,5 @@
-from tipo_entrega import TipoEntrega
-from morador import Morador
+from models.tipo_entrega import TipoEntrega
+from models.morador import Morador
 from uuid import uuid4
 from datetime import date
 

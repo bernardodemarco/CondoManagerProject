@@ -1,4 +1,4 @@
-from funcionario import Funcionario
+from models.funcionario import Funcionario
 
 
 class Condominio:

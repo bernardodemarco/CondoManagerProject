@@ -1,4 +1,4 @@
-from morador import Morador
+from models.morador import Morador
 
 class Apartamento:
     def __init__(self, num: int, morador: Morador):

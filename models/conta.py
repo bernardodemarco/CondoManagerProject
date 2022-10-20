@@ -1,4 +1,4 @@
-from tipo_conta import TipoConta
+from models.tipo_conta import TipoConta
 from uuid import uuid4
 
 

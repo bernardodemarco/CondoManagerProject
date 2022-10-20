@@ -1,5 +1,5 @@
-from reservavel import Reservavel
-from morador import Morador
+from models.reservavel import Reservavel
+from models.morador import Morador
 from uuid import uuid4
 
 
