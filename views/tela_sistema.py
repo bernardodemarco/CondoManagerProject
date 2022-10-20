@@ -7,4 +7,4 @@ class TelaSistema(Tela):
         super().__init__()
 
     def mostra_opcoes(self):
-        print()
+        return print("ALO")
