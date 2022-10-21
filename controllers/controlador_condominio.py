@@ -1,4 +1,4 @@
-from CondoManagerProject.views.tela_apartamento import TelaApartamento
+from views.tela_apartamento import TelaApartamento
 from controllers.controlador import Controlador
 from models.condominio import Condominio
 from views.tela_condominio import TelaCondominio
@@ -42,7 +42,7 @@ class ControladorCondominio(Controlador):
     def ir_apartamento(self):
         self.abre_tela_apartamento()
 
-    def abre_tela_condo(self):
+    def abre_tela(self):
         opcoes = {1: self.incluir_condo, 2: self.alterar_condo,
                   3: self.listar_condo, 4: self.excluir_condo,
                   5: self.ir_apartamento, 0: self.retornar}
