@@ -6,6 +6,6 @@ class TelaCondominio(Tela):
     def __init__(self):
         super().__init__()
 
-    def mostra_opcoes():
-        print("ALO")
+    def mostra_opcoes(self):
+        return input()
     

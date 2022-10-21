@@ -27,14 +27,22 @@ class ControladorCondominio(Controlador):
                            dados_condo["funcionario"])
         self.__condominios.append(condo)
 
+    def alterar_condo(self):
+        pass
+
+    def listar_condo(self):
+        pass
+
+    def excluir_condo(self):
+        pass
 
     def abre_tela(self):
         opcoes = {1: self.incluir_condo, 2: self.alterar_condo,
-                  3: self.lista_condo, 4: self.excluir_condo,
+                  3: self.listar_condo, 4: self.excluir_condo,
                   0: self.retornar}
         
         while True:
-            opcoes[self.__tela_condominio.mostra_opcoes()]()
+            opcoes[int(self.__tela_condominio.mostra_opcoes())]()
 
     def forca_incluir_condo(self):
         self.__tela_condominio.forca_incluir_condo()
@@ -42,3 +50,4 @@ class ControladorCondominio(Controlador):
 
     def retornar(self):
         self.__controlador_sistema.abre_tela()
+        

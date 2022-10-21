@@ -18,9 +18,12 @@ class ControladorSistema(Controlador):
         self.__controlador_reserva = ControladorReserva(self)
         self.__tela_sistema = TelaSistema()
 
+    '''
+    AINDA PRECISO TERMINAR A CHECAGEM DA PRIMEIRA VEZ ABERTO
+    '''
+
     @property
     def controlador_condominio(self) -> ControladorCondominio:
-        print("APO")
         return self.__controlador_condominio
     
     def inicializar(self):
@@ -49,13 +52,6 @@ class ControladorSistema(Controlador):
         while True:
             opcoes[self.__tela_sistema.mostra_opcoes()]()
 
-
     def retornar(self):
         exit(0)
 
-'''
-            
-    else:
-        def forca_cadastro_condo():
-            self.__controlador_condominio.forca_incluir_condo()
-'''

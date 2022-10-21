@@ -7,4 +7,25 @@ class TelaSistema(Tela):
         super().__init__()
 
     def mostra_opcoes(self):
-        return print("ALO")
+        while True:
+            print("\033[1;36m")
+            print("<======<<CondoManager>>======>")
+            print("Para qual seção gostaria de ir?")
+            print("        1 - Condomínios")
+            print("        2 - Pessoas")
+            print("        3 - Reservas")
+            print("        4 - Entregas")
+            print("        5 - Contas")
+            print("        0 - Desligar Sistema")
+            print("<=========<<========>=========> \033[0m")
+            try:
+                print("")
+                opcao = int(input("\033[1;32mPor favor, informe a seção desejada:\033[0m "))
+                if 0 <= opcao <= 5:
+                    return opcao
+                else:
+                    raise ValueError
+            except ValueError:
+                print("")
+                print("\033[0;31mERRO!: Opção inválida, por favor, tente novamente: \033[0m")
+
