@@ -53,5 +53,6 @@ class ControladorSistema(Controlador):
             opcoes[self.__tela_sistema.mostra_opcoes()]()
 
     def retornar(self):
+        self.__tela_sistema.desligar()
         exit(0)
 
