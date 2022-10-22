@@ -2,7 +2,6 @@ from views.tela_apartamento import TelaApartamento
 from controllers.controlador import Controlador
 from models.condominio import Condominio
 from views.tela_condominio import TelaCondominio
-from views.tela_apartamento import TelaApartamento
 
 
 class ControladorCondominio(Controlador):

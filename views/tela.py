@@ -7,6 +7,10 @@ class Tela(ABC):
     def __init__(self):
         pass
 
+    @abstractmethod
+    def mostra_opcoes(self):
+        pass
+
     def checa_opcao(self, valormax):
         while True:    
             try:
