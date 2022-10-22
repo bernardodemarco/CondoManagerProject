@@ -1,5 +1,5 @@
 import re
-from InvalidCPFException import InvalidCPFException
+from utils.InvalidCPFException import InvalidCPFException
 
 def get_digit(cpf: str, digit: str) -> str:
     ''' Retorna o dígito verificador esperado '''
