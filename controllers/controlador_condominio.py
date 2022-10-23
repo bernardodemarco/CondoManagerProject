@@ -1,4 +1,4 @@
-from views.tela_apartamento import TelaApartamento
+# from views.tela_apartamento import TelaApartamento
 from controllers.controlador import Controlador
 from models.condominio import Condominio
 from views.tela_condominio import TelaCondominio
@@ -9,7 +9,7 @@ class ControladorCondominio(Controlador):
         self.__controlador_sistema = controlador_sistema
         self.__condominios = []
         self.__tela_condominio = TelaCondominio()
-        self.__tela_apartamento = TelaApartamento()
+        # self.__tela_apartamento = TelaApartamento()
 
     @property
     def condominios(self) -> list:

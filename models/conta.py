@@ -20,6 +20,10 @@ class Conta:
     def id_conta(self):
         return self.__id_conta
 
+    @id_conta.setter
+    def id_conta(self, id_conta: int) -> None:
+        self.__id_conta = id_conta
+
     @property
     def valor(self) -> float:
         return self.__valor
@@ -38,5 +42,5 @@ class Conta:
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Conta):
-            return (self.__id_conta == other.id_conta)
+            return self.__id_conta == other.id_conta
         return False
