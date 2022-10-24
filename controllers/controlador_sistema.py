@@ -30,7 +30,7 @@ class ControladorSistema(Controlador):
         self.abre_tela()
 
     def ir_condo(self):
-        self.__controlador_condominio.abre_tela()
+        self.__controlador_condominio.abre_tela_condo()
     
     def ir_pessoa(self):
         self.__controlador_pessoa.abre_tela()
@@ -53,5 +53,6 @@ class ControladorSistema(Controlador):
             opcoes[self.__tela_sistema.mostra_opcoes()]()
 
     def retornar(self):
+        self.__tela_sistema.desligar()
         exit(0)
 
