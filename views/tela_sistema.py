@@ -23,4 +23,3 @@ class TelaSistema(Tela):
         print("\033[1;36m")
         print("Até mais! Obrigado por usar o CondoManager! \033[0m")
         time.sleep(1)
-

@@ -44,25 +44,17 @@ class Condominio:
     def funcionarios(self) -> list:
         return self.__funcionarios
 
-    # NAO LEMBRO SE TEM QUE POR AQUI O APPEND, VOU DEIXAR O ESPACO ABERTO
-
     @property
     def apartamentos(self) -> list:
         return self.__apartamentos
-
-    # MESMA COISA LOL
 
     @property
     def reservaveis(self) -> list:
         return self.__reservaveis
 
-    # LEIA ACIMA
-
     @property
     def contas(self) -> list:
         return self.__contas
-
-    # ^ ^
 
     @property
     def entregas(self) -> list:

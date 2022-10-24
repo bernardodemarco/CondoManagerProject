@@ -1,10 +1,9 @@
 from models.tipo_conta import TipoConta
-from uuid import uuid4
 
 
 class Conta:
-    def __init__(self, tipo: TipoConta, valor: float, mes: str) -> None:
-        self.__id_conta = uuid4()
+    def __init__(self, tipo: TipoConta, valor: float, mes: str, id_conta: int) -> None:
+        self.__id_conta = id_conta
         self.__tipo = tipo
         self.__mes = mes
         self.__valor = valor
@@ -21,6 +20,10 @@ class Conta:
     def id_conta(self):
         return self.__id_conta
 
+    @id_conta.setter
+    def id_conta(self, id_conta: int) -> None:
+        self.__id_conta = id_conta
+
     @property
     def valor(self) -> float:
         return self.__valor
@@ -36,3 +39,8 @@ class Conta:
     @mes.setter
     def mes(self, mes: str) -> None:
         self.__mes = mes
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Conta):
+            return self.__id_conta == other.id_conta
+        return False
