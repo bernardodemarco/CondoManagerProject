@@ -1,5 +1,5 @@
 from views.tela import Tela
-
+import time
 
 class TelaSistema(Tela):
 
@@ -28,4 +28,4 @@ class TelaSistema(Tela):
             except ValueError:
                 print("")
                 print("\033[0;31mERRO!: Opção inválida, por favor, tente novamente: \033[0m")
-
+                time.sleep(1)

@@ -7,5 +7,6 @@ class TelaCondominio(Tela):
         super().__init__()
 
     def mostra_opcoes(self):
+        print("Olá, você está na seção de condomínio!")
         return input()
     
