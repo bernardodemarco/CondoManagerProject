@@ -10,9 +10,9 @@ from utils.ResourceNotFoundException import ResourceNotFoundException
 
 
 class ControladorConta(Controlador):
-    def __init__(self, controlador_sistema):
+    def __init__(self, controlador_condominio):
         super().__init__()
-        self.__controlador_sistema = controlador_sistema
+        self.__controlador_condominio = controlador_condominio
         self.__tela_conta = TelaConta()
         self.__contas = []
         self.__tipos_conta = []
@@ -202,4 +202,4 @@ class ControladorConta(Controlador):
         }
 
         while True:
-            switcher[self.__tela_conta.mostra_opcoes()]()
+            switcher[int(self.__tela_conta.mostra_opcoes())]()

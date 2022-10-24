@@ -15,7 +15,7 @@ def get_digit(cpf: str, digit: str) -> str:
 
 def validate_cpf(raw_cpf: str):
     ''' Validação do CPF e de seus dígitos verificadores '''
-    cpf = raw_cpf.strip()
+    cpf = str(raw_cpf).strip()
 
     if not re.match(r'[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}-?[0-9]{2}$', cpf):
        raise InvalidCPFException(raw_cpf)

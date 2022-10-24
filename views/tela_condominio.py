@@ -1,4 +1,6 @@
+from cmath import exp
 from views.tela import Tela
+import time
 
 
 class TelaCondominio(Tela):
@@ -18,4 +20,22 @@ class TelaCondominio(Tela):
         print("        0 - Retornar")
         print("<=======<<===========>>=======> \033[0m")
         return self.checa_opcao(5)
-    
+
+    def pega_dados_condo(self, **kwargs):
+        print("\033[1;36m")
+        print("<=======<<DADOS CONDOMÍNIO>>=======>")
+        try:
+            nome = input("Digite o nome do condomínio: ")
+            if kwargs['acao'] == 'alteracao':
+                numero = kwargs['numero']
+            else:
+                numero = int(
+                    input("Digite um número único (positivo) pro condomínio: "))
+                if numero <= 0:
+                    raise ValueError
+            endereco = input("Digite o endereço do condomínio: ")
+            print("É necessário o cadastro de um funcionário para o condomínio.")
+            return {"nome": nome, "numero": numero, 'endereco': endereco}
+        except ValueError:
+            print("")
+            print("\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")

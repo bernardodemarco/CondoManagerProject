@@ -81,6 +81,3 @@ class TelaConta(Tela):
             raise ValueError
         except ValueError:
             raise ValueError('Valor do id inválido')
-
-    def mostra_mensagem(self, mensagem: str):
-        print(mensagem)
