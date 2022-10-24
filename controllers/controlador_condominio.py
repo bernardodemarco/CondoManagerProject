@@ -24,32 +24,25 @@ class ControladorCondominio(Controlador):
     def condominios(self) -> list:
         return self.__condominios
 
-    def ir_pessoa(self):
-        self.__controlador_pessoa.abre_tela()
-
-    def ir_reserva(self):
-        self.__controlador_reserva.abre_tela()
-
-    def ir_entrega(self):
-        self.__controlador_entrega.abre_tela()
-
-    def ir_conta(self):
-        self.__controlador_conta.abre_tela()
-
     def pega_condominio_por_num(self, num: int):
         for condo in self.__condominios:
-            if(condo.num == num):
+            if (condo.num == num):
                 return condo
         return None
 
     def incluir_condo(self):
-        dados_condo = self.__tela_condominio.pega_dados_condo(acao="criacao")    
+        dados_condo = self.__tela_condominio.pega_dados_condo(acao="criacao")
         funcionario = self.__controlador_pessoa.incluir_funcionario()
 
         condo = Condominio(dados_condo["nome"],
-                        dados_condo["numero"],
-                        dados_condo["endereco"],
-                        funcionario)
+                           dados_condo["numero"],
+                           dados_condo["endereco"],
+                           funcionario)
+        self.__condominios.append(condo)
+        print(self.__condominios[0].nome)
+        print(self.__condominios[0].numero)
+        print(self.__condominios[0].endereco)
+        print(self.__condominios[0].funcionario[0])
 
     def alterar_condo(self):
         pass
@@ -77,7 +70,7 @@ class ControladorCondominio(Controlador):
             5: self.ir_apartamento,
             0: self.retornar
         }
-        
+
         while True:
             switcher[int(self.__tela_condominio.mostra_opcoes())]()
 
@@ -89,6 +82,17 @@ class ControladorCondominio(Controlador):
         while True:
             opcoes[int(self.__tela_apartamento.mostra_opcoes())]()
 
+    def ir_pessoa(self):
+        self.__controlador_pessoa.abre_tela()
+
+    def ir_reserva(self):
+        self.__controlador_reserva.abre_tela()
+
+    def ir_entrega(self):
+        self.__controlador_entrega.abre_tela()
+
+    def ir_conta(self):
+        self.__controlador_conta.abre_tela()
+
     def retornar(self):
         self.__controlador_sistema.retornar()
-        

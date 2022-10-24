@@ -21,6 +21,14 @@ class ControladorPessoa(Controlador):
         
         return funcionario
 
+    def incluir_morador(self):
+        dados_morador = self.__tela_morador.pega_dados_funcionario(acao="criacao")
+        morador = Morador(dados_morador["nome"],
+                                  dados_morador["cpf"],
+                                  dados_morador["telefone"])
+        
+        return morador
+
     def retornar(self):
         self.__controlador_condominio.abre_tela()
 
