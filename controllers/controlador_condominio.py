@@ -9,12 +9,16 @@ class ControladorCondominio(Controlador):
     def __init__(self, controlador_sistema):
         self.__controlador_sistema = controlador_sistema
         self.__condominios = []
-        self.__tela_condominio = TelaCondominio()
+        self.__tela_condominio = TelaCondominio(self)
         self.__tela_apartamento = TelaApartamento()
 
     @property
     def condominios(self) -> list:
         return self.__condominios
+    
+    @property
+    def controlador_sistema(self):
+        return self.__controlador_sistema
 
     def pega_condominio_por_num(self, num: int):
         for condo in self.__condominios:
@@ -64,5 +68,5 @@ class ControladorCondominio(Controlador):
         self.incluir_condo()
 
     def retornar(self):
-        self.__controlador_sistema.abre_tela()
+        self.controlador_sistema.abre_tela()
         

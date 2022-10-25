@@ -25,12 +25,16 @@ class ControladorSistema(Controlador):
     @property
     def controlador_condominio(self) -> ControladorCondominio:
         return self.__controlador_condominio
+
+    @property
+    def controlador_pessoa(self):
+        return self.__controlador_pessoa
     
     def inicializar(self):
         self.abre_tela()
 
     def ir_condo(self):
-        self.__controlador_condominio.abre_tela_condo()
+        self.__controlador_condominio.abre_tela()
     
     def ir_pessoa(self):
         self.__controlador_pessoa.abre_tela()
