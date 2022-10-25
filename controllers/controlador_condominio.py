@@ -76,8 +76,11 @@ class ControladorCondominio(Controlador):
     def excluir_condo(self):
         pass
 
-    def ir_pessoa(self):
+    def ir_morador(self):
         self.__controlador_pessoa.abre_tela()
+
+    def ir_funcionario(self):
+        self.__controlador_pessoa.abre_tela_funcionario()
 
     def ir_reserva(self):
         self.__controlador_reserva.abre_tela()
@@ -110,10 +113,11 @@ class ControladorCondominio(Controlador):
     def abre_tela_2(self):
         switcher = {
             1: self.ir_apartamento,
-            2: self.ir_pessoa,
-            3: self.ir_conta,
-            4: self.ir_reserva,
-            5: self.ir_entrega,
+            2: self.ir_morador,
+            3: self.ir_funcionario,
+            4: self.ir_conta,
+            5: self.ir_reserva,
+            6: self.ir_entrega,
             0: self.abre_tela
         }
 
@@ -121,12 +125,28 @@ class ControladorCondominio(Controlador):
             switcher[int(self.__tela_condominio.mostra_opcoes_2())]()
 
     def abre_tela_apartamento(self):
-        opcoes = {1: self.incluir_apartamento, 2: self.alterar_apartamento,
-                  3: self.listar_apartamento, 4: self.excluir_apartamento,
-                  0: self.retornar}
+        switcher = {
+            1: self.incluir_apartamento,
+            2: self.alterar_apartamento,
+            3: self.listar_apartamento,
+            4: self.excluir_apartamento,
+            0: self.abre_tela_2
+        }
 
         while True:
-            opcoes[int(self.__tela_apartamento.mostra_opcoes())]()
+            switcher[int(self.__tela_condominio.mostra_opcoes_apartamento())]()
+
+    def incluir_apartamento(self):
+        pass
+
+    def alterar_apartamento(self):
+        pass
+
+    def listar_apartamento(self):
+        pass
+
+    def excluir_apartamento(self):
+        pass
 
     def ir_pessoa(self):
         self.__controlador_pessoa.abre_tela()

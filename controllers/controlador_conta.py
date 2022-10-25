@@ -186,7 +186,7 @@ class ControladorConta(Controlador):
             print(err)
 
     def retornar(self):
-        self.__controlador_sistema.abre_tela()
+        self.__controlador_condominio.abre_tela_2()
 
     def abre_tela(self):
         switcher = {

@@ -3,13 +3,14 @@ from utils.InvalidCPFException import InvalidCPFException
 
 
 class TelaMorador(Tela):
-    def __init__(self):
+    def __init__(self, controlador_pessoa):
         super().__init__()
+        self.__controlador_pessoa = controlador_pessoa
 
     def mostra_opcoes(self):
         pass
 
-    def pega_dados_funcionario(self, **kwargs):
+    def pega_dados_morador(self, **kwargs):
         print("\033[1;36m")
         print("<=======<<DADOS MORADOR>>=======>")
         try:

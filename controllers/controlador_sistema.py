@@ -27,4 +27,4 @@ class ControladorSistema(Controlador):
         exit(0)
 
     def abre_tela(self):
-        self.__tela_sistema.tutorial_cadastro
+        self.__tela_sistema.tutorial_cadastro #RETIRADO PARA TESTES
