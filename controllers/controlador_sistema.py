@@ -12,7 +12,7 @@ class ControladorSistema(Controlador):
     
     def inicializar(self):
         if not self.__controlador_condominio.condominios:
-            self.__tela_sistema.tutorial_cadastro()
+            self.abre_tela()
             self.__controlador_condominio.incluir_condo()
             self.ir_condo()
         else:
@@ -21,10 +21,10 @@ class ControladorSistema(Controlador):
     def ir_condo(self):
         self.__controlador_condominio.abre_tela()
 
-    def abre_tela(self):
-        pass
 
     def retornar(self):
         self.__tela_sistema.desligar()
         exit(0)
 
+    def abre_tela(self):
+        self.__tela_sistema.tutorial_cadastro
