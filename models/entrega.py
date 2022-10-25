@@ -1,21 +1,24 @@
 from models.tipo_entrega import TipoEntrega
 from models.morador import Morador
-from uuid import uuid4
 from datetime import date
 
 
 class Entrega:
-    def __init__(self, tipo: TipoEntrega, destinatario: Morador) -> None:
-        self.__id_entrega = uuid4()
-        self.__data_recebimento_condominio = date.today()
-        self.__data_recebimento_morador = None
+    def __init__(self, tipo: TipoEntrega, destinatario: Morador, id_entrega: int) -> None:
         self.__tipo = tipo
         self.__destinatario = destinatario
+        self.__id_entrega = id_entrega
+        self.__data_recebimento_condominio = date.today()
+        self.__data_recebimento_morador = None
 
     @property
-    def id_entrega(self):
+    def id_entrega(self) -> int:
         return self.__id_entrega
     
+    @id_entrega.setter
+    def id_entrega(self, id_entrega: int) -> None:
+        self.__id_entrega = id_entrega
+
     @property
     def tipo(self) -> TipoEntrega:
         return self.__tipo
@@ -43,3 +46,8 @@ class Entrega:
     @data_recebimento_morador.setter
     def data_recebimento_morador(self, data):
         self.__data_recebimento_morador = data
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Entrega):
+            return self.__id_entrega == other.id_entrega
+        return False

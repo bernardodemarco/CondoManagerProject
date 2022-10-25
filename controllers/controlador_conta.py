@@ -66,11 +66,11 @@ class ControladorConta(Controlador):
             self.__contas.append(conta)
 
         except ValueError as err:
-            print('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
         except ResourceAlreadyExistsException as err:
-            print(f'{err} (identificador já utilizado)')
+            self.__tela_conta.mostra_mensagem(f'{err} (identificador já utilizado)')
         except ResourceNotFoundException as err:
-            print(err)
+            self.__tela_conta.mostra_mensagem(err)
 
     def incluir_tipo_conta(self):
         try:
@@ -82,9 +82,9 @@ class ControladorConta(Controlador):
             self.__tipos_conta.append(tipo)
 
         except ValueError as err:
-            print('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
         except ResourceAlreadyExistsException as err:
-            print(f'{err} (Ou id já utilizado ou nome já cadastrado)')
+            self.__tela_conta.mostra_mensagem(f'{err} (Ou id já utilizado ou nome já cadastrado)')
 
     def alterar_conta(self):
         try:        
@@ -116,11 +116,11 @@ class ControladorConta(Controlador):
             conta.mes = dados_alterados['mes']
             conta.id_conta = dados_alterados['id']
         except ValueError as err:
-            print('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
         except ResourceNotFoundException as err:
-            print(err)
+            self.__tela_conta.mostra_mensagem(err)
         except Exception as err:
-            print(err)
+            self.__tela_conta.mostra_mensagem(err)
 
     def alterar_tipo_conta(self):
         try:        
@@ -139,11 +139,11 @@ class ControladorConta(Controlador):
             tipo.id_tipo = dados_alterados['id']
 
         except ResourceNotFoundException as err:
-            print(err)
+            self.__tela_conta.mostra_mensagem(err)
         except ValueError as err:
-            print('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
         except Exception as err:
-            print(err)
+            self.__tela_conta.mostra_mensagem(err)
 
     def excluir_conta(self):
         try:  
@@ -159,11 +159,11 @@ class ControladorConta(Controlador):
             self.__contas.remove(conta)
 
         except ResourceNotFoundException as err:
-            print(err)
+            self.__tela_conta.mostra_mensagem(err)
         except ValueError as err:
-            print('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
         except Exception as err:
-            print(err)            
+            self.__tela_conta.mostra_mensagem(err)            
 
     def excluir_tipo_conta(self):
         try:        
@@ -179,11 +179,11 @@ class ControladorConta(Controlador):
             self.__tipos_conta.remove(tipo)
 
         except ResourceNotFoundException as err:
-            print(err)
+            self.__tela_conta.mostra_mensagem(err)
         except ValueError as err:
-            print('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
         except Exception as err:
-            print(err)
+            self.__tela_conta.mostra_mensagem(err)
 
     def retornar(self):
         self.__controlador_condominio.abre_tela_2()
