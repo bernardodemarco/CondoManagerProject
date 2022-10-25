@@ -19,7 +19,7 @@ class TelaFuncionario(Tela):
                 cpf = kwargs['cpf']
             else:
                 while True:
-                    cpf = int(input("Digite o CPF do funcionário: "))
+                    cpf = input("Digite o CPF do funcionário: ")
                     try:
                         validate_cpf(cpf)
                     except InvalidCPFException as err:

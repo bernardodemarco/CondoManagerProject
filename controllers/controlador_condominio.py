@@ -128,5 +128,17 @@ class ControladorCondominio(Controlador):
         while True:
             opcoes[int(self.__tela_apartamento.mostra_opcoes())]()
 
+    def ir_pessoa(self):
+        self.__controlador_pessoa.abre_tela()
+
+    def ir_reserva(self):
+        self.__controlador_reserva.abre_tela()
+
+    def ir_entrega(self):
+        self.__controlador_entrega.abre_tela()
+
+    def ir_conta(self):
+        self.__controlador_conta.abre_tela()
+
     def retornar(self):
         self.__controlador_sistema.retornar()
