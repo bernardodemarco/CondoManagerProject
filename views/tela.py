@@ -7,6 +7,10 @@ class Tela(ABC):
     def __init__(self):
         pass
 
+    @abstractmethod
+    def mostra_opcoes(self):
+        pass
+
     def checa_opcao(self, valormax):
         while True:    
             try:
@@ -20,3 +24,6 @@ class Tela(ABC):
                 print("")
                 print("\033[0;31mERRO!: Opção inválida, por favor, tente novamente: \033[0m")
                 time.sleep(1)
+
+    def mostra_mensagem(self, mensagem: str):
+        print(mensagem)
