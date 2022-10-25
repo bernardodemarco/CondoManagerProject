@@ -13,4 +13,3 @@ class Controlador(ABC):
     @abstractmethod
     def abre_tela(self):
         pass
-    

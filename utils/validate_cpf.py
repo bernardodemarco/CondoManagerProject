@@ -1,6 +1,7 @@
 import re
 from utils.InvalidCPFException import InvalidCPFException
 
+
 def get_digit(cpf: str, digit: str) -> str:
     ''' Retorna o dígito verificador esperado '''
     ind = 0
@@ -13,12 +14,13 @@ def get_digit(cpf: str, digit: str) -> str:
 
     return '0' if (soma * 10 % 11 == 10) else str(soma * 10 % 11)
 
+
 def validate_cpf(raw_cpf: str):
     ''' Validação do CPF e de seus dígitos verificadores '''
     cpf = raw_cpf.strip()
 
     if not re.match(r'[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}-?[0-9]{2}$', cpf):
-       raise InvalidCPFException(raw_cpf)
+        raise InvalidCPFException(raw_cpf)
 
     if not cpf.isdecimal():
         cpf = cpf.replace('.', '')

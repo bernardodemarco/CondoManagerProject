@@ -64,12 +64,14 @@ class TelaCondominio(Tela):
         while True:
             try:
                 print("\033[1;36m")
-                numero = int(input("SELECIONE O CONDOMÍNIO (digite o numero): "))
+                numero = int(
+                    input("SELECIONE O CONDOMÍNIO (digite o numero): "))
                 if isinstance(numero, int) and numero > 0:
                     return numero
                 raise ValueError
             except ValueError:
-                print("\033[0;31mERRO!: Número inválido, por favor, tente novamente: \033[1;36m")
+                print(
+                    "\033[0;31mERRO!: Número inválido, por favor, tente novamente: \033[1;36m")
 
     def pega_dados_condo(self, **kwargs):
         print("\033[1;36m")
@@ -86,10 +88,10 @@ class TelaCondominio(Tela):
                         raise ValueError
                 except ValueError:
                     print("")
-                    print("\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
+                    print(
+                        "\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
                 else:
-                    break    
+                    break
         endereco = input("Digite o endereço do condomínio: ")
         print("É necessário o cadastro de um funcionário para o condomínio.")
         return {"nome": nome, "numero": numero, 'endereco': endereco}
-        

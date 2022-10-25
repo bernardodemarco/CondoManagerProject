@@ -9,7 +9,7 @@ class ControladorSistema(Controlador):
         super().__init__()
         self.__tela_sistema = TelaSistema()
         self.__controlador_condominio = ControladorCondominio(self)
-    
+
     def inicializar(self):
         if not self.__controlador_condominio.condominios:
             self.abre_tela()
@@ -26,4 +26,4 @@ class ControladorSistema(Controlador):
         exit(0)
 
     def abre_tela(self):
-        self.__tela_sistema.tutorial_cadastro #RETIRADO PARA TESTES
+        self.__tela_sistema.tutorial_cadastro  # RETIRADO PARA TESTES

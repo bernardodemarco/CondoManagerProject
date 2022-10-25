@@ -1,11 +1,12 @@
 from models.funcionario import Funcionario
+from models.morador import Morador
 from controllers.controlador import Controlador
 from views.tela_funcionario import TelaFuncionario
 from views.tela_morador import TelaMorador
 
 
 class ControladorPessoa(Controlador):
-    
+
     def __init__(self, controlador_condominio):
         super().__init__()
         self.__controlador_condominio = controlador_condominio
@@ -27,20 +28,32 @@ class ControladorPessoa(Controlador):
                 return pessoa
         return None
 
-
     def incluir_morador(self):
         dados_morador = self.__tela_morador.pega_dados_morador(acao="criacao")
         morador = Morador(dados_morador["nome"],
-                                  dados_morador["cpf"],
-                                  dados_morador["telefone"])
-        
+                          dados_morador["cpf"],
+                          dados_morador["telefone"])
+
         self.__pessoas.append(morador)
 
-    def incluir_funcionario_condo(self):
-        print("oi")
-
-    def incluir_funcionario(self):
+    def alterar_morador(self):
         pass
+
+    def excluir_morador(self):
+        pass
+
+    def listar_moradores(self):
+        for pessoa in self.__pessoas:
+            if isinstance(pessoa, Morador):
+                self.__tela_morador.mostra_morador({
+                    'nome': pessoa.nome,
+                    'cpf': pessoa.cpf,
+                    'telefone': pessoa.telefone,
+                })
+
+    def seleciona_morador(self):
+        self.listar_moradores()
+        return self.pega_pessoa_por_cpf(self.__tela_morador.seleciona_morador())
 
     def abre_tela(self):
         switcher = {
@@ -48,6 +61,7 @@ class ControladorPessoa(Controlador):
             2: self.alterar_morador,
             3: self.excluir_morador,
             4: self.listar_moradores,
+            5: self.seleciona_morador,
             0: self.retornar
 
         }
@@ -56,13 +70,14 @@ class ControladorPessoa(Controlador):
             switcher[int(self.__tela_morador.mostra_opcoes())]()
 
     def incluir_funcionario(self):
-        dados_funcionario = self.__tela_funcionario.pega_dados_funcionario(acao="criacao")
+        dados_funcionario = self.__tela_funcionario.pega_dados_funcionario(
+            acao="criacao")
         if dados_funcionario == None:
             return None
         funcionario = Funcionario(dados_funcionario["nome"],
                                   dados_funcionario["cpf"],
                                   dados_funcionario["telefone"])
-        
+
         self.__pessoas.append(funcionario)
 
     def alterar_funcionario(self):
@@ -73,7 +88,6 @@ class ControladorPessoa(Controlador):
 
     def listar_funcionarios(self):
         pass
-
 
     def abre_tela_funcionario(self):
         switcher = {
@@ -89,4 +103,3 @@ class ControladorPessoa(Controlador):
 
     def retornar(self):
         self.__controlador_condominio.abre_tela()
-

@@ -23,7 +23,7 @@ class TelaFuncionario(Tela):
         print("        4 - Listar Funcionário")
         print("        0 - Retornar")
         print("<=======<<============>>=======> \033[0m")
-        return self.checa_opcao(5)
+        return self.checa_opcao(4)
 
     def pega_dados_funcionario(self, **kwargs):
         print("\033[1;36m")

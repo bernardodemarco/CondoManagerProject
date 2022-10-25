@@ -30,7 +30,8 @@ class ControladorConta(Controlador):
         return None
 
     def lista_contas(self):
-        self.__tela_conta.mostra_mensagem('<=======<<TODAS CONTAS CADASTRADAS>>=======>')
+        self.__tela_conta.mostra_mensagem(
+            '<=======<<TODAS CONTAS CADASTRADAS>>=======>')
         for conta in self.__contas:
             self.__tela_conta.mostra_conta({
                 'valor': conta.valor,
@@ -40,7 +41,8 @@ class ControladorConta(Controlador):
             })
 
     def lista_tipos_contas(self):
-        self.__tela_conta.mostra_mensagem('<=======<<TODAS OS TIPOS DE CONTA CADASTRADOS>>=======>')
+        self.__tela_conta.mostra_mensagem(
+            '<=======<<TODAS OS TIPOS DE CONTA CADASTRADOS>>=======>')
         for tipo in self.__tipos_conta:
             self.__tela_conta.mostra_tipo_conta({
                 'nome': tipo.nome,
@@ -50,9 +52,10 @@ class ControladorConta(Controlador):
     def incluir_conta(self):
         try:
             if len(self.__tipos_conta) == 0:
-                self.__tela_conta.mostra_mensagem('Cadastre um tipo de conta primeiro!')
+                self.__tela_conta.mostra_mensagem(
+                    'Cadastre um tipo de conta primeiro!')
                 self.incluir_tipo_conta()
-            
+
             self.lista_tipos_contas()
             id_tipo = self.__tela_conta.seleciona_tipo_conta()
             tipo = self.pega_tipo_por_id(id_tipo)
@@ -66,9 +69,11 @@ class ControladorConta(Controlador):
             self.__contas.append(conta)
 
         except ValueError as err:
-            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except ResourceAlreadyExistsException as err:
-            self.__tela_conta.mostra_mensagem(f'{err} (identificador já utilizado)')
+            self.__tela_conta.mostra_mensagem(
+                f'{err} (identificador já utilizado)')
         except ResourceNotFoundException as err:
             self.__tela_conta.mostra_mensagem(err)
 
@@ -82,16 +87,19 @@ class ControladorConta(Controlador):
             self.__tipos_conta.append(tipo)
 
         except ValueError as err:
-            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except ResourceAlreadyExistsException as err:
-            self.__tela_conta.mostra_mensagem(f'{err} (Ou id já utilizado ou nome já cadastrado)')
+            self.__tela_conta.mostra_mensagem(
+                f'{err} (Ou id já utilizado ou nome já cadastrado)')
 
     def alterar_conta(self):
-        try:        
+        try:
             if len(self.__contas) == 0:
                 raise Exception('Nenhuma conta registrada!')
 
-            self.__tela_conta.mostra_mensagem("<=======<<EDITAR CONTA>>=======>")
+            self.__tela_conta.mostra_mensagem(
+                "<=======<<EDITAR CONTA>>=======>")
             self.lista_contas()
             id_conta = self.__tela_conta.seleciona_conta()
             conta = self.pega_conta_por_id(id_conta)
@@ -109,48 +117,54 @@ class ControladorConta(Controlador):
             tipo = self.pega_tipo_por_id(id_tipo)
             if tipo == None:
                 raise ResourceNotFoundException('Tipo da conta')
-    
-            dados_alterados = self.__tela_conta.pega_dados_contas(acao='alteracao', id_conta=conta.id_conta)
-            conta.tipo = tipo            
+
+            dados_alterados = self.__tela_conta.pega_dados_contas(
+                acao='alteracao', id_conta=conta.id_conta)
+            conta.tipo = tipo
             conta.valor = dados_alterados['valor']
             conta.mes = dados_alterados['mes']
             conta.id_conta = dados_alterados['id']
         except ValueError as err:
-            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except ResourceNotFoundException as err:
             self.__tela_conta.mostra_mensagem(err)
         except Exception as err:
             self.__tela_conta.mostra_mensagem(err)
 
     def alterar_tipo_conta(self):
-        try:        
+        try:
             if len(self.__tipos_conta) == 0:
                 raise Exception('Nenhum tipo de conta registrado!')
 
-            self.__tela_conta.mostra_mensagem("<=======<<EDITAR TIPO DE CONTA>>=======>")
+            self.__tela_conta.mostra_mensagem(
+                "<=======<<EDITAR TIPO DE CONTA>>=======>")
             self.lista_tipos_contas()
             id_tipo = self.__tela_conta.seleciona_tipo_conta()
             tipo = self.pega_tipo_por_id(id_tipo)
             if tipo == None:
-                raise ResourceNotFoundException('Tipo da conta') 
+                raise ResourceNotFoundException('Tipo da conta')
 
-            dados_alterados = self.__tela_conta.pega_dados_tipo(acao='alteracao', id_tipo=id_tipo)
+            dados_alterados = self.__tela_conta.pega_dados_tipo(
+                acao='alteracao', id_tipo=id_tipo)
             tipo.nome = dados_alterados['nome_tipo']
             tipo.id_tipo = dados_alterados['id']
 
         except ResourceNotFoundException as err:
             self.__tela_conta.mostra_mensagem(err)
         except ValueError as err:
-            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except Exception as err:
             self.__tela_conta.mostra_mensagem(err)
 
     def excluir_conta(self):
-        try:  
+        try:
             if len(self.__contas) == 0:
                 raise Exception('Nenhuma conta registrada!')
 
-            self.__tela_conta.mostra_mensagem("<=======<<REMOVER CONTA>>=======>")
+            self.__tela_conta.mostra_mensagem(
+                "<=======<<REMOVER CONTA>>=======>")
             self.lista_contas()
             id_conta = self.__tela_conta.seleciona_conta()
             conta = self.pega_conta_por_id(id_conta)
@@ -161,16 +175,18 @@ class ControladorConta(Controlador):
         except ResourceNotFoundException as err:
             self.__tela_conta.mostra_mensagem(err)
         except ValueError as err:
-            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except Exception as err:
-            self.__tela_conta.mostra_mensagem(err)            
+            self.__tela_conta.mostra_mensagem(err)
 
     def excluir_tipo_conta(self):
-        try:        
+        try:
             if len(self.__tipos_conta) == 0:
                 raise Exception('Nenhum tipo de conta registrado!')
 
-            self.__tela_conta.mostra_mensagem("<=======<<REMOVER TIPO DE CONTA>>=======>")
+            self.__tela_conta.mostra_mensagem(
+                "<=======<<REMOVER TIPO DE CONTA>>=======>")
             self.lista_contas()
             id_tipo = self.__tela_conta.seleciona_tipo_conta()
             tipo = self.pega_tipo_por_id(id_tipo)
@@ -181,7 +197,8 @@ class ControladorConta(Controlador):
         except ResourceNotFoundException as err:
             self.__tela_conta.mostra_mensagem(err)
         except ValueError as err:
-            self.__tela_conta.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_conta.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except Exception as err:
             self.__tela_conta.mostra_mensagem(err)
 

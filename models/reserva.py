@@ -17,7 +17,7 @@ class Reserva:
     @property
     def horario(self) -> str:
         return self.__horario
-    
+
     @horario.setter
     def horario(self, horario: str) -> None:
         self.__horario = horario
@@ -25,7 +25,7 @@ class Reserva:
     @property
     def reservavel(self) -> Reservavel:
         return self.__reservavel
-    
+
     @reservavel.setter
     def reservavel(self, reservavel: Reservavel) -> None:
         self.__reservavel = reservavel
@@ -33,7 +33,7 @@ class Reserva:
     @property
     def morador(self) -> Morador:
         return self.__morador
-    
+
     @morador.setter
     def morador(self, morador: Morador) -> None:
         self.__morador = morador

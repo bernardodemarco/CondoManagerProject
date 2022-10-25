@@ -18,13 +18,13 @@ class ControladorCondominio(Controlador):
         self.__controlador_entrega = ControladorEntrega(self)
         self.__controlador_reserva = ControladorReserva(self)
         self.__controlador_pessoa = ControladorPessoa(self)
-        self.__tela_condominio = TelaCondominio()
+        self.__tela_condominio = TelaCondominio(self)
         # self.__tela_apartamento = TelaApartamento()
 
     @property
     def condominios(self) -> list:
         return self.__condominios
-    
+
     @property
     def controlador_sistema(self):
         return self.__controlador_sistema
