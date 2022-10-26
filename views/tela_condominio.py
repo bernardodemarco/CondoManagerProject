@@ -34,11 +34,12 @@ class TelaCondominio(Tela):
         print("        2 - Moradores")
         print("        3 - Funcionários")
         print("        4 - Contas")
-        print("        5 - Reservas")
-        print("        6 - Entregas")
+        print("        5 - Reservável")
+        print("        6 - Reservas")
+        print("        7 - Entregas")
         print("        0 - Condomínios")
         print("<=======<<=============>>=======> \033[0m")
-        return self.checa_opcao(6)
+        return self.checa_opcao(7)
 
     def mostra_opcoes_apartamento(self):
         print("\033[1;36m")
@@ -48,6 +49,18 @@ class TelaCondominio(Tela):
         print("        2 - Alterar Apartamento")
         print("        3 - Excluir Apartamento")
         print("        4 - Listar Apartamentos")
+        print("        0 - Retornar")
+        print("<=======<<============>>=======> \033[0m")
+        return self.checa_opcao(4)
+
+    def mostra_opcoes_reservavel(self):
+        print("\033[1;36m")
+        print("<=======<<RESERVÁVEL>>=======>")
+        print("Para qual seção gostaria de ir?")
+        print("        1 - Incluir Reservável")
+        print("        2 - Alterar Reservável")
+        print("        3 - Excluir Reservável")
+        print("        4 - Listar Reservável")
         print("        0 - Retornar")
         print("<=======<<============>>=======> \033[0m")
         return self.checa_opcao(4)
@@ -95,3 +108,24 @@ class TelaCondominio(Tela):
         endereco = input("Digite o endereço do condomínio: ")
         print("É necessário o cadastro de um funcionário para o condomínio.")
         return {"nome": nome, "numero": numero, 'endereco': endereco}
+
+    def pega_dados_reservavel(self, **kwargs):
+        print("\033[1;36m")
+        print("<=======<<DADOS RESERVAVEL>>=======>")
+        nome = input("Digite o nome do reservável: ")
+        if kwargs['acao'] == 'alteracao':
+            id_reservavel = kwargs['id_reservavel']
+        else:
+            while True:
+                try:
+                    id_reservavel = int(
+                        input("Digite um número único (positivo) pro condomínio: "))
+                    if id_reservavel <= 0:
+                        raise ValueError
+                except ValueError:
+                    print("")
+                    print(
+                        "\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
+                else:
+                    break
+        return {"nome": nome, "id_reservavel": id_reservavel}

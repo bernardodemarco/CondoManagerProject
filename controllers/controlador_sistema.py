@@ -11,7 +11,7 @@ class ControladorSistema(Controlador):
         self.__controlador_condominio = ControladorCondominio(self)
 
     def inicializar(self):
-        if not self.__controlador_condominio.condominios:
+        if not self.__controlador_condominio.condominio:
             self.abre_tela()
             self.__controlador_condominio.incluir_condo()
             self.ir_condo()
