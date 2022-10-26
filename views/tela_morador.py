@@ -1,5 +1,6 @@
 from views.tela import Tela
 from utils.InvalidCPFException import InvalidCPFException
+from utils.ResourceNotFoundException import ResourceNotFoundException
 from utils.validate_cpf import validate_cpf
 
 
@@ -51,10 +52,22 @@ class TelaMorador(Tela):
         print("<=======<<======================>>=======> \033[0m")
 
     def seleciona_morador(self):
-        try:
-            print("\33[1;36m")
-            cpf_morador = input(('SELECIONE O MORADOR (digite o CPF): '))
-            if validate_cpf(cpf_morador):
-                return cpf_morador
-        except InvalidCPFException as err:
-            print(err)
+        while True:
+            try:
+                print("\33[1;36m")
+                cpf_morador = input(('SELECIONE O MORADOR (digite o CPF): '))
+                validate_cpf(cpf_morador)
+                if self.__controlador_pessoa.pega_pessoa_por_cpf(cpf_morador) is not None:
+                    return cpf_morador
+                else:
+                    raise ResourceNotFoundException("Morador")
+            except InvalidCPFException as err:
+                print(err)
+                print("\033[1;32m")
+                if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR\033[1;36m: ").lower() == 'cancelar':
+                    return None
+            except ResourceNotFoundException as err:
+                print(err)
+                print("\033[1;32m")
+                if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR\033[1;36m: ").lower() == 'cancelar':
+                    return None

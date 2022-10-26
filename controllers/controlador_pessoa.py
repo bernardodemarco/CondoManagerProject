@@ -63,7 +63,6 @@ class ControladorPessoa(Controlador):
             4: self.listar_moradores,
             5: self.seleciona_morador,
             0: self.retornar
-
         }
 
         while True:

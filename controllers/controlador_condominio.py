@@ -140,8 +140,17 @@ class ControladorCondominio(Controlador):
             if (reservavel.id_reservavel == id):
                 return reservavel
         return None
-
     
+    def listar_reservaveis(self):
+        for reservavel in self.condominio.reservaveis:
+            self.__tela_morador.mostra_reservavel({
+                'nome': reservavel.nome,
+                'id': reservavel.id,
+            })
+
+    def selecionar_reservavel(self):
+        self.listar_reservaveis
+        return self.pega_reservavel_por_id(self.__tela_condominio.seleciona_reservavel())
 
     def incluir_reservavel(self):
         dados_reservavel = self.__tela_condominio.pega_dados_reservavel(acao="criacao")
@@ -150,6 +159,7 @@ class ControladorCondominio(Controlador):
                            dados_reservavel["id_reservavel"])
 
         self.__condominio.reservaveis.append(reservavel)
+
 
     def alterar_reservavel(self):
         pass

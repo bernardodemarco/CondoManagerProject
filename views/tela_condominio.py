@@ -119,7 +119,7 @@ class TelaCondominio(Tela):
             while True:
                 try:
                     id_reservavel = int(
-                        input("Digite um número único (positivo) pro condomínio: "))
+                        input("Digite um número único (positivo) pro reservável: "))
                     if id_reservavel <= 0:
                         raise ValueError
                 except ValueError:
@@ -129,3 +129,25 @@ class TelaCondominio(Tela):
                 else:
                     break
         return {"nome": nome, "id_reservavel": id_reservavel}
+
+    def mostra_reservavel(self, dados):
+        print("\33[1;36m")
+        print("<=======<<LISTAGEM DOS RESERVÁVEL>>=======>") 
+        print('NOME DO RESERVÁVEL:', dados['nome'])
+        print('ID DO RESERVÁVEL:', dados['id_reservavel'])
+        print("<=======<<=======================>>=======> \033[0m")
+
+    def seleciona_reservavel(self):
+        while True:
+            try:
+                print("\33[1;36m")
+                id_reservavel = input(('SELECIONE O RESERVÁVEL (digite o ID): '))
+                if self.__controlador_condo.pega_reservavel_por_id(id_reservavel) is not None:
+                    return id_reservavel
+                else:
+                    raise ResourceNotFoundException("Reservável")
+            except ResourceNotFoundException as err:
+                print(err)
+                print("\033[1;32m")
+                if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR\033[1;36m: ").lower() == 'cancelar':
+                    return None
