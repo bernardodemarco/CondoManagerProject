@@ -43,6 +43,7 @@ class ControladorPessoa(Controlador):
         pass
 
     def listar_moradores(self):
+        self.__tela_morador.mostra_mensagem("<=======<<LISTAGEM DOS MORADORES>>=======>")
         for pessoa in self.__pessoas:
             if isinstance(pessoa, Morador):
                 self.__tela_morador.mostra_morador({

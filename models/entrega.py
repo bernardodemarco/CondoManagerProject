@@ -1,6 +1,6 @@
 from models.tipo_entrega import TipoEntrega
 from models.morador import Morador
-from datetime import date
+from datetime import datetime
 
 
 class Entrega:
@@ -8,7 +8,7 @@ class Entrega:
         self.__tipo = tipo
         self.__destinatario = destinatario
         self.__id_entrega = id_entrega
-        self.__data_recebimento_condominio = date.today()
+        self.__data_recebimento_condominio = datetime.now()
         self.__data_recebimento_morador = None
 
     @property
@@ -46,6 +46,11 @@ class Entrega:
     @data_recebimento_morador.setter
     def data_recebimento_morador(self, data):
         self.__data_recebimento_morador = data
+
+    def tempo_pendente_entrega(self):
+        if self.__data_recebimento_morador != None:
+            return self.__data_recebimento_morador - self.__data_recebimento_condominio
+        return None
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Entrega):

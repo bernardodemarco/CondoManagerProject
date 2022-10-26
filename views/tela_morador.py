@@ -45,7 +45,6 @@ class TelaMorador(Tela):
 
     def mostra_morador(self, dados):
         print("\33[1;36m")
-        print("<=======<<LISTAGEM DOS MORADORES>>=======>")
         print('NOME DO MORADOR:', dados['nome'])
         print('CPF DO MORADOR:', dados['cpf'])
         print('TELEFONE DO MORADOR:', dados['telefone'])

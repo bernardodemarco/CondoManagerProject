@@ -34,6 +34,9 @@ class ControladorCondominio(Controlador):
     def controlador_sistema(self):
         return self.__controlador_sistema
 
+    @property
+    def controlador_pessoa(self) -> ControladorPessoa:
+        return self.__controlador_pessoa
 
     def incluir_condo(self):
         dados_condo = self.__tela_condominio.pega_dados_condo(acao="criacao")
