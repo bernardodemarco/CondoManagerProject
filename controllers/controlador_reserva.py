@@ -1,7 +1,8 @@
 from controllers.controlador import Controlador
 
+
 class ControladorReserva(Controlador):
-   
+
     def __init__(self, controlador_condominio):
         super().__init__()
         self.__controlador_condominio = controlador_condominio

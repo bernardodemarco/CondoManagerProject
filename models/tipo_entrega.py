@@ -6,7 +6,7 @@ class TipoEntrega:
     @property
     def nome(self) -> str:
         return self.__nome
-    
+
     @nome.setter
     def nome(self, nome: str) -> None:
         self.__nome = nome

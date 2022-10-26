@@ -1,5 +1,6 @@
 from models.morador import Morador
 
+
 class Apartamento:
     def __init__(self, num: int, morador: Morador):
         self.__num = num

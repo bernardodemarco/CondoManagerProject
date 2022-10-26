@@ -1,12 +1,12 @@
 class TipoConta:
     def __init__(self, nome: str, id_tipo: int) -> None:
         self.__nome = nome
-        self.__id_tipo = id_tipo 
+        self.__id_tipo = id_tipo
 
     @property
     def nome(self) -> str:
         return self.__nome
-    
+
     @nome.setter
     def nome(self, nome: str) -> None:
         self.__nome = nome
