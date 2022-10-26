@@ -23,14 +23,15 @@ class TelaConta(Tela):
 
     def pega_dados_contas(self, **kwargs):
         print("<=======<<DADOS CONTA>>=======>")
-        
+
         valor = float(input("Digite o valor da conta: "))
         mes = input('Digite o mês: ')
         if kwargs['acao'] == 'alteracao':
             id_conta = kwargs['id_conta']
         else:
-            id_conta = int(input('Digite um identificador (número inteiro positivo) para a conta: '))
-        
+            id_conta = int(
+                input('Digite um identificador (número inteiro positivo) para a conta: '))
+
         if (isinstance(valor, float) and
                 valor >= 0 and isinstance(mes, str) and
                 isinstance(id_conta, int) and id_conta > 0):
@@ -45,8 +46,9 @@ class TelaConta(Tela):
         if kwargs['acao'] == 'alteracao':
             id_tipo = kwargs['id_tipo']
         else:
-            id_tipo = int(input('Digite um identificador (número inteiro positivo) para o tipo da conta: '))        
-        
+            id_tipo = int(input(
+                'Digite um identificador (número inteiro positivo) para o tipo da conta: '))
+
         if (isinstance(tipo, str) and
                 isinstance(id_tipo, int) and id_tipo > 0):
             return {'nome_tipo': tipo, 'id': id_tipo}
@@ -66,7 +68,8 @@ class TelaConta(Tela):
 
     def seleciona_conta(self):
         try:
-            id_conta = int(input(('SELECIONE A CONTA (digite o identificador): ')))
+            id_conta = int(
+                input(('SELECIONE A CONTA (digite o identificador): ')))
             if isinstance(id_conta, int) and id_conta > 0:
                 return id_conta
             raise ValueError
@@ -75,7 +78,8 @@ class TelaConta(Tela):
 
     def seleciona_tipo_conta(self):
         try:
-            id_tipo = int(input(('SELECIONE O TIPO DE CONTA (digite o identificador): ')))
+            id_tipo = int(
+                input(('SELECIONE O TIPO DE CONTA (digite o identificador): ')))
             if isinstance(id_tipo, int) and id_tipo > 0:
                 return id_tipo
             raise ValueError

@@ -2,7 +2,7 @@ from models.tipo_conta import TipoConta
 
 
 class Conta:
-    def __init__(self, tipo: TipoConta, valor: float, mes: str, id_conta: int) -> None:
+    def __init__(self, tipo: TipoConta, valor: float, mes: str, id_conta: int):
         self.__id_conta = id_conta
         self.__tipo = tipo
         self.__mes = mes
@@ -11,7 +11,7 @@ class Conta:
     @property
     def tipo(self) -> TipoConta:
         return self.__tipo
-    
+
     @tipo.setter
     def tipo(self, tipo: TipoConta) -> None:
         self.__tipo = tipo
@@ -27,15 +27,15 @@ class Conta:
     @property
     def valor(self) -> float:
         return self.__valor
-    
+
     @valor.setter
     def valor(self, valor: float) -> None:
         self.__valor = valor
-    
+
     @property
     def mes(self) -> str:
         return self.__mes
-    
+
     @mes.setter
     def mes(self, mes: str) -> None:
         self.__mes = mes

@@ -14,7 +14,7 @@ class Entrega:
     @property
     def id_entrega(self) -> int:
         return self.__id_entrega
-    
+
     @id_entrega.setter
     def id_entrega(self, id_entrega: int) -> None:
         self.__id_entrega = id_entrega

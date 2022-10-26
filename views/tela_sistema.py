@@ -1,6 +1,7 @@
 from views.tela import Tela
 import time
 
+
 class TelaSistema(Tela):
 
     def __init__(self):
@@ -26,7 +27,6 @@ class TelaSistema(Tela):
         time.sleep(1)
         print('\033[1A\033[35C.')
         time.sleep(2)
-
 
     def desligar(self):
         print("\033[1;36m")

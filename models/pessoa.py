@@ -27,3 +27,6 @@ class Pessoa(ABC):
     @telefone.setter
     def telefone(self, telefone):
         self.__telefone = telefone
+
+    def __str__(self):
+        return f"Esse morador é o {self.nome}"

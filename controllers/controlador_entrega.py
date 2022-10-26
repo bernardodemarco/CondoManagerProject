@@ -30,7 +30,8 @@ class ControladorEntrega(Controlador):
         return None
 
     def lista_entregas(self):
-        self.__tela_entrega.mostra_mensagem('<=======<<TODAS ENTREGAS CADASTRADAS>>=======>')
+        self.__tela_entrega.mostra_mensagem(
+            '<=======<<TODAS ENTREGAS CADASTRADAS>>=======>')
         for entrega in self.__entregas:
             self.__tela_entrega.mostra_entrega({
                 'destinatario': entrega.destinatario,
@@ -41,7 +42,8 @@ class ControladorEntrega(Controlador):
             })
 
     def lista_tipos_entregas(self):
-        self.__tela_entrega.mostra_mensagem('<=======<<TODAS OS TIPOS DE ENTREGA CADASTRADOS>>=======>')
+        self.__tela_entrega.mostra_mensagem(
+            '<=======<<TODAS OS TIPOS DE ENTREGA CADASTRADOS>>=======>')
         for tipo in self.__tipos_entrega:
             self.__tela_entrega.mostra_tipo_entrega({
                 'nome': tipo.nome,
@@ -51,9 +53,10 @@ class ControladorEntrega(Controlador):
     def incluir_entrega(self):
         try:
             if len(self.__tipos_entrega) == 0:
-                self.__tela_entrega.mostra_mensagem('Cadastre um tipo de entrega primeiro!')
+                self.__tela_entrega.mostra_mensagem(
+                    'Cadastre um tipo de entrega primeiro!')
                 self.incluir_tipo_entrega()
-            
+
             self.lista_tipos_entregas()
             id_tipo = self.__tela_entrega.seleciona_tipo_entrega()
             tipo = self.pega_tipo_por_id(id_tipo)
@@ -67,9 +70,11 @@ class ControladorEntrega(Controlador):
             self.__entregas.append(entrega)
 
         except ValueError as err:
-            self.__tela_entrega.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_entrega.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except ResourceAlreadyExistsException as err:
-            self.__tela_entrega.mostra_mensagem(f'{err} (identificador já utilizado)')
+            self.__tela_entrega.mostra_mensagem(
+                f'{err} (identificador já utilizado)')
         except ResourceNotFoundException as err:
             self.__tela_entrega.mostra_mensagem(err)
 
@@ -83,16 +88,19 @@ class ControladorEntrega(Controlador):
             self.__tipos_entrega.append(tipo)
 
         except ValueError as err:
-            self.__tela_entrega.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_entrega.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except ResourceAlreadyExistsException as err:
-            self.__tela_entrega.mostra_mensagem(f'{err} (Ou id já utilizado ou nome já cadastrado)')
+            self.__tela_entrega.mostra_mensagem(
+                f'{err} (Ou id já utilizado ou nome já cadastrado)')
 
     def alterar_entrega(self):
-        try:        
+        try:
             if len(self.__entregas) == 0:
                 raise Exception('Nenhuma entrega registrada!')
 
-            self.__tela_entrega.mostra_mensagem("<=======<<EDITAR ENTREGA>>=======>")
+            self.__tela_entrega.mostra_mensagem(
+                "<=======<<EDITAR ENTREGA>>=======>")
             self.lista_entregas()
             id_entrega = self.__tela_entrega.seleciona_entrega()
             entrega = self.pega_entrega_por_id(id_entrega)
@@ -111,46 +119,52 @@ class ControladorEntrega(Controlador):
             tipo = self.pega_tipo_por_id(id_tipo)
             if tipo == None:
                 raise ResourceNotFoundException('Tipo da entrega')
-    
-            dados_alterados = self.__tela_entrega.pega_dados_entrega(acao='alteracao', id_entrega=entrega.id_entrega)
+
+            dados_alterados = self.__tela_entrega.pega_dados_entrega(
+                acao='alteracao', id_entrega=entrega.id_entrega)
             entrega.destinatario = dados_alterados['destinatario']
             entrega.id_entrega = dados_alterados['id']
         except ValueError as err:
-            self.__tela_entrega.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_entrega.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except ResourceNotFoundException as err:
             self.__tela_entrega.mostra_mensagem(err)
         except Exception as err:
             self.__tela_entrega.mostra_mensagem(err)
 
     def alterar_tipo_entrega(self):
-        try:        
+        try:
             if len(self.__tipos_entrega) == 0:
                 raise Exception('Nenhum tipo de entrega registrado!')
 
-            self.__tela_entrega.mostra_mensagem("<=======<<EDITAR TIPO DE ENTREGA>>=======>")
+            self.__tela_entrega.mostra_mensagem(
+                "<=======<<EDITAR TIPO DE ENTREGA>>=======>")
             self.lista_tipos_entregas()
             id_tipo = self.__tela_entrega.seleciona_tipo_entrega()
             tipo = self.pega_tipo_por_id(id_tipo)
             if tipo == None:
-                raise ResourceNotFoundException('Tipo da entrega') 
+                raise ResourceNotFoundException('Tipo da entrega')
 
-            dados_alterados = self.__tela_entrega.pega_dados_tipo(acao='alteracao', id_tipo=id_tipo)
+            dados_alterados = self.__tela_entrega.pega_dados_tipo(
+                acao='alteracao', id_tipo=id_tipo)
             tipo.nome = dados_alterados['nome_tipo']
             tipo.id_tipo = dados_alterados['id']
 
         except ResourceNotFoundException as err:
             self.__tela_entrega.mostra_mensagem(err)
         except ValueError as err:
-            self.__tela_entrega.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_entrega.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except Exception as err:
             self.__tela_entrega.mostra_mensagem(err)
 
     def excluir_entrega(self):
-        try:  
+        try:
             if len(self.__entregas) == 0:
                 raise Exception('Nenhuma entrega registrada!')
 
-            self.__tela_entrega.mostra_mensagem("<=======<<REMOVER ENTREGA>>=======>")
+            self.__tela_entrega.mostra_mensagem(
+                "<=======<<REMOVER ENTREGA>>=======>")
             self.lista_entregas()
             id_entrega = self.__tela_entrega.seleciona_entrega()
             entrega = self.pega_entrega_por_id(id_entrega)
@@ -161,16 +175,18 @@ class ControladorEntrega(Controlador):
         except ResourceNotFoundException as err:
             self.__tela_entrega.mostra_mensagem(err)
         except ValueError as err:
-            self.__tela_entrega.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_entrega.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except Exception as err:
-            self.__tela_entrega.mostra_mensagem(err)            
+            self.__tela_entrega.mostra_mensagem(err)
 
     def excluir_tipo_entrega(self):
-        try:        
+        try:
             if len(self.__tipos_entrega) == 0:
                 raise Exception('Nenhum tipo de entrega registrado!')
 
-            self.__tela_entrega.mostra_mensagem("<=======<<REMOVER TIPO DE ENTREGA>>=======>")
+            self.__tela_entrega.mostra_mensagem(
+                "<=======<<REMOVER TIPO DE ENTREGA>>=======>")
             self.lista_tipos_entregas()
             id_tipo = self.__tela_entrega.seleciona_tipo_entrega()
             tipo = self.pega_tipo_por_id(id_tipo)
@@ -181,7 +197,8 @@ class ControladorEntrega(Controlador):
         except ResourceNotFoundException as err:
             self.__tela_entrega.mostra_mensagem(err)
         except ValueError as err:
-            self.__tela_entrega.mostra_mensagem('Valores inválidos, tente novamente!')
+            self.__tela_entrega.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
         except Exception as err:
             self.__tela_entrega.mostra_mensagem(err)
 

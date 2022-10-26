@@ -1,14 +1,9 @@
-from uuid import uuid4
-
-
 class Reservavel:
 
-    def __init__(self, nome: str):
+    def __init__(self, nome: str, id_reservavel: int):
         self.__nome = nome
-        self.__id_reservavel = uuid4()
-        self.__horarios_disponiveis = None
-
-# PRA DEIXAR CLARO, TENHO QUE FAZER ISSO AINDA
+        self.__id_reservavel = id_reservavel
+        self.__horarios_indisponiveis = []
 
     @property
     def nome(self) -> str:
@@ -19,5 +14,9 @@ class Reservavel:
         self.__nome = nome
 
     @property
-    def id_reservavel(self) -> uuid4:
+    def id_reservavel(self):
         return self.__id_reservavel
+
+    @property
+    def horarios_indisponiveis(self):
+        return self.__horarios_indisponiveis
