@@ -1,4 +1,5 @@
 from views.tela import Tela
+import time
 
 
 class TelaConta(Tela):
@@ -9,14 +10,23 @@ class TelaConta(Tela):
         print("\033[1;36m")
         print("<=======<<CONTAS>>=======>")
         print("O que você gostaria de fazer?")
+        time.sleep(1)
         print("        1 - Incluir conta")
+        time.sleep(0.5)
         print("        2 - Alterar conta")
+        time.sleep(0.5)
         print("        3 - Excluir conta")
+        time.sleep(0.5)
         print("        4 - Listar contas")
+        time.sleep(1)
         print("        5 - Incluir tipo conta")
+        time.sleep(0.5)
         print("        6 - Alterar tipo conta")
+        time.sleep(0.5)
         print("        7 - Excluir tipo conta")
+        time.sleep(0.5)
         print("        8 - Listar tipo conta")
+        time.sleep(0.5)        
         print("        0 - Retornar")
         print("<=======<<===========>>=======> \033[0m")
         return self.checa_opcao(8)
@@ -54,14 +64,20 @@ class TelaConta(Tela):
 
     def mostra_conta(self, dados):
         print('TIPO DA CONTA:', dados['tipo'])
+        time.sleep(0.5)
         print('VALOR DA CONTA:', dados['valor'])
+        time.sleep(0.5)
         print('MES DA CONTA:', dados['mes'])
+        time.sleep(0.5)
         print('ID DA CONTA:', dados['id'])
+        time.sleep(0.5)
         print("<=======<<===========>>=======> \033[0m")
 
     def mostra_tipo_conta(self, dados):
         print('TIPO DE CONTA:', dados['nome'])
+        time.sleep(0.5)
         print('ID DO TIPO DE CONTA:', dados['id'])
+        time.sleep(0.5)
         print("<=======<<===========>>=======> \033[0m")
 
     def seleciona_conta(self):
