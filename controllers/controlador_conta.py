@@ -31,7 +31,7 @@ class ControladorConta(Controlador):
 
     def lista_contas(self):
         try:
-            if len(self.__contas == 0):
+            if len(self.__contas) == 0:
                 raise ResourceNotFoundException('Contas')
 
             self.__tela_conta.mostra_mensagem(
@@ -48,7 +48,7 @@ class ControladorConta(Controlador):
 
     def lista_tipos_contas(self):
         try:
-            if len(self.__tipos_conta == 0):
+            if len(self.__tipos_conta) == 0:
                 raise ResourceNotFoundException('Tipos de conta')
 
             self.__tela_conta.mostra_mensagem(
@@ -216,7 +216,7 @@ class ControladorConta(Controlador):
             self.__tela_conta.mostra_mensagem(err)
 
     def gerar_relatorio_mes(self):
-        pass
+        print('TESTANDO')
 
     def retornar(self):
         self.__controlador_condominio.abre_tela_2()
