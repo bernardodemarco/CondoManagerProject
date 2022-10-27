@@ -1,5 +1,7 @@
+from utils.date_helpers import convert_date
 from views.tela import Tela
-import time
+
+from datetime import date 
 
 
 class TelaConta(Tela):
@@ -10,23 +12,15 @@ class TelaConta(Tela):
         print("\033[1;36m")
         print("<=======<<CONTAS>>=======>")
         print("O que você gostaria de fazer?")
-        time.sleep(1)
         print("        1 - Incluir conta")
-        time.sleep(0.5)
         print("        2 - Alterar conta")
-        time.sleep(0.5)
         print("        3 - Excluir conta")
-        time.sleep(0.5)
         print("        4 - Listar contas")
-        time.sleep(1)
         print("        5 - Incluir tipo conta")
-        time.sleep(0.5)
         print("        6 - Alterar tipo conta")
-        time.sleep(0.5)
         print("        7 - Excluir tipo conta")
-        time.sleep(0.5)
         print("        8 - Listar tipo conta")
-        time.sleep(0.5)        
+        print("        9 - Gerar relatório das contas por mês")
         print("        0 - Retornar")
         print("<=======<<===========>>=======> \033[0m")
         return self.checa_opcao(8)
@@ -35,7 +29,10 @@ class TelaConta(Tela):
         print("<=======<<DADOS CONTA>>=======>")
 
         valor = float(input("Digite o valor da conta: "))
-        mes = input('Digite o mês: ')
+        print('A conta é referente a qual data?')
+        dia = int(input('Digite o dia (de 1 a 31): '))
+        mes = int(input('Digite o mês (de 1 a 12): '))
+        ano = int(input('Digite o ano: '))
         if kwargs['acao'] == 'alteracao':
             id_conta = kwargs['id_conta']
         else:
@@ -43,9 +40,12 @@ class TelaConta(Tela):
                 input('Digite um identificador (número inteiro positivo) para a conta: '))
 
         if (isinstance(valor, float) and
-                valor >= 0 and isinstance(mes, str) and
+                valor >= 0 and isinstance(mes, int) and
+                1 <= mes <= 12 and isinstance(dia, int) and
+                1 <= dia <= 31 and isinstance(ano, int) and
                 isinstance(id_conta, int) and id_conta > 0):
-            return {"valor": valor, "mes": mes, 'id': id_conta}
+            data = date(ano, mes, dia)
+            return {"valor": valor, 'id': id_conta, 'data': data}
         else:
             raise ValueError('Valores inválidos, tente novamente!')
 
@@ -59,27 +59,20 @@ class TelaConta(Tela):
             id_tipo = int(input(
                 'Digite um identificador (número inteiro positivo) para o tipo da conta: '))
 
-        if (isinstance(tipo, str) and
-                isinstance(id_tipo, int) and id_tipo > 0):
+        if (isinstance(id_tipo, int) and id_tipo > 0):
             return {'nome_tipo': tipo, 'id': id_tipo}
         raise ValueError('Valores inválidos, tente novamente!')
 
     def mostra_conta(self, dados):
         print('TIPO DA CONTA:', dados['tipo'])
-        time.sleep(0.5)
         print('VALOR DA CONTA:', dados['valor'])
-        time.sleep(0.5)
-        print('MES DA CONTA:', dados['mes'])
-        time.sleep(0.5)
+        print('DATA DA CONTA', convert_date(dados['data']))
         print('ID DA CONTA:', dados['id'])
-        time.sleep(0.5)
         print("<=======<<===========>>=======> \033[0m")
 
     def mostra_tipo_conta(self, dados):
         print('TIPO DE CONTA:', dados['nome'])
-        time.sleep(0.5)
         print('ID DO TIPO DE CONTA:', dados['id'])
-        time.sleep(0.5)
         print("<=======<<===========>>=======> \033[0m")
 
     def seleciona_conta(self):

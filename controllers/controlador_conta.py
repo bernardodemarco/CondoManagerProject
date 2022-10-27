@@ -10,7 +10,7 @@ from utils.ResourceNotFoundException import ResourceNotFoundException
 
 
 class ControladorConta(Controlador):
-    def __init__(self, controlador_condominio):
+    def __init__(self, controlador_condominio) -> None:
         super().__init__()
         self.__controlador_condominio = controlador_condominio
         self.__tela_conta = TelaConta()
@@ -30,24 +30,36 @@ class ControladorConta(Controlador):
         return None
 
     def lista_contas(self):
-        self.__tela_conta.mostra_mensagem(
-            '<=======<<TODAS CONTAS CADASTRADAS>>=======>')
-        for conta in self.__contas:
-            self.__tela_conta.mostra_conta({
-                'valor': conta.valor,
-                'tipo': conta.tipo.nome,
-                'mes': conta.mes,
-                'id': conta.id_conta
-            })
+        try:
+            if len(self.__contas == 0):
+                raise ResourceNotFoundException('Contas')
+
+            self.__tela_conta.mostra_mensagem(
+                '<=======<<TODAS CONTAS CADASTRADAS>>=======>')
+            for conta in self.__contas:
+                self.__tela_conta.mostra_conta({
+                    'valor': conta.valor,
+                    'tipo': conta.tipo.nome,
+                    'data': conta.data,
+                    'id': conta.id_conta
+                })
+        except ResourceNotFoundException as err:
+            self.__tela_conta.mostra_mensagem(err)
 
     def lista_tipos_contas(self):
-        self.__tela_conta.mostra_mensagem(
-            '<=======<<TODAS OS TIPOS DE CONTA CADASTRADOS>>=======>')
-        for tipo in self.__tipos_conta:
-            self.__tela_conta.mostra_tipo_conta({
-                'nome': tipo.nome,
-                'id': tipo.id_tipo
-            })
+        try:
+            if len(self.__tipos_conta == 0):
+                raise ResourceNotFoundException('Tipos de conta')
+
+            self.__tela_conta.mostra_mensagem(
+                '<=======<<TODAS OS TIPOS DE CONTA CADASTRADOS>>=======>')
+            for tipo in self.__tipos_conta:
+                self.__tela_conta.mostra_tipo_conta({
+                    'nome': tipo.nome,
+                    'id': tipo.id_tipo
+                })
+        except ResourceNotFoundException as err:
+            self.__tela_conta.mostra_mensagem(err)
 
     def incluir_conta(self):
         try:
@@ -63,7 +75,7 @@ class ControladorConta(Controlador):
                 raise ResourceNotFoundException('Tipo da conta')
 
             dados = self.__tela_conta.pega_dados_contas(acao='criacao')
-            conta = Conta(tipo, dados['valor'], dados['mes'], dados['id'])
+            conta = Conta(tipo, dados['valor'], dados['data'], dados['id'])
             if conta in self.__contas:
                 raise ResourceAlreadyExistsException('Conta')
             self.__contas.append(conta)
@@ -108,8 +120,8 @@ class ControladorConta(Controlador):
             self.__tela_conta.mostra_conta({
                 'valor': conta.valor,
                 'tipo': conta.tipo.nome,
-                'mes': conta.mes,
-                'id': conta.id_conta
+                'id': conta.id_conta,
+                'data': conta.data
             })
 
             self.lista_tipos_contas()
@@ -122,8 +134,9 @@ class ControladorConta(Controlador):
                 acao='alteracao', id_conta=conta.id_conta)
             conta.tipo = tipo
             conta.valor = dados_alterados['valor']
-            conta.mes = dados_alterados['mes']
             conta.id_conta = dados_alterados['id']
+            conta.data = dados_alterados['data']
+
         except ValueError as err:
             self.__tela_conta.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -187,7 +200,7 @@ class ControladorConta(Controlador):
 
             self.__tela_conta.mostra_mensagem(
                 "<=======<<REMOVER TIPO DE CONTA>>=======>")
-            self.lista_contas()
+            self.lista_tipos_contas()
             id_tipo = self.__tela_conta.seleciona_tipo_conta()
             tipo = self.pega_tipo_por_id(id_tipo)
             if tipo == None:
@@ -202,6 +215,9 @@ class ControladorConta(Controlador):
         except Exception as err:
             self.__tela_conta.mostra_mensagem(err)
 
+    def gerar_relatorio_mes(self):
+        pass
+
     def retornar(self):
         self.__controlador_condominio.abre_tela_2()
 
@@ -215,7 +231,8 @@ class ControladorConta(Controlador):
             5: self.incluir_tipo_conta,
             6: self.alterar_tipo_conta,
             7: self.excluir_tipo_conta,
-            8: self.lista_tipos_contas
+            8: self.lista_tipos_contas,
+            9: self.gerar_relatorio_mes
         }
 
         while True:
