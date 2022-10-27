@@ -2,10 +2,10 @@ from models.tipo_conta import TipoConta
 
 
 class Conta:
-    def __init__(self, tipo: TipoConta, valor: float, mes: str, id_conta: int):
+    def __init__(self, tipo: TipoConta, valor: float, data, id_conta: int):
         self.__id_conta = id_conta
         self.__tipo = tipo
-        self.__mes = mes
+        self.__data = data
         self.__valor = valor
 
     @property
@@ -33,12 +33,12 @@ class Conta:
         self.__valor = valor
 
     @property
-    def mes(self) -> str:
-        return self.__mes
+    def data(self):
+        return self.__data
 
-    @mes.setter
-    def mes(self, mes: str) -> None:
-        self.__mes = mes
+    @data.setter
+    def data(self, data) -> None:
+        self.__data = data
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Conta):

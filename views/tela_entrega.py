@@ -1,6 +1,6 @@
 from views.tela import Tela
 
-from utils.convert_date import convert_date
+from utils.date_helpers import convert_datetime
 
 class TelaEntrega(Tela):
     def __init__(self) -> None:
@@ -55,13 +55,13 @@ class TelaEntrega(Tela):
         print('TIPO DA ENGTREGA:', dados['tipo'])
         print('DESTINATARIO DA ENGTREGA:', dados['destinatario'])
         print('DATA DA ENGTREGA AO CONDOMINIO:',
-              convert_date(dados['data_recebimento_condominio']))
+              convert_datetime(dados['data_recebimento_condominio']))
         
         if dados['data_recebimento_morador'] == None:
             print(dados['destinatario'], 'AINDA NÃO COLETOU A SUA ENTREGA!')
         else:
             print('DATA DA ENGTREGA AO MORADOR:',
-                  convert_date(dados['data_recebimento_morador']))
+                  convert_datetime(dados['data_recebimento_morador']))
 
         if dados['tempo'] != None:
             print('MORADOR DEMOROU:', dados['tempo'], '(horas:minutos:segundos)')
