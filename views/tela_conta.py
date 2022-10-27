@@ -23,7 +23,7 @@ class TelaConta(Tela):
         print("        9 - Gerar relatório das contas por mês")
         print("        0 - Retornar")
         print("<=======<<===========>>=======> \033[0m")
-        return self.checa_opcao(8)
+        return self.checa_opcao(9)
 
     def pega_dados_contas(self, **kwargs):
         print("<=======<<DADOS CONTA>>=======>")
@@ -94,3 +94,20 @@ class TelaConta(Tela):
             raise ValueError
         except ValueError:
             raise ValueError('Valor do id inválido')
+
+    def pega_dados_relatorio(self):
+        while True:
+            try:
+                mes = int(input('Digite o mês (1 a 12): '))
+                ano = int(input('Digite o ano: '))
+                if not (isinstance(mes, int) and 1 <= mes <= 12
+                        and isinstance(ano, int)):
+                    raise ValueError
+                return {'mes': mes, 'ano': ano}
+            except ValueError:
+                print('Valores inválidos, tente novamente!')
+
+    def mostra_relatorio(self, dados_relatorio):
+        for key, val in dados_relatorio.items():
+            print(f'{key} -> R${val:.2f}')
+            print('----------------')

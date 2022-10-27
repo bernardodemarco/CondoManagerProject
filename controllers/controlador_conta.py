@@ -216,8 +216,29 @@ class ControladorConta(Controlador):
             self.__tela_conta.mostra_mensagem(err)
 
     def gerar_relatorio_mes(self):
-        print('TESTANDO')
+        ''' Geração de relatório de contas de um mês e ano específico ''' 
+            
+        try:
+            if len(self.__contas) == 0:
+                raise ResourceNotFoundException('Conta')
 
+            dados_relatorio = self.__tela_conta.pega_dados_relatorio()  
+            mes = dados_relatorio['mes']
+            ano = dados_relatorio['ano']
+            self.__tela_conta.mostra_mensagem(
+                f"<=======<<RELATÓRIO DAS CONTAS ({mes}/{ano})>>=======>")        
+
+            contas = [conta for conta in self.__contas if conta.data.year == ano and conta.data.month == mes]       
+            total = 0
+            dados = dict()
+            for conta in contas:
+                dados[conta.tipo.nome] = dados.get(conta.tipo.nome, 0) + conta.valor
+                total += conta.valor
+            dados['TOTAL'] = total
+            self.__tela_conta.mostra_relatorio(dados)
+        except ResourceNotFoundException as err:
+            print(err)
+    
     def retornar(self):
         self.__controlador_condominio.abre_tela_2()
 
