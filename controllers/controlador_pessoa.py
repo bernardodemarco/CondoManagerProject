@@ -15,6 +15,10 @@ class ControladorPessoa(Controlador):
         self.__pessoas = []
 
     @property
+    def controlador_condominio(self):
+        return self.__controlador_condominio
+
+    @property
     def funcionarios(self):
         return self.__funcionarios
 
@@ -28,13 +32,16 @@ class ControladorPessoa(Controlador):
                 return pessoa
         return None
 
-    def incluir_morador(self):
-        dados_morador = self.__tela_morador.pega_dados_morador(acao="criacao")
+    def incluir_morador(self, apartamentos):
+        dados_morador = self.__tela_morador.pega_dados_morador(apartamentos, acao="criacao")
+
         morador = Morador(dados_morador["nome"],
                           dados_morador["cpf"],
-                          dados_morador["telefone"])
+                          dados_morador["telefone"],
+                          dados_morador["apartamento"])
 
         self.__pessoas.append(morador)
+        self.controlador_condominio.ocupar_apartamento(morador.apartamento)
 
     def alterar_morador(self):
         pass
@@ -50,6 +57,7 @@ class ControladorPessoa(Controlador):
                     'nome': pessoa.nome,
                     'cpf': pessoa.cpf,
                     'telefone': pessoa.telefone,
+                    'apartamento': pessoa.apartamento
                 })
 
     def seleciona_morador(self):

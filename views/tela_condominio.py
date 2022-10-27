@@ -71,6 +71,7 @@ class TelaCondominio(Tela):
         print('NOME DO CONDOMÍNIO:', dados['nome'])
         print('NÚMERO DO CONDOMÍNIO:', dados['numero'])
         print('ENDEREÇO DO CONDOMÍNIO:', dados['endereco'])
+        print('APARTAMENTOS DISPONÍVEIS: ', ", ".join(dados["apartamentos"]))
         print("<=======<<====================>>=======> \033[0m")
 
     def seleciona_condo(self):
@@ -106,8 +107,8 @@ class TelaCondominio(Tela):
                 else:
                     break
         endereco = input("Digite o endereço do condomínio: ")
-        print("É necessário o cadastro de um funcionário para o condomínio.")
-        return {"nome": nome, "numero": numero, 'endereco': endereco}
+        apartamento = input("Digite o número de apartamentos deste condomínio: ")
+        return {"nome": nome, "numero": numero, 'endereco': endereco, "apartamento": apartamento}
 
     def pega_dados_reservavel(self, **kwargs):
         print("\033[1;36m")

@@ -21,7 +21,7 @@ class TelaMorador(Tela):
         print("<=======<<============>>=======> \033[0m")
         return self.checa_opcao(5)
 
-    def pega_dados_morador(self, **kwargs):
+    def pega_dados_morador(self, apartamentos, **kwargs):
         print("\033[1;36m")
         print("<=======<<DADOS MORADOR>>=======>")
         try:
@@ -38,7 +38,16 @@ class TelaMorador(Tela):
                     else:
                         break
                 telefone = input("Digite o telefone do morador: ")
-                return {"nome": nome, "cpf": cpf, 'telefone': telefone}
+                while True:
+                    try:
+                        apartamento = input("Digite o apartamento do morador: ")
+                        if apartamento not in apartamentos:
+                            raise Exception
+                        else:
+                            break
+                    except Exception:
+                        print("\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
+                return {"nome": nome, "cpf": cpf, 'telefone': telefone, 'apartamento': apartamento}
         except ValueError:
             print("")
             print("\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
@@ -48,6 +57,7 @@ class TelaMorador(Tela):
         print('NOME DO MORADOR:', dados['nome'])
         print('CPF DO MORADOR:', dados['cpf'])
         print('TELEFONE DO MORADOR:', dados['telefone'])
+        print('APARTAMENTO: ', dados["apartamento"])
         print("<=======<<======================>>=======> \033[0m")
 
     def seleciona_morador(self):

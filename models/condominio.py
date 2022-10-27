@@ -6,15 +6,13 @@ class Condominio:
     def __init__(self, nome: str,
                  numero: int,
                  endereco: str,
+                 apartamentos: int,
                  funcionario: Funcionario):
         self.__nome = nome
         self.__numero = numero
         self.__endereco = endereco
         self.__funcionarios = [funcionario]
-        self.__apartamentos = []
-        self.__reservaveis = []
-        self.__contas = []
-        self.__entregas = []
+        self.__apartamentos = [str(i) for i in range(1, int(apartamentos)+1)]
 
     @property
     def nome(self) -> str:

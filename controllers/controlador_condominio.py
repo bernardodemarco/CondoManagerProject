@@ -8,7 +8,7 @@ from controllers.controlador_reserva import ControladorReserva
 from models.reservavel import Reservavel
 from models.condominio import Condominio
 from views.tela_condominio import TelaCondominio
-# from views.tela_apartamento import TelaApartamento
+
 
 
 class ControladorCondominio(Controlador):
@@ -20,7 +20,6 @@ class ControladorCondominio(Controlador):
         self.__controlador_reserva = ControladorReserva(self)
         self.__controlador_pessoa = ControladorPessoa(self)
         self.__tela_condominio = TelaCondominio(self)
-        # self.__tela_apartamento = TelaApartamento()
 
     @property
     def condominio(self) -> list:
@@ -40,13 +39,19 @@ class ControladorCondominio(Controlador):
 
     def incluir_condo(self):
         dados_condo = self.__tela_condominio.pega_dados_condo(acao="criacao")
+        self.__tela_condominio.mostra_mensagem("É necessário o cadastro de um funcionário para o condomínio.")
         funcionario = self.__controlador_pessoa.incluir_funcionario()
 
         condo = Condominio(dados_condo["nome"],
                            dados_condo["numero"],
                            dados_condo["endereco"],
+                           dados_condo["apartamento"],
                            funcionario)
+
         self.condominio = condo
+        self.__tela_condominio.mostra_mensagem("Agora, é necessário o cadastro de um morador.")
+        self.__controlador_pessoa.incluir_morador(self.condominio.apartamentos)
+
 
     def alterar_condo(self):
         dados_alterados = self.__tela_condominio.pega_dados_condo(
@@ -59,8 +64,12 @@ class ControladorCondominio(Controlador):
         self.__tela_condominio.mostra_condo({
             "nome": self.condominio.nome,
             "numero": self.condominio.numero,
-            "endereco": self.condominio.endereco
+            "endereco": self.condominio.endereco,
+            "apartamentos": self.condominio.apartamentos
         })
+
+    def ocupar_apartamento(self, apartamento):
+        self.condominio.apartamentos.remove(apartamento)
 
     def excluir_condo(self):
         pass
@@ -91,12 +100,12 @@ class ControladorCondominio(Controlador):
 
     def abre_tela(self):
         switcher = {
-            1: self.incluir_condo,
+            1: self.incluir_condo, ## SUMIR
             2: self.alterar_condo,
-            3: self.excluir_condo,
-            4: self.listar_condo,
+            3: self.excluir_condo, ## RESET
+            4: self.listar_condo, ## MOSTRAR DADOS
             5: self.outras_opcoes,
-            0: self.retornar,
+            0: self.retornar, ## DESLIGAR
         }
 
         while True:
