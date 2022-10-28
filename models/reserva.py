@@ -1,18 +1,21 @@
 from models.reservavel import Reservavel
 from models.morador import Morador
-from uuid import uuid4
 
 
 class Reserva:
-    def __init__(self, horario: str, reservavel: Reservavel, morador: Morador) -> None:
-        self.__id_reserva = uuid4()
+    def __init__(self, id_reserva: int, horario: str, reservavel: Reservavel, morador: Morador) -> None:
+        self.__id_reserva = id_reserva
         self.__horario = horario
         self.__reservavel = reservavel
         self.__morador = morador
 
     @property
-    def id_reserva(self):
+    def id_reserva(self) -> int:
         return self.__id_reserva
+
+    @id_reserva.setter
+    def id_reserva(self, id_reserva: int) -> None:
+        self.__id_reserva = id_reserva
 
     @property
     def horario(self) -> str:
@@ -37,3 +40,8 @@ class Reserva:
     @morador.setter
     def morador(self, morador: Morador) -> None:
         self.__morador = morador
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Reserva):
+            return self.__id_reserva == other.id_reserva
+        return False

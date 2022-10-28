@@ -65,8 +65,8 @@ class TelaConta(Tela):
 
     def mostra_conta(self, dados):
         print('TIPO DA CONTA:', dados['tipo'])
-        print('VALOR DA CONTA:', dados['valor'])
-        print('DATA DA CONTA', convert_date(dados['data']))
+        print('VALOR DA CONTA: '+'R$'+str(dados['valor']))
+        print('DATA DA CONTA:', convert_date(dados['data']))
         print('ID DA CONTA:', dados['id'])
         print("<=======<<===========>>=======> \033[0m")
 

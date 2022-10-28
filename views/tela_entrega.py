@@ -64,7 +64,7 @@ class TelaEntrega(Tela):
                   convert_datetime(dados['data_recebimento_morador']))
 
         if dados['tempo'] != None:
-            print('MORADOR DEMOROU:', dados['tempo'], '(horas:minutos:segundos)')
+            print('MORADOR DEMOROU:', dados['tempo'], '(horas:minutos:segundos) para coletar a entrega')
         
         print('ID DA ENGTREGA:', dados['id'])
         print("<=======<<===========>>=======> \033[0m")

@@ -13,6 +13,7 @@ class Condominio:
         self.__endereco = endereco
         self.__funcionarios = [funcionario]
         self.__apartamentos = [str(i) for i in range(1, int(apartamentos)+1)]
+        self.__reservaveis = []
 
     @property
     def nome(self) -> str:

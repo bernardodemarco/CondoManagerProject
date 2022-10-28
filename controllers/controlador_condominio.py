@@ -90,7 +90,7 @@ class ControladorCondominio(Controlador):
         self.__controlador_conta.abre_tela()
 
     def ir_reservavel(self):
-        self.abre_tela_reservavel
+        self.abre_tela_reservavel()
 
     def ir_apartamento(self):
         self.abre_tela_apartamento()
@@ -139,8 +139,8 @@ class ControladorCondominio(Controlador):
         switcher = {
             1: self.incluir_reservavel,
             2: self.alterar_reservavel,
-            3: self.listar_reservaveis,
-            4: self.excluir_reservavel,
+            3: self.excluir_reservavel,
+            4: self.listar_reservaveis,
             0: self.abre_tela_2
         }
 
@@ -155,13 +155,13 @@ class ControladorCondominio(Controlador):
     
     def listar_reservaveis(self):
         for reservavel in self.condominio.reservaveis:
-            self.__tela_morador.mostra_reservavel({
+            self.__tela_condominio.mostra_reservavel({
                 'nome': reservavel.nome,
-                'id': reservavel.id,
+                'id': reservavel.id_reservavel,
             })
 
-    def selecionar_reservavel(self):
-        self.listar_reservaveis
+    def seleciona_reservavel(self):
+        self.listar_reservaveis()
         return self.pega_reservavel_por_id(self.__tela_condominio.seleciona_reservavel())
 
     def incluir_reservavel(self):
@@ -176,8 +176,6 @@ class ControladorCondominio(Controlador):
     def alterar_reservavel(self):
         pass
 
-    def listar_reservaveis(self):
-        pass
 
     def excluir_reservavel(self):
         pass

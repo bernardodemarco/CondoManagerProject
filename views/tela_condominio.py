@@ -1,6 +1,6 @@
-from cmath import exp
 from views.tela import Tela
-import time
+
+from utils.ResourceNotFoundException import ResourceNotFoundException
 
 
 class TelaCondominio(Tela):
@@ -135,7 +135,7 @@ class TelaCondominio(Tela):
         print("\33[1;36m")
         print("<=======<<LISTAGEM DOS RESERVÁVEL>>=======>") 
         print('NOME DO RESERVÁVEL:', dados['nome'])
-        print('ID DO RESERVÁVEL:', dados['id_reservavel'])
+        print('ID DO RESERVÁVEL:', dados['id'])
         print("<=======<<=======================>>=======> \033[0m")
 
     def seleciona_reservavel(self):

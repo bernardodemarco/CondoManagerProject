@@ -17,6 +17,10 @@ class Reservavel:
     def id_reservavel(self):
         return self.__id_reservavel
 
+    @id_reservavel.setter
+    def id_reservavel(self, id_reservavel: int) -> None:
+        self.__id_reservavel = id_reservavel
+
     @property
     def horarios_indisponiveis(self):
         return self.__horarios_indisponiveis
