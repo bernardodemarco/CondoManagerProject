@@ -62,7 +62,7 @@ class ControladorPessoa(Controlador):
 
     def seleciona_morador(self):
         self.listar_moradores()
-        return self.pega_pessoa_por_cpf(self.__tela_morador.seleciona_morador())
+        return self.__tela_morador.seleciona_morador()
 
     def abre_tela(self):
         switcher = {

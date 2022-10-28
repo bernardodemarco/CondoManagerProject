@@ -142,9 +142,10 @@ class TelaCondominio(Tela):
         while True:
             try:
                 print("\33[1;36m")
-                id_reservavel = input(('SELECIONE O RESERVÁVEL (digite o ID): '))
-                if self.__controlador_condo.pega_reservavel_por_id(id_reservavel) is not None:
-                    return id_reservavel
+                id_reservavel = int(input(('SELECIONE O RESERVÁVEL (digite o ID): ')))
+                reservavel = self.__controlador_condo.pega_reservavel_por_id(id_reservavel)
+                if reservavel is not None:
+                    return reservavel
                 else:
                     raise ResourceNotFoundException("Reservável")
             except ResourceNotFoundException as err:

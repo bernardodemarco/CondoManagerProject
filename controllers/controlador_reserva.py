@@ -70,7 +70,7 @@ class ControladorReserva(Controlador):
             if len(self.__reservas) == 0:
                 raise Exception('Nenhuma reserva registrada!')
 
-            self.__tela_conta.mostra_mensagem(
+            self.__tela_reserva.mostra_mensagem(
                 "<=======<<EDITAR RESERVA>>=======>")
             self.lista_reservas()
             id_reserva = self.__tela_reserva.seleciona_reserva()
@@ -93,13 +93,18 @@ class ControladorReserva(Controlador):
                 raise ResourceNotFoundException('Reservavel')
 
             dados_alterados_reserva = self.__tela_reserva.pega_dados_reserva(acao='alteracao', id_reserva=reserva.id_reserva)
-            reserva = Reserva(dados_alterados_reserva['id'], dados_alterados_reserva['horario'], reservavel, morador)
+            # reserva = Reserva(dados_alterados_reserva['id'], dados_alterados_reserva['horario'], reservavel, morador)
+            reserva.id_reserva = dados_alterados_reserva['id']
+            reserva.horario = dados_alterados_reserva['horario']
+            reserva.reservavel = reservavel
+            reserva.morador = morador
+            self.__tela_reserva.mostra_mensagem('RESERVA ATUALIZADA COM SUCESSO!')
 
         except ValueError as err:
-            self.__tela_conta.mostra_mensagem(
+            self.__tela_reserva.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
         except (ResourceNotFoundException, Exception) as err:
-            self.__tela_conta.mostra_mensagem(err)
+            self.__tela_reserva.mostra_mensagem(err)
 
     def excluir_reserva(self):
         try:
