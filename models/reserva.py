@@ -3,7 +3,7 @@ from models.morador import Morador
 
 
 class Reserva:
-    def __init__(self, id_reserva: int, horario: str, reservavel: Reservavel, morador: Morador) -> None:
+    def __init__(self, id_reserva: int, horario: tuple, reservavel: Reservavel, morador: Morador) -> None:
         self.__id_reserva = id_reserva
         self.__horario = horario
         self.__reservavel = reservavel
@@ -18,11 +18,11 @@ class Reserva:
         self.__id_reserva = id_reserva
 
     @property
-    def horario(self) -> str:
+    def horario(self) -> tuple:
         return self.__horario
 
     @horario.setter
-    def horario(self, horario: str) -> None:
+    def horario(self, horario: tuple) -> None:
         self.__horario = horario
 
     @property

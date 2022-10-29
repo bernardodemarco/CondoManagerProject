@@ -6,6 +6,7 @@ from models.reserva import Reserva
 
 from utils.ResourceNotFoundException import ResourceNotFoundException
 from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
+from utils.date_helpers import convert_date
 
 
 class ControladorReserva(Controlador):
@@ -20,6 +21,27 @@ class ControladorReserva(Controlador):
             if reserva.id_reserva == id_reserva:
                 return reserva
         return None
+
+    def checar_disponibilidade_horario(self, horario_inicial_reserva, horario_final_reserva, horarios) -> bool:
+        ''' Verifica se determinado horário está disponível '''
+        horario_disponivel = True
+        if convert_date(horario_inicial_reserva.date()) in horarios:
+            for (horario_i, horario_f) in horarios[convert_date(horario_inicial_reserva.date())]:
+                if not (horario_inicial_reserva >= horario_f or (horario_inicial_reserva < horario_i and horario_final_reserva <= horario_i)): 
+                    horario_disponivel = False
+                    break
+            else:
+                horario_disponivel = True
+        else:
+            horario_disponivel = True
+        return horario_disponivel
+
+    def marcar_horario(self, horario_inicial_reserva, horario_final_reserva, horarios):
+        ''' Registra o horário da reserva '''
+        if convert_date(horario_inicial_reserva.date()) in horarios:
+            horarios[convert_date(horario_inicial_reserva.date())].append((horario_inicial_reserva, horario_final_reserva))
+        else:
+            horarios[convert_date(horario_inicial_reserva.date())] = [(horario_inicial_reserva, horario_final_reserva)]   
 
     def lista_reservas(self):
         try:
@@ -52,7 +74,14 @@ class ControladorReserva(Controlador):
                 raise ResourceNotFoundException('Reservavel')
 
             dados_reserva = self.__tela_reserva.pega_dados_reserva(acao='criacao')
-            reserva = Reserva(dados_reserva['id'], dados_reserva['horario'], reservavel, morador)
+            horario_inicial, horario_final = dados_reserva['horario']
+
+            if not self.checar_disponibilidade_horario(horario_inicial, horario_final, reservavel.horarios):
+                raise ValueError('Horário indisponível')
+
+            self.marcar_horario(horario_inicial, horario_final, reservavel.horarios)
+                    
+            reserva = Reserva(dados_reserva['id'], (horario_inicial, horario_final), reservavel, morador)
             
             if reserva in self.__reservas:
                 raise ResourceAlreadyExistsException('Reserva')
@@ -93,9 +122,15 @@ class ControladorReserva(Controlador):
                 raise ResourceNotFoundException('Reservavel')
 
             dados_alterados_reserva = self.__tela_reserva.pega_dados_reserva(acao='alteracao', id_reserva=reserva.id_reserva)
-            # reserva = Reserva(dados_alterados_reserva['id'], dados_alterados_reserva['horario'], reservavel, morador)
+            horario_inicial, horario_final = dados_alterados_reserva['horario']
+
+            if not self.checar_disponibilidade_horario(horario_inicial, horario_final, reservavel.horarios):
+                raise ValueError('Horário indisponível')
+
+            self.marcar_horario(horario_inicial, horario_final, reservavel.horarios)
+            
             reserva.id_reserva = dados_alterados_reserva['id']
-            reserva.horario = dados_alterados_reserva['horario']
+            reserva.horario = (horario_inicial, horario_final)
             reserva.reservavel = reservavel
             reserva.morador = morador
             self.__tela_reserva.mostra_mensagem('RESERVA ATUALIZADA COM SUCESSO!')
@@ -118,6 +153,9 @@ class ControladorReserva(Controlador):
             reserva = self.pega_reserva_por_id(id_reserva)
             if reserva == None:
                 raise ResourceNotFoundException('Reserva')
+            
+            horario_reserva = reserva.horario
+            reserva.reservavel.horarios[convert_date(horario_reserva[0].date())].remove(horario_reserva)
             self.__reservas.remove(reserva)
 
         except ResourceNotFoundException as err:
