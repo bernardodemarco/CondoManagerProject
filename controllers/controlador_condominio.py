@@ -15,6 +15,7 @@ class ControladorCondominio(Controlador):
     def __init__(self, controlador_sistema):
         self.__controlador_sistema = controlador_sistema
         self.__condominio = None
+        self.__reservaveis = []
         self.__controlador_conta = ControladorConta(self)
         self.__controlador_entrega = ControladorEntrega(self)
         self.__controlador_reserva = ControladorReserva(self)
@@ -24,8 +25,12 @@ class ControladorCondominio(Controlador):
 #   GETTERS E SETTERS   #
 
     @property
-    def condominio(self) -> list:
+    def condominio(self):
         return self.__condominio
+
+    @property
+    def reservaveis(self):
+        return self.__reservaveis
 
     @condominio.setter
     def condominio(self, condo):
@@ -63,11 +68,14 @@ class ControladorCondominio(Controlador):
                            dados_condo["apartamento"])
 
         self.condominio = condo
-
-        self.__tela_condominio.mostra_mensagem("É necessário o cadastro de um funcionário para o condomínio.")
+        self.__tela_condominio.mostra_mensagem("\u001b[32m")
+        self.__tela_condominio.mostra_mensagem("É necessário o cadastro de um\u001b[34m funcionário\u001b[32m para o condomínio.")
         self.__controlador_pessoa.incluir_funcionario()
-        self.__tela_condominio.mostra_mensagem("Agora, é necessário o cadastro de um morador.")
+        self.__tela_condominio.mostra_mensagem("\u001b[32m")
+        self.__tela_condominio.mostra_mensagem("Agora, é necessário o cadastro de um\u001b[34m morador\u001b[32m.")
         self.__controlador_pessoa.incluir_morador(self.condominio.apartamentos)
+        self.__tela_condominio.mostra_mensagem("\u001b[32m")
+        self.__tela_condominio.mostra_mensagem("Tudo certo para a utilização do\u001b[34m CondoManager\u001b[32m")
 
     def alterar_condo(self):
         dados_alterados = self.__tela_condominio.pega_dados_condo(acao='alteracao')
@@ -108,17 +116,10 @@ class ControladorCondominio(Controlador):
             switcher[int(self.__tela_condominio.mostra_opcoes_reservavel())]()
 
     def pega_reservavel_por_id(self, id: str):
-        for reservavel in self.condominio.reservaveis:
+        for reservavel in self.reservaveis:
             if (reservavel.id_reservavel == id):
                 return reservavel
         return None
-    
-    def listar_reservaveis(self):
-        for reservavel in self.condominio.reservaveis:
-            self.__tela_condominio.mostra_reservavel({
-                'nome': reservavel.nome,
-                'id': reservavel.id_reservavel,
-            })
 
     def seleciona_reservavel(self):
         self.listar_reservaveis()
@@ -128,10 +129,69 @@ class ControladorCondominio(Controlador):
         dados_reservavel = self.__tela_condominio.pega_dados_reservavel(acao="criacao")
 
         reservavel = Reservavel(dados_reservavel["nome"],
-                           dados_reservavel["id_reservavel"])
+                                dados_reservavel["id_reservavel"])
 
-        self.__condominio.reservaveis.append(reservavel)
+        self.reservaveis.append(reservavel)
+    
+    def listar_reservaveis(self):
+        if len(reservavel) == 0:
+            self.__tela_condominio.mostra_mensagem("\33[1;36m")
+            self.__tela_condominio.mostra_mensagem("Não existem nenhum reservável cadastrado!")
+        for reservavel in self.reservaveis:
+            self.__tela_condominio.mostra_reservavel({
+                'nome': reservavel.nome,
+                'id': reservavel.id_reservavel,
+            })
 
+    def alterar_reservavel(self):
+        try:
+            if len(self.reservaveis) == 0:
+                raise Exception('Nenhum reservável registrado!')
+
+            self.__tela_condominio.mostra_mensagem("\33[1;36m")
+            self.__tela_condominio.mostra_mensagem(
+                "<=======<<EDITAR RESERVÁVEL>>=======>")
+            self.listar_reservaveis()
+            reservavel = self.__tela_condominio.seleciona_reservavel()
+            if reservavel == None:
+                raise ResourceNotFoundException('Reservável')
+
+            self.__tela_condominio.mostra_reservavel({
+                'nome': reservavel.nome,
+                'id': reservavel.id_reservavel,
+            })
+
+            dados_alterados = self.__tela_condominio.pega_dados_reservavel(acao='alteracao', id_reservavel = reservavel.id_reservavel)
+            reservavel.nome = dados_alterados['nome']
+            reservavel.id_reservaveis = dados_alterados["id_reservavel"]
+
+        except ValueError as err:
+            self.__tela_condominio.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
+        except (ResourceNotFoundException, Exception) as err:
+            self.__tela_condominio.mostra_mensagem(err)
+            
+
+    def excluir_reservavel(self):
+        try:
+            if len(self.reservaveis) == 0:
+                raise Exception('Nenhum reservável registrado!')
+            self.__tela_condominio.mostra_mensagem("\33[1;36m")
+            self.__tela_condominio.mostra_mensagem(
+                "<=======<<REMOVER RESERVÁVEL>>=======>")
+            self.listar_reservaveis()
+            reservavel = self.__tela_condominio.seleciona_reservavel()
+            if reservavel == None:
+                raise ResourceNotFoundException('Reservável')
+            self.reservaveis.remove(reservavel)
+
+        except ResourceNotFoundException as err:
+            self.__tela_condominio.mostra_mensagem(err)
+        except ValueError as err:
+            self.__tela_condominio.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
+        except Exception as err:
+            self.__tela_condominio.mostra_mensagem(err)
 
     def ocupar_apartamento(self, apartamento):
         self.condominio.apartamentos.remove(apartamento)
@@ -139,12 +199,6 @@ class ControladorCondominio(Controlador):
     def desocupar_apartamento(self, apartamento):
         self.condominio.apartamentos.append(apartamento)
         self.condominio.apartamentos.sort()
-
-    def alterar_reservavel(self):
-        pass
-
-    def excluir_reservavel(self):
-        pass
 
     def abre_tela_2(self):
         switcher = {

@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 class Controlador(ABC):
     @abstractmethod
     def __init__(self):
-        pass
+        self.__contador_id = 0
 
     @abstractmethod
     def retornar(self):
@@ -13,3 +13,4 @@ class Controlador(ABC):
     @abstractmethod
     def abre_tela(self):
         pass
+

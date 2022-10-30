@@ -40,4 +40,4 @@ class ControladorSistema(Controlador):
         exit(0)
 
     def abre_tela(self):
-        self.tela_sistema.tutorial_cadastro  # RETIRADO PARA TESTES
+        self.tela_sistema.tutorial_cadastro()  # RETIRADO PARA TESTES
