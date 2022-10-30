@@ -109,7 +109,7 @@ class ControladorEntrega(Controlador):
                 raise ResourceAlreadyExistsException('Entrega')
             self.__entregas.append(entrega)
 
-        except ValueError as err:
+        except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
         except ResourceAlreadyExistsException as err:
@@ -127,7 +127,7 @@ class ControladorEntrega(Controlador):
                 raise ResourceAlreadyExistsException('Tipo de entrega')
             self.__tipos_entrega.append(tipo)
 
-        except ValueError as err:
+        except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
         except ResourceAlreadyExistsException as err:
@@ -168,12 +168,10 @@ class ControladorEntrega(Controlador):
             entrega.id_entrega = dados_alterados['id']
             entrega.tipo = tipo
 
-        except ValueError as err:
+        except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
-        except ResourceNotFoundException as err:
-            self.__tela_entrega.mostra_mensagem(err)
-        except Exception as err:
+        except (ResourceNotFoundException, Exception) as err:
             self.__tela_entrega.mostra_mensagem(err)
 
     def alterar_tipo_entrega(self):
@@ -194,12 +192,10 @@ class ControladorEntrega(Controlador):
             tipo.nome = dados_alterados['nome_tipo']
             tipo.id_tipo = dados_alterados['id']
 
-        except ResourceNotFoundException as err:
-            self.__tela_entrega.mostra_mensagem(err)
-        except ValueError as err:
+        except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
-        except Exception as err:
+        except (ResourceNotFoundException, Exception) as err:
             self.__tela_entrega.mostra_mensagem(err)
 
     def excluir_entrega(self):
@@ -216,12 +212,10 @@ class ControladorEntrega(Controlador):
                 raise ResourceNotFoundException('Entrega')
             self.__entregas.remove(entrega)
 
-        except ResourceNotFoundException as err:
-            self.__tela_entrega.mostra_mensagem(err)
-        except ValueError as err:
+        except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
-        except Exception as err:
+        except (ResourceNotFoundException, Exception) as err:
             self.__tela_entrega.mostra_mensagem(err)
 
     def excluir_tipo_entrega(self):
@@ -238,12 +232,10 @@ class ControladorEntrega(Controlador):
                 raise ResourceNotFoundException('Tipo de entrega')
             self.__tipos_entrega.remove(tipo)
 
-        except ResourceNotFoundException as err:
-            self.__tela_entrega.mostra_mensagem(err)
-        except ValueError as err:
+        except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
-        except Exception as err:
+        except (ResourceNotFoundException, Exception) as err:
             self.__tela_entrega.mostra_mensagem(err)
 
     def registro_coleta_morador(self):
@@ -270,9 +262,7 @@ class ControladorEntrega(Controlador):
                 'tempo': entrega.tempo_pendente_entrega()
             })
             
-        except ResourceNotFoundException as err:
-            self.__tela_entrega.mostra_mensagem(err)
-        except ValueError as err:
+        except (ResourceNotFoundException, ValueError) as err:
             self.__tela_entrega.mostra_mensagem(err)
 
     def retornar(self):
@@ -294,4 +284,4 @@ class ControladorEntrega(Controlador):
         }
 
         while True:
-            switcher[int(self.__tela_entrega.mostra_opcoes())]()
+            switcher[self.__tela_entrega.mostra_opcoes()]()
