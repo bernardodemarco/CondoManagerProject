@@ -20,7 +20,7 @@ class TelaFuncionario(Tela):
         print("        3 - Excluir Funcionário")
         print("        4 - Listar Funcionário")
         print("        0 - Retornar")
-        print("<=======<<============>>=======> \033[0m")
+        print("<=======<<============>>=======>")
         return self.checa_opcao(5)
 
     def pega_dados_funcionario(self, **kwargs):
@@ -56,7 +56,9 @@ class TelaFuncionario(Tela):
                 cpf = input("Digite o CPF do funcionário: ")
                 try:
                     validate_cpf(cpf)
-                except InvalidCPFException as err:
+                    if self.__controlador_pessoa.pega_funcionario_por_cpf(cpf):
+                        raise ResourceAlreadyExistsException("Funcionário")
+                except (InvalidCPFException, ResourceAlreadyExistsException) as err:
                     print("\033[0;31m")
                     print(err)
                     print("\033[1;36m")
@@ -95,7 +97,7 @@ class TelaFuncionario(Tela):
         print('CPF DO FUNCIONÁRIO:', dados['cpf'])
         print('CARGO DO FUNCIONÁRIO:', dados['cargo'])
         print(f'SALÁRIO DO FUNCIONÁRIO: R${dados["salario"]:.2f}')
-        print("<=======<<======================>>=======> \033[0m")
+        print("<=======<<======================>>=======>")
 
     def seleciona_funcionario(self):
         while True:
