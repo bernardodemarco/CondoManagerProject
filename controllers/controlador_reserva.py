@@ -69,7 +69,7 @@ class ControladorReserva(Controlador):
             if morador == None:
                 raise ResourceNotFoundException('Morador')
 
-            if len(self.__controlador_condominio.condominio.reservaveis) == 0:
+            if len(self.__controlador_condominio.reservaveis) == 0:
                 raise ResourceNotFoundException('Reservavel')
 
             reservavel = self.__controlador_condominio.seleciona_reservavel()
@@ -116,7 +116,7 @@ class ControladorReserva(Controlador):
             if morador == None:
                 raise ResourceNotFoundException('Morador')
 
-            if len(self.__controlador_condominio.condominio.reservaveis) == 0:
+            if len(self.__controlador_condominio.reservaveis) == 0:
                 raise ResourceNotFoundException('Reservavel')
                 
             reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].remove(reserva.horario)

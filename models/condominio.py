@@ -14,7 +14,6 @@ class Condominio:
         self.__numero = numero
         self.__num_max_ap = int(apartamentos)
         self.__apartamentos = [i for i in range(1, int(apartamentos)+1)]
-        self.__reservaveis = []
 
     @property
     def nome(self) -> str:
@@ -62,7 +61,3 @@ class Condominio:
         else:
             del self.apartamentos[-(self.__num_max_ap - num):]
             self.__num_max_ap = num
-
-    @property
-    def reservaveis(self) -> list:
-        return self.__reservaveis

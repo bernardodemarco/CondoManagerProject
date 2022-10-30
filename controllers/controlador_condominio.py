@@ -134,7 +134,7 @@ class ControladorCondominio(Controlador):
         self.reservaveis.append(reservavel)
     
     def listar_reservaveis(self):
-        if len(reservavel) == 0:
+        if len(self.reservaveis) == 0:
             self.__tela_condominio.mostra_mensagem("\33[1;36m")
             self.__tela_condominio.mostra_mensagem("Não existem nenhum reservável cadastrado!")
         for reservavel in self.reservaveis:
