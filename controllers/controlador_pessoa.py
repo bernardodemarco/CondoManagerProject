@@ -1,5 +1,6 @@
 from models.funcionario import Funcionario
 from models.morador import Morador
+from models.visitante import Visitante
 from controllers.controlador import Controlador
 from views.tela_funcionario import TelaFuncionario
 from views.tela_morador import TelaMorador
@@ -125,7 +126,7 @@ class ControladorPessoa(Controlador):
             2: self.alterar_morador,
             3: self.excluir_morador,
             4: self.listar_moradores,
-            5: self.seleciona_morador,
+            5: self.abre_tela_visitantes,
             0: self.retornar
         }
 
@@ -138,6 +139,39 @@ class ControladorPessoa(Controlador):
             else:
                 switcher[opcao]()
 
+#   VISITANTE #
+
+    def incluir_visitante(self):
+        morador = self.seleciona_morador()
+        dados_visitante = self.__tela_morador.pega_dados_visitante(acao="criacao")
+
+        visitante = Visitante(dados_visitante["nome"],
+                          dados_visitante["cpf"],
+                          dados_visitante["telefone"])
+
+        morador.visitantes.append(visitante)
+
+    def alterar_visitante(self):
+        pass
+
+    def excluir_visitante(self):
+        pass
+
+    def listar_visitante(self):
+        pass
+
+    def abre_tela_visitantes(self):
+        switcher = {
+            1: self.incluir_visitante,
+            2: self.alterar_visitante,
+            3: self.excluir_visitante,
+            4: self.listar_visitante,
+            0: self.abre_tela
+        }
+
+        while True:
+            switcher[int(self.__tela_morador.mostra_opcoes_visitantes())]()
+
 #   FUNCIONARIO #
 
     def incluir_funcionario(self):
@@ -147,7 +181,9 @@ class ControladorPessoa(Controlador):
             return None
         funcionario = Funcionario(dados_funcionario["nome"],
                                   dados_funcionario["cpf"],
-                                  dados_funcionario["telefone"])
+                                  dados_funcionario["telefone"],
+                                  dados_funcionario["cargo"],
+                                  dados_funcionario["salario"])
 
         self.funcionarios.append(funcionario)
 
@@ -169,11 +205,15 @@ class ControladorPessoa(Controlador):
                 'nome': funcionario.nome,
                 'telefone': funcionario.telefone,
                 'cpf': funcionario.cpf,
+                'cargo': funcionario.cargo,
+                'salario': funcionario.salario
             })
 
             dados_alterados = self.__tela_funcionario.pega_dados_funcionario(acao='alteracao', cpf = funcionario.cpf)
             funcionario.nome = dados_alterados['nome']
             funcionario.telefone = dados_alterados['telefone']
+            funcionario.cargo = dados_alterados['cargo']
+            funcionario.salario = dados_alterados['salario']
 
         except ValueError as err:
             self.__tela_funcionario.mostra_mensagem(
@@ -207,11 +247,13 @@ class ControladorPessoa(Controlador):
     def listar_funcionarios(self):
         self.__tela_funcionario.mostra_mensagem("\33[1;36m")
         self.__tela_funcionario.mostra_mensagem("<=======<<LISTAGEM DOS FUNCIONÁRIOS>>=======>")
-        for pessoa in self.funcionarios:
+        for funcionario in self.funcionarios:
             self.__tela_funcionario.mostra_funcionario({
-                'nome': pessoa.nome,
-                'cpf': pessoa.cpf,
-                'telefone': pessoa.telefone
+                'nome': funcionario.nome,
+                'telefone': funcionario.telefone,
+                'cpf': funcionario.cpf,
+                'cargo': funcionario.cargo,
+                'salario': funcionario.salario
             })
 
     def abre_tela_funcionario(self):

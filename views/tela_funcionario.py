@@ -1,7 +1,9 @@
-from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
 from utils.InvalidCPFException import InvalidCPFException
+from utils.ResourceNotFoundException import ResourceNotFoundException
+from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
 from utils.validate_cpf import validate_cpf
 from views.tela import Tela
+import re
 
 
 class TelaFuncionario(Tela):
@@ -11,65 +13,100 @@ class TelaFuncionario(Tela):
 
     def mostra_opcoes(self):
         print("\033[1;36m")
-        print("<=======<<MORADORES>>=======>")
+        print("<=======<<FUNCIONÁRIOS>>=======>")
         print("    O que gostaria de fazer?")
-        print("        1 - Incluir Morador")
-        print("        2 - Alterar Morador")
-        print("        3 - Excluir Morador")
-        print("        4 - Listar Moradores")
+        print("        1 - Incluir Funcionário")
+        print("        2 - Alterar Funcionário")
+        print("        3 - Excluir Funcionário")
+        print("        4 - Listar Funcionário")
         print("        0 - Retornar")
         print("<=======<<============>>=======> \033[0m")
         return self.checa_opcao(5)
 
-    def pega_dados_funcionario(self, apartamentos, **kwargs):
+    def pega_dados_funcionario(self, **kwargs):
         print("\033[1;36m")
-        print("<=======<<DADOS MORADOR>>=======>")
-        try:
-            nome = input("Digite o nome do morador: ")
-            telefone = input("Digite o telefone do morador: ")
-            if kwargs['acao'] == 'alteracao':
-                cpf = kwargs['cpf']
-                apartamento = kwargs['apartamento']
-            else:
-                while True:
-                    cpf = input("Digite o CPF do morador: ")
-                    try:
-                        validate_cpf(cpf)
-                    except InvalidCPFException as err:
-                        print(err)
-                    else:
-                        break
-                while True:
-                    try:
-                        apartamento = int(input("Digite o apartamento do morador: "))
-                        if apartamento not in apartamentos:
-                            raise Exception
-                        else:
-                            break
-                    except Exception:
-                        print("\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
-            return {"nome": nome, "cpf": cpf, 'telefone': telefone, 'apartamento': apartamento}
-        except ValueError:
-            print("")
-            print("\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
-    
+        print("<=======<<DADOS FUNCIONÁRIO>>=======>")
+        while True:
+            try:
+                nome = input("Digite o nome do funcionário: ")
+                if bool(re.match('[a-zA-Zà-ÿÀ-Ý\s]+$', nome)) == False:
+                    raise Exception
+                else:
+                    nome = nome.title()
+                    break
+            except Exception:
+                print("\033[0;31m")
+                print("ERRO!: Nome inválido, por favor, tente novamente")
+                print("\033[1;36m")
+        while True:
+            try:
+                telefone = input("Digite o telefone do funcionário: ")
+                if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', telefone)) == False:
+                    raise Exception
+                else:
+                    break
+            except Exception:
+                print("\033[0;31m")
+                print("ERRO!: Telefone inválido, por favor, tente novamente")
+                print("\033[1;36m")
+        if kwargs['acao'] == 'alteracao':
+            cpf = kwargs['cpf']
+        else:
+            while True:
+                cpf = input("Digite o CPF do funcionário: ")
+                try:
+                    validate_cpf(cpf)
+                except InvalidCPFException as err:
+                    print("\033[0;31m")
+                    print(err)
+                    print("\033[1;36m")
+                else:
+                    break
+        while True:
+            try:
+                cargo = input("Digite o cargo do funcionário: ")
+                if bool(re.match('[a-zA-Zà-ÿÀ-Ý\s]+$', cargo)) == False:
+                    raise Exception
+                else:
+                    cargo = cargo.title()
+                    break
+            except Exception:
+                print("\033[0;31m")
+                print("ERRO!: Cargo inválido, por favor, tente novamente")
+                print("\033[1;36m")
+        while True:
+            try:
+                salario = float(input("Digite o valor do salário deste funcionário: "))
+                if salario <= 0:
+                    raise ValueError
+                else:
+                    break
+            except ValueError:
+                print("\033[0;31m")
+                print("ERRO!: Valor inválido, por favor, tente novamente")
+                print("\033[1;36m")
+        print("<=======<<==================>>=======>")
+        return {"nome": nome, "cpf": cpf, 'telefone': telefone, 'cargo': cargo, 'salario': salario}
+
 
     def mostra_funcionario(self, dados):
-        print('NOME DO MORADOR:', dados['nome'])
-        print('TELEFONE DO MORADOR:', dados['telefone'])
-        print('CPF DO MORADOR:', dados['cpf'])
+        print('NOME DO FUNCIONÁRIO:', dados['nome'])
+        print('TELEFONE DO FUNCIONÁRIO:', dados['telefone'])
+        print('CPF DO FUNCIONÁRIO:', dados['cpf'])
+        print('CARGO DO FUNCIONÁRIO:', dados['cargo'])
+        print(f'SALÁRIO DO FUNCIONÁRIO: R${dados["salario"]:.2f}')
         print("<=======<<======================>>=======> \033[0m")
 
     def seleciona_funcionario(self):
         while True:
             try:
                 print("\33[1;36m")
-                cpf_morador = input(('SELECIONE O MORADOR (digite o CPF): '))
-                validate_cpf(cpf_morador)
-                if self.__controlador_pessoa.pega_morador_por_cpf(cpf_morador) is not None:
-                    return cpf_morador
+                cpf_funcionario = input(('SELECIONE O FUNCIONÁRIO (digite o CPF): '))
+                validate_cpf(cpf_funcionario)
+                if self.__controlador_pessoa.pega_funcionario_por_cpf(cpf_funcionario) is not None:
+                    return cpf_funcionario
                 else:
-                    raise ResourceNotFoundException("Morador")
+                    raise ResourceNotFoundException("Funcionário")
             except InvalidCPFException as err:
                 print(err)
                 print("\033[1;32m")
