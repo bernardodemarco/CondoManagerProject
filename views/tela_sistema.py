@@ -28,7 +28,20 @@ class TelaSistema(Tela):
         print('\033[1A\033[35C.')
         time.sleep(2)
 
-    def desligar(self):
+    def aviso_desligar(self):
         print("\033[1;36m")
         print("Até mais! Obrigado por usar o CondoManager! \033[0m")
         time.sleep(1)
+
+    def aviso_resetar(self):
+        print("\033[1;31m")
+        print("ATENÇÃO!! Tem certeza de que deseja resetar o aplicativo?")
+        time.sleep(1)
+        if input("Digite: QUERO RESETAR ").lower() == "quero resetar":
+            print("OPERAÇÃO ACEITA!! Até mais!")
+            time.sleep(1)
+            return True
+        else:
+            print("OPERAÇÃO ABORTADA!! COMANDO INVÁLIDO")
+            time.sleep(1)
+            return False

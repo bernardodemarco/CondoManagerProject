@@ -13,10 +13,10 @@ class TelaMorador(Tela):
         print("\033[1;36m")
         print("<=======<<MORADORES>>=======>")
         print("    O que gostaria de fazer?")
-        print("        1 - Incluir Funcionário")
-        print("        2 - Alterar Funcionário")
-        print("        3 - Excluir Funcionário")
-        print("        4 - Listar Funcionário")
+        print("        1 - Incluir Morador")
+        print("        2 - Alterar Morador")
+        print("        3 - Excluir Morador")
+        print("        4 - Listar Moradores")
         print("        0 - Retornar")
         print("<=======<<============>>=======> \033[0m")
         return self.checa_opcao(5)
@@ -26,8 +26,10 @@ class TelaMorador(Tela):
         print("<=======<<DADOS MORADOR>>=======>")
         try:
             nome = input("Digite o nome do morador: ")
+            telefone = input("Digite o telefone do morador: ")
             if kwargs['acao'] == 'alteracao':
                 cpf = kwargs['cpf']
+                apartamento = kwargs['apartamento']
             else:
                 while True:
                     cpf = input("Digite o CPF do morador: ")
@@ -37,26 +39,25 @@ class TelaMorador(Tela):
                         print(err)
                     else:
                         break
-                telefone = input("Digite o telefone do morador: ")
                 while True:
                     try:
-                        apartamento = input("Digite o apartamento do morador: ")
+                        apartamento = int(input("Digite o apartamento do morador: "))
                         if apartamento not in apartamentos:
                             raise Exception
                         else:
                             break
                     except Exception:
                         print("\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
-                return {"nome": nome, "cpf": cpf, 'telefone': telefone, 'apartamento': apartamento}
+            return {"nome": nome, "cpf": cpf, 'telefone': telefone, 'apartamento': apartamento}
         except ValueError:
             print("")
             print("\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
+    
 
     def mostra_morador(self, dados):
-        print("\33[1;36m")
         print('NOME DO MORADOR:', dados['nome'])
-        print('CPF DO MORADOR:', dados['cpf'])
         print('TELEFONE DO MORADOR:', dados['telefone'])
+        print('CPF DO MORADOR:', dados['cpf'])
         print('APARTAMENTO: ', dados["apartamento"])
         print("<=======<<======================>>=======> \033[0m")
 
@@ -66,7 +67,7 @@ class TelaMorador(Tela):
                 print("\33[1;36m")
                 cpf_morador = input(('SELECIONE O MORADOR (digite o CPF): '))
                 validate_cpf(cpf_morador)
-                if self.__controlador_pessoa.pega_pessoa_por_cpf(cpf_morador) is not None:
+                if self.__controlador_pessoa.pega_morador_por_cpf(cpf_morador) is not None:
                     return cpf_morador
                 else:
                     raise ResourceNotFoundException("Morador")

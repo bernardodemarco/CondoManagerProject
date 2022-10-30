@@ -3,7 +3,9 @@ from models.morador import Morador
 from controllers.controlador import Controlador
 from views.tela_funcionario import TelaFuncionario
 from views.tela_morador import TelaMorador
-
+from collections import Counter
+from utils.ResourceNotFoundException import ResourceNotFoundException
+from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
 
 class ControladorPessoa(Controlador):
 
@@ -12,7 +14,8 @@ class ControladorPessoa(Controlador):
         self.__controlador_condominio = controlador_condominio
         self.__tela_morador = TelaMorador(self)
         self.__tela_funcionario = TelaFuncionario(self)
-        self.__pessoas = []
+        self.__moradores = []
+        self.__funcionarios = []
 
     @property
     def controlador_condominio(self):
@@ -26,11 +29,21 @@ class ControladorPessoa(Controlador):
     def moradores(self):
         return self.__moradores
 
-    def pega_pessoa_por_cpf(self, cpf: str):
-        for pessoa in self.__pessoas:
-            if (pessoa.cpf == cpf):
-                return pessoa
-        return None
+    def pega_morador_por_cpf(self, cpf):
+        for morador in self.moradores:
+            if morador.cpf == cpf:
+                return morador
+            return None
+
+    def pega_funcionario_por_cpf(self, cpf):
+        for funcionario in self.funcionarios:
+            if funcionario.cpf == cpf:
+                return funcionario
+            return None
+    
+    def pega_apartamento(self):
+        apartamentos = self.controlador_condominio.retorna_apartamento()
+        return apartamentos
 
     def incluir_morador(self, apartamentos):
         dados_morador = self.__tela_morador.pega_dados_morador(apartamentos, acao="criacao")
@@ -40,29 +53,77 @@ class ControladorPessoa(Controlador):
                           dados_morador["telefone"],
                           dados_morador["apartamento"])
 
-        self.__pessoas.append(morador)
+        self.moradores.append(morador)
         self.controlador_condominio.ocupar_apartamento(morador.apartamento)
 
-    def alterar_morador(self):
-        pass
+    def alterar_morador(self, apartamentos):
+        try:
+            if len(self.moradores) == 0:
+                raise Exception('Nenhum morador registrado!')
 
+            self.__tela_morador.mostra_mensagem("\33[1;36m")
+            self.__tela_morador.mostra_mensagem(
+                "<=======<<EDITAR MORADOR>>=======>")
+            self.listar_moradores()
+            cpf = self.__tela_morador.seleciona_morador()
+            morador = self.pega_morador_por_cpf(cpf)
+            if morador == None:
+                raise ResourceNotFoundException('Morador')
+
+            self.__tela_morador.mostra_morador({
+                'nome': morador.nome,
+                'telefone': morador.telefone,
+                'cpf': morador.cpf,
+                'apartamento': morador.apartamento
+            })
+
+            dados_alterados = self.__tela_morador.pega_dados_morador(apartamentos, acao='alteracao', cpf = morador.cpf, apartamento = morador.apartamento)
+            morador.nome = dados_alterados['nome']
+            morador.telefone = dados_alterados['telefone']
+
+        except ValueError as err:
+            self.__tela_morador.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
+        except (ResourceNotFoundException, Exception) as err:
+            self.__tela_morador.mostra_mensagem(err)
+            
     def excluir_morador(self):
-        pass
+        try:
+            if len(self.moradores) == 0:
+                raise Exception('Nenhum morador registrado!')
+            self.__tela_morador.mostra_mensagem("\33[1;36m")
+            self.__tela_morador.mostra_mensagem(
+                "<=======<<REMOVER MORADOR>>=======>")
+            self.listar_moradores()
+            cpf = self.__tela_morador.seleciona_morador()
+            morador = self.pega_morador_por_cpf(cpf)
+            if morador == None and not isinstance(morador, Morador):
+                raise ResourceNotFoundException('Morador')
+            self.controlador_condominio.desocupar_apartamento(morador.apartamento)
+            self.moradores.remove(morador)
+
+        except ResourceNotFoundException as err:
+            self.__tela_morador.mostra_mensagem(err)
+        except ValueError as err:
+            self.__tela_morador.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
+        except Exception as err:
+            self.__tela_morador.mostra_mensagem(err)
 
     def listar_moradores(self):
+        self.__tela_morador.mostra_mensagem("\33[1;36m")
         self.__tela_morador.mostra_mensagem("<=======<<LISTAGEM DOS MORADORES>>=======>")
-        for pessoa in self.__pessoas:
-            if isinstance(pessoa, Morador):
-                self.__tela_morador.mostra_morador({
-                    'nome': pessoa.nome,
-                    'cpf': pessoa.cpf,
-                    'telefone': pessoa.telefone,
-                    'apartamento': pessoa.apartamento
-                })
+        for pessoa in self.moradores:
+            self.__tela_morador.mostra_morador({
+                'nome': pessoa.nome,
+                'cpf': pessoa.cpf,
+                'telefone': pessoa.telefone,
+                'apartamento': pessoa.apartamento
+            })
 
     def seleciona_morador(self):
         self.listar_moradores()
-        return self.pega_pessoa_por_cpf(self.__tela_morador.seleciona_morador())
+        return self.pega_morador_por_cpf(self.__tela_morador.seleciona_morador())
 
     def abre_tela(self):
         switcher = {
@@ -75,7 +136,13 @@ class ControladorPessoa(Controlador):
         }
 
         while True:
-            switcher[int(self.__tela_morador.mostra_opcoes())]()
+            opcao = int(self.__tela_morador.mostra_opcoes())
+            if opcao == 1:
+                switcher[1](self.pega_apartamento())
+            elif opcao == 2:
+                switcher[2](self.pega_apartamento())
+            else:
+                switcher[opcao]()
 
     def incluir_funcionario(self):
         dados_funcionario = self.__tela_funcionario.pega_dados_funcionario(
@@ -86,7 +153,7 @@ class ControladorPessoa(Controlador):
                                   dados_funcionario["cpf"],
                                   dados_funcionario["telefone"])
 
-        self.__pessoas.append(funcionario)
+        self.funcionarios.append(funcionario)
 
     def alterar_funcionario(self):
         pass

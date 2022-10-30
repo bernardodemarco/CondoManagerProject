@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 from views.tela import Tela
 
 from utils.ResourceNotFoundException import ResourceNotFoundException
@@ -15,43 +16,29 @@ class TelaCondominio(Tela):
 
     def mostra_opcoes(self):
         print("\033[1;36m")
-        print("<=======<<CONDOMÍNIOS>>=======>")
+        print("<=======<<CONDOMÍNIO>>=======>")
         print("    O que gostaria de fazer?")
-        print("        1 - Incluir Condomínio")
-        print("        2 - Alterar Condomínio")
-        print("        3 - Excluir Condomínio")
-        print("        4 - Listar Condomínios")
-        print("        5 - Outras opções")
+        print("        1 - Alterar Condomínio")
+        print("        2 - Mostrar Dados")
+        print("        3 - Outras opções")
+        print("        4 - Resetar")
         print("        0 - Desligar")
-        print("<=======<<===========>>=======> \033[0m")
-        return self.checa_opcao(5)
+        print("<=======<<==========>>=======> \033[0m")
+        return self.checa_opcao(4)
 
     def mostra_opcoes_2(self):
         print("\033[1;36m")
         print("<=======<<OUTRAS OPÇÕES>>=======>")
         print("Para qual seção gostaria de ir?")
-        print("        1 - Apartamentos")
-        print("        2 - Moradores")
-        print("        3 - Funcionários")
-        print("        4 - Contas")
-        print("        5 - Reservável")
-        print("        6 - Reservas")
-        print("        7 - Entregas")
+        print("        1 - Moradores")
+        print("        2 - Funcionários")
+        print("        3 - Contas")
+        print("        4 - Reservável")
+        print("        5 - Reservas")
+        print("        6 - Entregas")
         print("        0 - Condomínios")
         print("<=======<<=============>>=======> \033[0m")
-        return self.checa_opcao(7)
-
-    def mostra_opcoes_apartamento(self):
-        print("\033[1;36m")
-        print("<=======<<APARTAMENTOS>>=======>")
-        print("Para qual seção gostaria de ir?")
-        print("        1 - Incluir Apartamento")
-        print("        2 - Alterar Apartamento")
-        print("        3 - Excluir Apartamento")
-        print("        4 - Listar Apartamentos")
-        print("        0 - Retornar")
-        print("<=======<<============>>=======> \033[0m")
-        return self.checa_opcao(4)
+        return self.checa_opcao(6)
 
     def mostra_opcoes_reservavel(self):
         print("\033[1;36m")
@@ -59,20 +46,21 @@ class TelaCondominio(Tela):
         print("Para qual seção gostaria de ir?")
         print("        1 - Incluir Reservável")
         print("        2 - Alterar Reservável")
-        print("        3 - Excluir Reservável")
-        print("        4 - Listar Reservável")
+        print("        3 - Listar Reservável")
+        print("        4 - Excluir Reservável")
         print("        0 - Retornar")
         print("<=======<<============>>=======> \033[0m")
         return self.checa_opcao(4)
 
     def mostra_condo(self, dados):
         print("\033[1;36m")
-        print("<=======<<LISTA DE CONDOMINIOS>>=======>")
+        print("<=======<<DADOS DO CONDOMÍNIO>>=======>")
         print('NOME DO CONDOMÍNIO:', dados['nome'])
+        print('CIDADE DO CONDOMÍNIO:', dados['cidade'])
+        print('RUA DO CONDOMÍNIO:', dados['rua'])
         print('NÚMERO DO CONDOMÍNIO:', dados['numero'])
-        print('ENDEREÇO DO CONDOMÍNIO:', dados['endereco'])
-        print('APARTAMENTOS DISPONÍVEIS: ', ", ".join(dados["apartamentos"]))
-        print("<=======<<====================>>=======> \033[0m")
+        print('APARTAMENTOS DISPONÍVEIS:', ", ".join(dados["apartamentos"]))
+        print("<=======<<===================>>=======> \033[0m")
 
     def seleciona_condo(self):
         while True:
@@ -91,24 +79,55 @@ class TelaCondominio(Tela):
         print("\033[1;36m")
         print("<=======<<DADOS CONDOMÍNIO>>=======>")
         nome = input("Digite o nome do condomínio: ")
-        if kwargs['acao'] == 'alteracao':
-            numero = kwargs['numero']
-        else:
-            while True:
-                try:
-                    numero = int(
-                        input("Digite um número único (positivo) pro condomínio: "))
-                    if numero <= 0:
-                        raise ValueError
-                except ValueError:
-                    print("")
-                    print(
-                        "\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
-                else:
-                    break
-        endereco = input("Digite o endereço do condomínio: ")
-        apartamento = input("Digite o número de apartamentos deste condomínio: ")
-        return {"nome": nome, "numero": numero, 'endereco': endereco, "apartamento": apartamento}
+        while True:
+            try:
+                cidade = input("Digite a cidade do condomínio: ")
+                if not cidade.isalpha():
+                    raise ValueError
+            except ValueError:
+                print("\033[0;31m")
+                print("ERRO!: Cidade inválida! Por favor, tente novamente!")
+                print("\033[1;36m")
+            else:
+                break
+        while True:
+            try:
+                rua = input("Digite a rua do condomínio: ")
+                if rua.isdigit():
+                    raise ValueError
+            except ValueError:
+                print("\033[0;31m")
+                print("ERRO!: Rua inválida! Por favor, tente novamente!")
+                print("\033[1;36m")
+            else:
+                break
+        while True:
+            try:
+                numero = int(
+                    input("Digite o número do condomínio: "))
+                if numero <= 0:
+                    raise ValueError
+            except ValueError:
+                print("\033[0;31m")
+                print("ERRO!: Número inválido! Por favor, tente novamente!")
+                print("\033[1;36m")
+            else:
+                break
+        while True:
+            try:
+                apartamento = int(input("Digite o número de apartamentos deste condomínio: "))         
+                if kwargs['acao'] == 'alteracao':
+                    for i in range(1, self.__controlador_condo.condominio.apartamentos[-1]):
+                        if i not in self.__controlador_condo.condominio.apartamentos:
+                            if int(apartamento) < i:
+                                raise ValueError
+            except ValueError:
+                print("\033[0;31m")
+                print("ERRO!: Número inválido! Por favor, tente novamente!")
+                print("\033[1;36m")
+            else:
+                break
+        return {"nome": nome, "cidade": cidade, "rua": rua, "numero": numero,  "apartamento": apartamento}
 
     def pega_dados_reservavel(self, **kwargs):
         print("\033[1;36m")

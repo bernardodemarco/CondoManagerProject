@@ -4,15 +4,16 @@ from models.funcionario import Funcionario
 class Condominio:
 
     def __init__(self, nome: str,
+                 cidade: str,
+                 rua: str,
                  numero: int,
-                 endereco: str,
-                 apartamentos: int,
-                 funcionario: Funcionario):
+                 apartamentos: int):
         self.__nome = nome
+        self.__cidade = cidade
+        self.__rua = rua
         self.__numero = numero
-        self.__endereco = endereco
-        self.__funcionarios = [funcionario]
-        self.__apartamentos = [str(i) for i in range(1, int(apartamentos)+1)]
+        self.__num_max_ap = int(apartamentos)
+        self.__apartamentos = [i for i in range(1, int(apartamentos)+1)]
         self.__reservaveis = []
 
     @property
@@ -24,6 +25,22 @@ class Condominio:
         self.__nome = nome
 
     @property
+    def cidade(self) -> str:
+        return self.__cidade
+
+    @cidade.setter
+    def cidade(self, cidade):
+        self.__cidade = cidade
+
+    @property
+    def rua(self):
+        return self.__rua
+    
+    @rua.setter
+    def rua(self, rua):
+        self.__rua = rua
+
+    @property
     def numero(self) -> int:
         return self.__numero
 
@@ -32,29 +49,20 @@ class Condominio:
         self.__numero = numero
 
     @property
-    def endereco(self) -> str:
-        return self.__endereco
-
-    @endereco.setter
-    def endereco(self, endereco):
-        self.__endereco = endereco
-
-    @property
-    def funcionarios(self) -> list:
-        return self.__funcionarios
-
-    @property
     def apartamentos(self) -> list:
         return self.__apartamentos
+
+    @apartamentos.setter
+    def apartamentos(self, num):
+        num = int(num)
+        if num > self.__num_max_ap:
+            for i in range(self.__num_max_ap + 1, num + 1, 1):
+                self.apartamentos.append(i)
+            self.__num_max_ap = num
+        else:
+            del self.apartamentos[-(self.__num_max_ap - num):]
+            self.__num_max_ap = num
 
     @property
     def reservaveis(self) -> list:
         return self.__reservaveis
-
-    @property
-    def contas(self) -> list:
-        return self.__contas
-
-    @property
-    def entregas(self) -> list:
-        return self.__entregas

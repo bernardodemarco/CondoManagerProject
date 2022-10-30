@@ -21,6 +21,8 @@ class ControladorCondominio(Controlador):
         self.__controlador_pessoa = ControladorPessoa(self)
         self.__tela_condominio = TelaCondominio(self)
 
+#   GETTERS E SETTERS   #
+
     @property
     def condominio(self) -> list:
         return self.__condominio
@@ -37,110 +39,68 @@ class ControladorCondominio(Controlador):
     def controlador_pessoa(self) -> ControladorPessoa:
         return self.__controlador_pessoa
 
-    def incluir_condo(self):
-        dados_condo = self.__tela_condominio.pega_dados_condo(acao="criacao")
-        self.__tela_condominio.mostra_mensagem("É necessário o cadastro de um funcionário para o condomínio.")
-        funcionario = self.__controlador_pessoa.incluir_funcionario()
-
-        condo = Condominio(dados_condo["nome"],
-                           dados_condo["numero"],
-                           dados_condo["endereco"],
-                           dados_condo["apartamento"],
-                           funcionario)
-
-        self.condominio = condo
-        self.__tela_condominio.mostra_mensagem("Agora, é necessário o cadastro de um morador.")
-        self.__controlador_pessoa.incluir_morador(self.condominio.apartamentos)
-
-
-    def alterar_condo(self):
-        dados_alterados = self.__tela_condominio.pega_dados_condo(
-            acao="alteracao", numero=self.condominio.numero)
-        self.condominio.nome = dados_alterados["nome"]
-        self.condominio.num = dados_alterados["numero"]
-        self.condominio.endereco = dados_alterados["endereco"]
-
-    def listar_condo(self):
-        self.__tela_condominio.mostra_condo({
-            "nome": self.condominio.nome,
-            "numero": self.condominio.numero,
-            "endereco": self.condominio.endereco,
-            "apartamentos": self.condominio.apartamentos
-        })
-
-    def ocupar_apartamento(self, apartamento):
-        self.condominio.apartamentos.remove(apartamento)
-
-    def excluir_condo(self):
-        pass
-
-    def ir_morador(self):
-        self.__controlador_pessoa.abre_tela()
-
-    def ir_funcionario(self):
-        self.__controlador_pessoa.abre_tela_funcionario()
-    
-    def ir_reserva(self):
-        self.__controlador_reserva.abre_tela()
-
-    def ir_entrega(self):
-        self.__controlador_entrega.abre_tela()
-
-    def ir_conta(self):
-        self.__controlador_conta.abre_tela()
-
-    def ir_reservavel(self):
-        self.abre_tela_reservavel()
-
-    def ir_apartamento(self):
-        self.abre_tela_apartamento()
-
-    def outras_opcoes(self):
-        self.abre_tela_2()
+#   CONDOMÍNIO  #
 
     def abre_tela(self):
         switcher = {
-            1: self.incluir_condo, ## SUMIR
-            2: self.alterar_condo,
-            3: self.excluir_condo, ## RESET
-            4: self.listar_condo, ## MOSTRAR DADOS
-            5: self.outras_opcoes,
-            0: self.retornar, ## DESLIGAR
+            1: self.alterar_condo,
+            2: self.mostra_dados_condo,
+            3: self.outras_opcoes,
+            4: self.resetar,
+            0: self.retornar
         }
 
         while True:
             switcher[int(self.__tela_condominio.mostra_opcoes())]()
+       
+    def cadastro_inicial(self):
+        dados_condo = self.__tela_condominio.pega_dados_condo(acao='criacao')
 
-    def abre_tela_apartamento(self):
-        switcher = {
-            1: self.incluir_apartamento,
-            2: self.alterar_apartamento,
-            3: self.listar_apartamento,
-            4: self.excluir_apartamento,
-            0: self.abre_tela_2
-        }
+        condo = Condominio(dados_condo["nome"],
+                           dados_condo["cidade"],
+                           dados_condo["rua"],
+                           dados_condo["numero"],
+                           dados_condo["apartamento"])
 
-        while True:
-            switcher[int(self.__tela_condominio.mostra_opcoes_apartamento())]()
+        self.condominio = condo
 
-    def incluir_apartamento(self):
-        pass
+        self.__tela_condominio.mostra_mensagem("É necessário o cadastro de um funcionário para o condomínio.")
+        self.__controlador_pessoa.incluir_funcionario()
+        self.__tela_condominio.mostra_mensagem("Agora, é necessário o cadastro de um morador.")
+        self.__controlador_pessoa.incluir_morador(self.condominio.apartamentos)
 
-    def alterar_apartamento(self):
-        pass
+    def alterar_condo(self):
+        dados_alterados = self.__tela_condominio.pega_dados_condo(acao='alteracao')
+        self.condominio.nome = dados_alterados["nome"]
+        self.condominio.cidade = dados_alterados["cidade"]
+        self.condominio.rua = dados_alterados["rua"]
+        self.condominio.numero = dados_alterados["numero"]
+        self.condominio.apartamentos = dados_alterados["apartamento"]
 
-    def listar_apartamento(self):
-        pass
+    def mostra_dados_condo(self):
+        apartamentos_str = [str(i) for i in self.condominio.apartamentos]
+        self.__tela_condominio.mostra_condo({
+            "nome": self.condominio.nome,
+            "cidade": self.condominio.cidade,
+            "rua": self.condominio.rua,
+            "numero": self.condominio.numero,
+            "apartamentos": apartamentos_str
+        })
 
-    def excluir_apartamento(self):
-        pass
+    def resetar(self):
+        self.controlador_sistema.resetar()
+
+    def retorna_apartamento(self):
+        return self.condominio.apartamentos
+
+#   RESERVAVEL  #
 
     def abre_tela_reservavel(self):
         switcher = {
             1: self.incluir_reservavel,
             2: self.alterar_reservavel,
-            3: self.excluir_reservavel,
-            4: self.listar_reservaveis,
+            3: self.listar_reservaveis,
+            4: self.excluir_reservavel,
             0: self.abre_tela_2
         }
 
@@ -173,30 +133,46 @@ class ControladorCondominio(Controlador):
         self.__condominio.reservaveis.append(reservavel)
 
 
+    def ocupar_apartamento(self, apartamento):
+        self.condominio.apartamentos.remove(apartamento)
+
+    def desocupar_apartamento(self, apartamento):
+        self.condominio.apartamentos.append(apartamento)
+        self.condominio.apartamentos.sort()
+
     def alterar_reservavel(self):
         pass
-
 
     def excluir_reservavel(self):
         pass
 
     def abre_tela_2(self):
         switcher = {
-            1: self.ir_apartamento,
-            2: self.ir_morador,
-            3: self.ir_funcionario,
-            4: self.ir_conta,
-            5: self.ir_reservavel,
-            6: self.ir_reserva,
-            7: self.ir_entrega,
+            1: self.ir_morador,
+            2: self.ir_funcionario,
+            3: self.ir_conta,
+            4: self.ir_reservavel,
+            5: self.ir_reserva,
+            6: self.ir_entrega,
             0: self.abre_tela
         }
 
         while True:
             switcher[int(self.__tela_condominio.mostra_opcoes_2())]()
 
-    def ir_pessoa(self):
+#   TELAS   #
+
+    def ir_morador(self):
         self.__controlador_pessoa.abre_tela()
+
+    def ir_funcionario(self):
+        self.__controlador_pessoa.abre_tela_funcionario()
+
+    def ir_conta(self):
+        self.__controlador_conta.abre_tela()
+
+    def ir_reservavel(self):
+        self.abre_tela_reservavel()
 
     def ir_reserva(self):
         self.__controlador_reserva.abre_tela()
@@ -204,8 +180,8 @@ class ControladorCondominio(Controlador):
     def ir_entrega(self):
         self.__controlador_entrega.abre_tela()
 
-    def ir_conta(self):
-        self.__controlador_conta.abre_tela()
+    def outras_opcoes(self):
+        self.abre_tela_2()
 
     def retornar(self):
         self.__controlador_sistema.retornar()
