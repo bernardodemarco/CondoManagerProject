@@ -119,8 +119,11 @@ class ControladorReserva(Controlador):
             if len(self.__controlador_condominio.condominio.reservaveis) == 0:
                 raise ResourceNotFoundException('Reservavel')
                 
+            reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].remove(reserva.horario)
+
             reservavel = self.__controlador_condominio.seleciona_reservavel()
             if reservavel == None:
+                reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].remove(reserva.horario)
                 raise ResourceNotFoundException('Reservavel')
 
             dados_alterados_reserva = self.__tela_reserva.pega_dados_reserva(acao='alteracao', id_reserva=reserva.id_reserva)
