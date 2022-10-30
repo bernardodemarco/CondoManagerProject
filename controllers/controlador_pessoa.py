@@ -38,7 +38,7 @@ class ControladorPessoa(Controlador):
         for morador in self.moradores:
             if morador.cpf == cpf:
                 return morador
-            return None
+        return None
 
     def incluir_morador(self, apartamentos):
         dados_morador = self.__tela_morador.pega_dados_morador(apartamentos, acao="criacao")
@@ -275,7 +275,7 @@ class ControladorPessoa(Controlador):
         for funcionario in self.funcionarios:
             if funcionario.cpf == cpf:
                 return funcionario
-            return None
+        return None
 
     def pega_apartamento(self):
         apartamentos = self.controlador_condominio.retorna_apartamento()
