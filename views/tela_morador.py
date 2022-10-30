@@ -67,8 +67,9 @@ class TelaMorador(Tela):
                 print("\33[1;36m")
                 cpf_morador = input(('SELECIONE O MORADOR (digite o CPF): '))
                 validate_cpf(cpf_morador)
-                if self.__controlador_pessoa.pega_morador_por_cpf(cpf_morador) is not None:
-                    return cpf_morador
+                morador = self.__controlador_pessoa.pega_morador_por_cpf(cpf_morador)
+                if morador is not None:
+                    return morador
                 else:
                     raise ResourceNotFoundException("Morador")
             except InvalidCPFException as err:

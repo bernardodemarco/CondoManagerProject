@@ -122,7 +122,7 @@ class ControladorCondominio(Controlador):
 
     def seleciona_reservavel(self):
         self.listar_reservaveis()
-        return self.pega_reservavel_por_id(self.__tela_condominio.seleciona_reservavel())
+        return self.__tela_condominio.seleciona_reservavel()
 
     def incluir_reservavel(self):
         dados_reservavel = self.__tela_condominio.pega_dados_reservavel(acao="criacao")

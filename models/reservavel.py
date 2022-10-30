@@ -1,9 +1,8 @@
 class Reservavel:
-
     def __init__(self, nome: str, id_reservavel: int):
         self.__nome = nome
         self.__id_reservavel = id_reservavel
-        self.__horarios_indisponiveis = []
+        self.__horarios = dict()
 
     @property
     def nome(self) -> str:
@@ -22,5 +21,5 @@ class Reservavel:
         self.__id_reservavel = id_reservavel
 
     @property
-    def horarios_indisponiveis(self):
-        return self.__horarios_indisponiveis
+    def horarios(self) -> dict:
+        return self.__horarios
