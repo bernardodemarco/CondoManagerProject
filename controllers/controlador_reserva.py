@@ -69,6 +69,9 @@ class ControladorReserva(Controlador):
             if morador == None:
                 raise ResourceNotFoundException('Morador')
 
+            if len(self.__controlador_condominio.condominio.reservaveis) == 0:
+                raise ResourceNotFoundException('Reservavel')
+
             reservavel = self.__controlador_condominio.seleciona_reservavel()
             if reservavel == None:
                 raise ResourceNotFoundException('Reservavel')
@@ -87,11 +90,7 @@ class ControladorReserva(Controlador):
                 raise ResourceAlreadyExistsException('Reserva')
             self.__reservas.append(reserva)
 
-        except ValueError as err:
-            self.__tela_reserva.mostra_mensagem(err)
-        except ResourceAlreadyExistsException as err:
-            self.__tela_reserva.mostra_mensagem(err)
-        except ResourceNotFoundException as err:
+        except (ResourceAlreadyExistsException, ResourceNotFoundException, ValueError) as err:
             self.__tela_reserva.mostra_mensagem(err)
 
     def alterar_reserva(self):
@@ -117,8 +116,14 @@ class ControladorReserva(Controlador):
             if morador == None:
                 raise ResourceNotFoundException('Morador')
 
+            if len(self.__controlador_condominio.condominio.reservaveis) == 0:
+                raise ResourceNotFoundException('Reservavel')
+                
+            reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].remove(reserva.horario)
+
             reservavel = self.__controlador_condominio.seleciona_reservavel()
             if reservavel == None:
+                reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].append(reserva.horario)
                 raise ResourceNotFoundException('Reservavel')
 
             dados_alterados_reserva = self.__tela_reserva.pega_dados_reserva(acao='alteracao', id_reserva=reserva.id_reserva)
@@ -135,10 +140,7 @@ class ControladorReserva(Controlador):
             reserva.morador = morador
             self.__tela_reserva.mostra_mensagem('RESERVA ATUALIZADA COM SUCESSO!')
 
-        except ValueError as err:
-            self.__tela_reserva.mostra_mensagem(
-                'Valores inválidos, tente novamente!')
-        except (ResourceNotFoundException, Exception) as err:
+        except (ResourceNotFoundException, ValueError, Exception) as err:
             self.__tela_reserva.mostra_mensagem(err)
 
     def excluir_reserva(self):
@@ -158,14 +160,35 @@ class ControladorReserva(Controlador):
             reserva.reservavel.horarios[convert_date(horario_reserva[0].date())].remove(horario_reserva)
             self.__reservas.remove(reserva)
 
-        except ResourceNotFoundException as err:
-            self.__tela_reserva.mostra_mensagem(err)
         except ValueError as err:
             self.__tela_reserva.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
-        except Exception as err:
+        except (ResourceNotFoundException, Exception) as err:
             self.__tela_reserva.mostra_mensagem(err)
+
+    def gerar_relatorio_reservas(self):
+        ''' Geração de relatório informando quantas vezes um dado morador realizou reservas '''
             
+        try:
+            if len(self.__reservas) == 0:
+                raise ResourceNotFoundException('Reserva')
+            
+            self.__tela_reserva.mostra_mensagem(
+                f"<=======<<RELATÓRIO DAS RESERVAS>>=======>")        
+
+            morador = self.__controlador_condominio.controlador_pessoa.seleciona_morador()
+            if morador == None:
+                raise ResourceNotFoundException('Morador')
+
+            total_reservas = 0
+            for reserva in self.__reservas:
+                if reserva.morador.cpf == morador.cpf:
+                    total_reservas += 1
+
+            self.__tela_reserva.mostra_relatorio(total_reservas, morador.nome)
+        except ResourceNotFoundException as err:
+            self.__tela_reserva.mostra_mensagem(err)
+        
     def retornar(self):
         self.__controlador_condominio.abre_tela_2()
 
@@ -175,7 +198,8 @@ class ControladorReserva(Controlador):
             1: self.incluir_reserva,
             2: self.alterar_reserva,
             3: self.excluir_reserva,
-            4: self.lista_reservas
+            4: self.lista_reservas,
+            5: self.gerar_relatorio_reservas
         }
 
         while True:
