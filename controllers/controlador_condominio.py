@@ -24,7 +24,7 @@ class ControladorCondominio(Controlador):
 #   GETTERS E SETTERS   #
 
     @property
-    def condominio(self) -> list:
+    def condominio(self):
         return self.__condominio
 
     @condominio.setter

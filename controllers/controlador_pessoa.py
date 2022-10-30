@@ -346,6 +346,12 @@ class ControladorPessoa(Controlador):
     def retornar(self):
         self.__controlador_condominio.abre_tela()
 
+    def pega_funcionario_por_cpf(self, cpf):
+        for funcionario in self.funcionarios:
+            if funcionario.cpf == cpf:
+                return funcionario
+        return None
+
     def pega_apartamento(self):
         apartamentos = self.controlador_condominio.retorna_apartamento()
         return apartamentos
