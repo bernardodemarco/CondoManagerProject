@@ -17,6 +17,8 @@ class ControladorPessoa(Controlador):
         self.__moradores = []
         self.__funcionarios = []
 
+#   GETTERS E SETTERS   #
+
     @property
     def controlador_condominio(self):
         return self.__controlador_condominio
@@ -29,21 +31,13 @@ class ControladorPessoa(Controlador):
     def moradores(self):
         return self.__moradores
 
+#   MORADOR #
+
     def pega_morador_por_cpf(self, cpf):
         for morador in self.moradores:
             if morador.cpf == cpf:
                 return morador
             return None
-
-    def pega_funcionario_por_cpf(self, cpf):
-        for funcionario in self.funcionarios:
-            if funcionario.cpf == cpf:
-                return funcionario
-            return None
-    
-    def pega_apartamento(self):
-        apartamentos = self.controlador_condominio.retorna_apartamento()
-        return apartamentos
 
     def incluir_morador(self, apartamentos):
         dados_morador = self.__tela_morador.pega_dados_morador(apartamentos, acao="criacao")
@@ -124,7 +118,7 @@ class ControladorPessoa(Controlador):
     def seleciona_morador(self):
         self.listar_moradores()
         return self.__tela_morador.seleciona_morador()
-
+     
     def abre_tela(self):
         switcher = {
             1: self.incluir_morador,
@@ -144,6 +138,8 @@ class ControladorPessoa(Controlador):
             else:
                 switcher[opcao]()
 
+#   FUNCIONARIO #
+
     def incluir_funcionario(self):
         dados_funcionario = self.__tela_funcionario.pega_dados_funcionario(
             acao="criacao")
@@ -156,13 +152,67 @@ class ControladorPessoa(Controlador):
         self.funcionarios.append(funcionario)
 
     def alterar_funcionario(self):
-        pass
+        try:
+            if len(self.funcionarios) == 0:
+                raise Exception('Nenhum funcionário registrado!')
+
+            self.__tela_funcionario.mostra_mensagem("\33[1;36m")
+            self.__tela_funcionario.mostra_mensagem(
+                "<=======<<EDITAR FUNCIONÁRIO>>=======>")
+            self.listar_funcionarios()
+            cpf = self.__tela_funcionario.seleciona_funcionario()
+            funcionario = self.pega_funcionario_por_cpf(cpf)
+            if funcionario == None:
+                raise ResourceNotFoundException('Funcionário')
+
+            self.__tela_funcionario.mostra_funcionario({
+                'nome': funcionario.nome,
+                'telefone': funcionario.telefone,
+                'cpf': funcionario.cpf,
+            })
+
+            dados_alterados = self.__tela_funcionario.pega_dados_funcionario(acao='alteracao', cpf = funcionario.cpf)
+            funcionario.nome = dados_alterados['nome']
+            funcionario.telefone = dados_alterados['telefone']
+
+        except ValueError as err:
+            self.__tela_funcionario.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
+        except (ResourceNotFoundException, Exception) as err:
+            self.__tela_funcionario.mostra_mensagem(err)
+            
 
     def excluir_funcionario(self):
-        pass
+        try:
+            if len(self.funcionarios) >= 1:
+                raise Exception('Não é possível excluir nenhum funcionário! O condomínio não pode funcionar sem funcionários!')
+            self.__tela_funcionario.mostra_mensagem("\33[1;36m")
+            self.__tela_funcionario.mostra_mensagem(
+                "<=======<<REMOVER FUNCIONÁRIO>>=======>")
+            self.listar_funcionarios()
+            cpf = self.__tela_funcionario.seleciona_funcionario()
+            funcionario = self.pega_funcionario_por_cpf(cpf)
+            if funcionario == None:
+                raise ResourceNotFoundException('Funcionario')
+            self.funcionarios.remove(funcionario)
+
+        except ResourceNotFoundException as err:
+            self.__tela_funcionario.mostra_mensagem(err)
+        except ValueError as err:
+            self.__tela_funcionario.mostra_mensagem(
+                'Valores inválidos, tente novamente!')
+        except Exception as err:
+            self.__tela_funcionario.mostra_mensagem(err)
 
     def listar_funcionarios(self):
-        pass
+        self.__tela_funcionario.mostra_mensagem("\33[1;36m")
+        self.__tela_funcionario.mostra_mensagem("<=======<<LISTAGEM DOS FUNCIONÁRIOS>>=======>")
+        for pessoa in self.funcionarios:
+            self.__tela_funcionario.mostra_funcionario({
+                'nome': pessoa.nome,
+                'cpf': pessoa.cpf,
+                'telefone': pessoa.telefone
+            })
 
     def abre_tela_funcionario(self):
         switcher = {
@@ -178,3 +228,14 @@ class ControladorPessoa(Controlador):
 
     def retornar(self):
         self.__controlador_condominio.abre_tela()
+
+    def pega_funcionario_por_cpf(self, cpf):
+        for funcionario in self.funcionarios:
+            if funcionario.cpf == cpf:
+                return funcionario
+            return None
+
+    def pega_apartamento(self):
+        apartamentos = self.controlador_condominio.retorna_apartamento()
+        return apartamentos
+    

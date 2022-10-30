@@ -21,7 +21,7 @@ class TelaFuncionario(Tela):
         print("<=======<<============>>=======> \033[0m")
         return self.checa_opcao(5)
 
-    def pega_dados_morador(self, apartamentos, **kwargs):
+    def pega_dados_funcionario(self, apartamentos, **kwargs):
         print("\033[1;36m")
         print("<=======<<DADOS MORADOR>>=======>")
         try:
@@ -54,14 +54,13 @@ class TelaFuncionario(Tela):
             print("\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
     
 
-    def mostra_morador(self, dados):
+    def mostra_funcionario(self, dados):
         print('NOME DO MORADOR:', dados['nome'])
         print('TELEFONE DO MORADOR:', dados['telefone'])
         print('CPF DO MORADOR:', dados['cpf'])
-        print('APARTAMENTO: ', dados["apartamento"])
         print("<=======<<======================>>=======> \033[0m")
 
-    def seleciona_morador(self):
+    def seleciona_funcionario(self):
         while True:
             try:
                 print("\33[1;36m")
