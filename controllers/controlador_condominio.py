@@ -7,6 +7,7 @@ from controllers.controlador_reserva import ControladorReserva
 from models.reservavel import Reservavel
 from models.condominio import Condominio
 from views.tela_condominio import TelaCondominio
+import time
 
 
 
@@ -67,10 +68,13 @@ class ControladorCondominio(Controlador):
                            dados_condo["apartamento"])
 
         self.condominio = condo
+        self.__tela_condominio.mostra_mensagem("")
         self.__tela_condominio.mostra_mensagem("É necessário o cadastro de um funcionário para o condomínio.")
         self.__controlador_pessoa.incluir_funcionario()
+        self.__tela_condominio.mostra_mensagem("")
         self.__tela_condominio.mostra_mensagem("Agora, é necessário o cadastro de um morador.")
         self.__controlador_pessoa.incluir_morador(self.condominio.apartamentos)
+        self.__tela_condominio.mostra_mensagem("")
         self.__tela_condominio.mostra_mensagem("Tudo certo para a utilização do CondoManager")
 
     def alterar_condo(self):
@@ -82,13 +86,17 @@ class ControladorCondominio(Controlador):
         self.condominio.apartamentos = dados_alterados["apartamento"]
 
     def mostra_dados_condo(self):
-        apartamentos_str = [str(i) for i in self.condominio.apartamentos]
+        apartamentos_ocupado_str = []
+        for i in range(1, self.condominio.num_max_ap+1):
+            if not i in (self.condominio.apartamentos):
+                apartamentos_ocupado_str.append(str(i))
         self.__tela_condominio.mostra_condo({
             "nome": self.condominio.nome,
             "cidade": self.condominio.cidade,
             "rua": self.condominio.rua,
             "numero": self.condominio.numero,
-            "apartamentos": apartamentos_str
+            "total_ap": self.condominio.num_max_ap,
+            "apartamentos": apartamentos_ocupado_str
         })
 
     def resetar(self):
@@ -131,6 +139,7 @@ class ControladorCondominio(Controlador):
     
     def listar_reservaveis(self):
         if len(self.reservaveis) == 0:
+            self.__tela_condominio.mostra_mensagem("")
             self.__tela_condominio.mostra_mensagem("Não existem nenhum reservável cadastrado!")
         for reservavel in self.reservaveis:
             self.__tela_condominio.mostra_reservavel({
@@ -142,7 +151,7 @@ class ControladorCondominio(Controlador):
         try:
             if len(self.reservaveis) == 0:
                 raise Exception('Nenhum reservável registrado!')
-
+            self.__tela_condominio.mostra_mensagem("")
             self.__tela_condominio.mostra_mensagem(
                 "<=======<<EDITAR RESERVÁVEL>>=======>")
             self.listar_reservaveis()
@@ -170,6 +179,7 @@ class ControladorCondominio(Controlador):
         try:
             if len(self.reservaveis) == 0:
                 raise Exception('Nenhum reservável registrado!')
+            self.__tela_condominio.mostra_mensagem("")
             self.__tela_condominio.mostra_mensagem(
                 "<=======<<REMOVER RESERVÁVEL>>=======>")
             self.listar_reservaveis()

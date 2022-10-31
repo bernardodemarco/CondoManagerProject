@@ -12,6 +12,7 @@ class TelaMorador(Tela):
         self.__controlador_pessoa = controlador_pessoa
 
     def mostra_opcoes(self):
+        print("")
         print("<=======<<MORADORES>>=======>")
         print("    O que gostaria de fazer?")
         print("        1 - Incluir Morador")
@@ -24,6 +25,7 @@ class TelaMorador(Tela):
         return self.checa_opcao(5)
 
     def pega_dados_morador(self, apartamentos, **kwargs):
+        print("")
         print("<=======<<DADOS MORADOR>>=======>")
         while True:
             try:
@@ -34,7 +36,9 @@ class TelaMorador(Tela):
                     nome = nome.title()
                     break
             except Exception:
+                print("")
                 print("ERRO!: Nome inválido, por favor, tente novamente")
+                print("")
         while True:
             try:
                 telefone = input("Digite o telefone do morador: ")
@@ -43,7 +47,9 @@ class TelaMorador(Tela):
                 else:
                     break
             except Exception:
+                print("")
                 print("ERRO!: Telefone inválido, por favor, tente novamente")
+                print("")
         if kwargs['acao'] == 'alteracao':
             cpf = kwargs['cpf']
             apartamento = kwargs['apartamento']
@@ -55,7 +61,9 @@ class TelaMorador(Tela):
                     if self.__controlador_pessoa.pega_morador_por_cpf(cpf):
                         raise ResourceAlreadyExistsException("Morador")
                 except (InvalidCPFException, ResourceAlreadyExistsException) as err:
+                    print("")
                     print(err)
+                    print("")
                 else:
                     break
             while True:
@@ -66,7 +74,9 @@ class TelaMorador(Tela):
                     else:
                         break
                 except Exception:
+                    print("")
                     print("ERRO!: Número inválido! Por favor, tente novamente!")
+                    print("")
         print("<=======<<==================>>=======>")        
         return {"nome": nome, "cpf": cpf, 'telefone': telefone, 'apartamento': apartamento}
 
@@ -87,17 +97,24 @@ class TelaMorador(Tela):
                 else:
                     raise ResourceNotFoundException("Morador")
             except InvalidCPFException as err:
+                print("")
                 print(err)
+                print("")
                 if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR ").lower() == 'cancelar':
+                    print("")
                     return None
             except ResourceNotFoundException as err:
+                print("")
                 print(err)
+                print("")
                 if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR ").lower() == 'cancelar':
+                    print("")
                     return None
 
 #   VISITANTES  #
 
     def mostra_opcoes_visitantes(self):
+        print("")
         print("<=======<<VISITANTES>>=======>")
         print("    O que gostaria de fazer?")
         print("        1 - Incluir Visitante")
@@ -109,6 +126,7 @@ class TelaMorador(Tela):
         return self.checa_opcao(4)
 
     def pega_dados_visitante(self, morador, **kwargs):
+        print("")
         print("<=======<<DADOS VISITANTE>>=======>")
         while True:
             try:
@@ -119,7 +137,9 @@ class TelaMorador(Tela):
                     nome = nome.title()
                     break
             except Exception:
+                print("")
                 print("ERRO!: Nome inválido, por favor, tente novamente")
+                print("")
         while True:
             try:
                 telefone = input("Digite o telefone do visitante: ")
@@ -128,7 +148,9 @@ class TelaMorador(Tela):
                 else:
                     break
             except Exception:
+                print("")
                 print("ERRO!: Telefone inválido, por favor, tente novamente")
+                print("")
         if kwargs['acao'] == 'alteracao':
             cpf = kwargs['cpf']
         else:
@@ -139,7 +161,9 @@ class TelaMorador(Tela):
                     if self.__controlador_pessoa.pega_visitante_por_cpf(morador, cpf) and self.__controlador_pessoa.pega_morador_por_cpf(cpf):
                         raise ResourceAlreadyExistsException
                 except (InvalidCPFException, ResourceAlreadyExistsException)as err:
+                    print("")
                     print(err)
+                    print("")
                 else:
                     break
         print("<=======<<==================>>=======>")        
@@ -155,12 +179,18 @@ class TelaMorador(Tela):
                 else:
                     raise ResourceNotFoundException("Visitante")
             except InvalidCPFException as err:
+                print("")
                 print(err)
+                print("")
                 if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR ").lower() == 'cancelar':
+                    print("")
                     return None
             except ResourceNotFoundException as err:
+                print("")
                 print(err)
+                print("")
                 if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR ").lower() == 'cancelar':
+                    print("")
                     return None
     
     def mostra_visitante(self, dados):

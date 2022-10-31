@@ -10,6 +10,7 @@ class TelaReserva(Tela):
         super().__init__()
 
     def mostra_opcoes(self):
+        print("")
         print("<=======<<RESERVAS>>=======>")
         print("O que você gostaria de fazer?")
         print("        1 - Incluir reserva")
@@ -22,6 +23,7 @@ class TelaReserva(Tela):
         return self.checa_opcao(5)
 
     def pega_dados_reserva(self, **kwargs):
+        print("")
         print('<=======<<REGISTRO DE RESERVAS>>=======>')
         while True:
             try:
@@ -47,7 +49,9 @@ class TelaReserva(Tela):
                 else:
                     raise ValueError
             except ValueError:
+                print("")
                 print('Valores inválidos, tente novamente!')
+                print("")
 
     def seleciona_reserva(self):
         while True:
@@ -58,7 +62,9 @@ class TelaReserva(Tela):
                     return id_reserva
                 raise ValueError
             except ValueError:
+                print("")
                 print('Valor do id inválido!')       
+                print("")
 
     def mostra_reserva(self, dados):
         print('NOME DO RESERVAVEL:', dados['reservavel'])
@@ -70,4 +76,5 @@ class TelaReserva(Tela):
         print("<=======<<===========>>=======>")
 
     def mostra_relatorio(self, total_reservas: int, morador):
+        print("")
         print(f'NOS REGISTROS DO CONDOMÍNIO CONSTAM QUE O(A) MORADOR(A) {morador} REALIZOU NO TOTAL {total_reservas} RESERVAS!')

@@ -44,16 +44,26 @@ class Condominio:
         self.__numero = numero
 
     @property
+    def num_max_ap(self):
+        return self.__num_max_ap
+
+    @num_max_ap.setter
+    def num_max_ap(self, num):
+        self.__num_max_ap = num
+
+    @property
     def apartamentos(self) -> list:
         return self.__apartamentos
 
     @apartamentos.setter
     def apartamentos(self, num):
         num = int(num)
-        if num > self.__num_max_ap:
-            for i in range(self.__num_max_ap + 1, num + 1, 1):
+        if num > self.num_max_ap:
+            for i in range(self.num_max_ap + 1, num + 1, 1):
                 self.apartamentos.append(i)
-            self.__num_max_ap = num
-        else:
-            del self.apartamentos[-(self.__num_max_ap - num):]
-            self.__num_max_ap = num
+            self.num_max_ap = num
+        elif num < self.num_max_ap:
+            del self.apartamentos[-(self.num_max_ap - num):]
+            self.num_max_ap = num
+        elif num == self.num_max_ap:
+            pass

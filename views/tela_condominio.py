@@ -15,6 +15,7 @@ class TelaCondominio(Tela):
         return self.__controlador_condo
 
     def mostra_opcoes(self):
+        print("")
         print("<=======<<CONDOMÍNIO>>=======>")
         print("    O que gostaria de fazer?")
         print("        1 - Alterar Condomínio")
@@ -26,6 +27,7 @@ class TelaCondominio(Tela):
         return self.checa_opcao(4)
 
     def mostra_opcoes_2(self):
+        print("")
         print("<=======<<OUTRAS OPÇÕES>>=======>")
         print("Para qual seção gostaria de ir?")
         print("        1 - Moradores")
@@ -39,6 +41,7 @@ class TelaCondominio(Tela):
         return self.checa_opcao(6)
 
     def mostra_opcoes_reservavel(self):
+        print("")
         print("<=======<<RESERVÁVEL>>=======>")
         print("Para qual seção gostaria de ir?")
         print("        1 - Incluir Reservável")
@@ -50,12 +53,14 @@ class TelaCondominio(Tela):
         return self.checa_opcao(4)
 
     def mostra_condo(self, dados):
+        print("")
         print("<=======<<DADOS DO CONDOMÍNIO>>=======>")
         print('NOME DO CONDOMÍNIO:', dados['nome'])
         print('CIDADE DO CONDOMÍNIO:', dados['cidade'])
         print('RUA DO CONDOMÍNIO:', dados['rua'])
         print('NÚMERO DO CONDOMÍNIO:', dados['numero'])
-        print('APARTAMENTOS DISPONÍVEIS:', ", ".join(dados["apartamentos"]))
+        print('TOTAL DE APARTAMENTOS:', dados['total_ap'])
+        print('APARTAMENTOS INDIVIDUAIS INDISPONÍVEIS:', ", ".join(dados["apartamentos"]))
         print("<=======<<===================>>=======>")
 
     def seleciona_condo(self):
@@ -67,10 +72,12 @@ class TelaCondominio(Tela):
                     return numero
                 raise ValueError
             except ValueError:
-                print(
-                    "ERRO!: Número inválido, por favor, tente novamente:")
+                print("")
+                print("ERRO!: Número inválido, por favor, tente novamente:")
+                print("")
 
     def pega_dados_condo(self, **kwargs):
+        print("")
         print("<=======<<DADOS CONDOMÍNIO>>=======>")
         nome = input("Digite o nome do condomínio: ")
         while True:
@@ -79,7 +86,9 @@ class TelaCondominio(Tela):
                 if not cidade.isalpha():
                     raise ValueError
             except ValueError:
+                print("")
                 print("ERRO!: Cidade inválida! Por favor, tente novamente!")
+                print("")
             else:
                 break
         while True:
@@ -88,7 +97,9 @@ class TelaCondominio(Tela):
                 if rua.isdigit():
                     raise ValueError
             except ValueError:
+                print("")
                 print("ERRO!: Rua inválida! Por favor, tente novamente!")
+                print("")
             else:
                 break
         while True:
@@ -98,7 +109,9 @@ class TelaCondominio(Tela):
                 if numero <= 0:
                     raise ValueError
             except ValueError:
+                print("")
                 print("ERRO!: Número inválido! Por favor, tente novamente!")
+                print("")
             else:
                 break
         while True:
@@ -110,12 +123,15 @@ class TelaCondominio(Tela):
                             if int(apartamento) < i:
                                 raise ValueError
             except ValueError:
+                print("")
                 print("ERRO!: Número inválido! Por favor, tente novamente!")
+                print("")
             else:
                 break
         return {"nome": nome, "cidade": cidade, "rua": rua, "numero": numero,  "apartamento": apartamento}
 
     def pega_dados_reservavel(self, **kwargs):
+        print("")
         print("<=======<<DADOS RESERVAVEL>>=======>")
         nome = input("Digite o nome do reservável: ")
         if kwargs['acao'] == 'alteracao':
@@ -129,13 +145,14 @@ class TelaCondominio(Tela):
                         raise ValueError
                 except ValueError:
                     print("")
-                    print(
-                        "ERRO!: Número inválido! Por favor, tente novamente!")
+                    print("ERRO!: Número inválido! Por favor, tente novamente!")
+                    print("")
                 else:
                     break
         return {"nome": nome, "id_reservavel": id_reservavel}
 
     def mostra_reservavel(self, dados):
+        print("")
         print("<=======<<LISTAGEM DOS RESERVÁVEL>>=======>") 
         print('NOME DO RESERVÁVEL:', dados['nome'])
         print('ID DO RESERVÁVEL:', dados['id'])

@@ -9,6 +9,7 @@ class TelaConta(Tela):
         super().__init__()
 
     def mostra_opcoes(self):
+        print("")
         print("<=======<<CONTAS>>=======>")
         print("O que você gostaria de fazer?")
         print("        1 - Incluir conta")
@@ -25,6 +26,7 @@ class TelaConta(Tela):
         return self.checa_opcao(9)
 
     def pega_dados_contas(self, **kwargs):
+        print("")
         print("<=======<<DADOS CONTA>>=======>")
         while True:
             try:
@@ -49,9 +51,12 @@ class TelaConta(Tela):
                 else:
                     raise ValueError
             except ValueError:
+                print("")
                 print('Valores inválidos, tente novamente!')
+                print("")
 
     def pega_dados_tipo(self, **kwargs):
+        print("")
         print("<=======<<DADOS TIPO DA CONTA>>=======>")
         while True:
             try:
@@ -66,7 +71,9 @@ class TelaConta(Tela):
                     return {'nome_tipo': tipo, 'id': id_tipo}
                 raise ValueError
             except ValueError:
+                print("")
                 print('Valores inválidos, tente novamente!')
+                print("")
 
     def mostra_conta(self, dados):
         print('TIPO DA CONTA:', dados['tipo'])
@@ -89,7 +96,9 @@ class TelaConta(Tela):
                     return id_conta
                 raise ValueError
             except ValueError:
-                print('Valor do id inválido!')
+                print("")
+                print('ERRO!: Valor do id inválido!')
+                print("")
 
     def seleciona_tipo_conta(self):
         while True:
@@ -100,7 +109,9 @@ class TelaConta(Tela):
                     return id_tipo
                 raise ValueError
             except ValueError:
+                print("")
                 print('Valor do id inválido!')
+                print("")
 
     def pega_dados_relatorio(self):
         while True:
@@ -112,7 +123,9 @@ class TelaConta(Tela):
                     raise ValueError
                 return {'mes': mes, 'ano': ano}
             except ValueError:
+                print("")
                 print('Valores inválidos, tente novamente!')
+                print("")
 
     def mostra_relatorio(self, dados_relatorio):
         for key, val in dados_relatorio.items():

@@ -7,6 +7,7 @@ class TelaEntrega(Tela):
         super().__init__()
 
     def mostra_opcoes(self):
+        print("")
         print("<=======<<ENTREGAS>>=======>")
         print("O que você gostaria de fazer?")
         print("        1 - Incluir entrega")
@@ -24,6 +25,7 @@ class TelaEntrega(Tela):
         return self.checa_opcao(10)
 
     def pega_dados_entrega(self, **kwargs):
+        print("")
         print("<=======<<DADOS ENTREGA>>=======>")
         while True:
             try:
@@ -38,9 +40,12 @@ class TelaEntrega(Tela):
                 else:
                     raise ValueError
             except ValueError:
+                print("")
                 print('Valores inválidos tente novamente!')
+                print("")
 
     def pega_dados_tipo(self, **kwargs):
+        print("")
         print("<=======<<DADOS TIPO DA ENTREGA>>=======>")
         while True:
             try:
@@ -55,7 +60,9 @@ class TelaEntrega(Tela):
                     return {'nome_tipo': tipo, 'id': id_tipo}
                 raise ValueError
             except ValueError:
+                print("")
                 print('Valores inválidos, tente novamente!')
+                print("")
 
     def mostra_entrega(self, dados):
         print('TIPO DA ENGTREGA:', dados['tipo'])
@@ -89,8 +96,10 @@ class TelaEntrega(Tela):
                     return id_entrega
                 raise ValueError
             except ValueError:
+                print("")
                 print('Valor do id inválido')
-    
+                print("")
+
     def seleciona_tipo_entrega(self):
         while True:
             try:
@@ -100,4 +109,6 @@ class TelaEntrega(Tela):
                     return id_tipo
                 raise ValueError
             except ValueError:
+                print("")
                 print('Valor do id inválido')
+                print("")
