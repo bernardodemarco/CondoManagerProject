@@ -1,5 +1,4 @@
 from utils.ResourceNotFoundException import ResourceNotFoundException
-from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
 from controllers.controlador import Controlador
 from controllers.controlador_conta import ControladorConta
 from controllers.controlador_entrega import ControladorEntrega
@@ -68,14 +67,11 @@ class ControladorCondominio(Controlador):
                            dados_condo["apartamento"])
 
         self.condominio = condo
-        self.__tela_condominio.mostra_mensagem("\u001b[32m")
-        self.__tela_condominio.mostra_mensagem("É necessário o cadastro de um\u001b[34m funcionário\u001b[32m para o condomínio.")
+        self.__tela_condominio.mostra_mensagem("É necessário o cadastro de um funcionário para o condomínio.")
         self.__controlador_pessoa.incluir_funcionario()
-        self.__tela_condominio.mostra_mensagem("\u001b[32m")
-        self.__tela_condominio.mostra_mensagem("Agora, é necessário o cadastro de um\u001b[34m morador\u001b[32m.")
+        self.__tela_condominio.mostra_mensagem("Agora, é necessário o cadastro de um morador.")
         self.__controlador_pessoa.incluir_morador(self.condominio.apartamentos)
-        self.__tela_condominio.mostra_mensagem("\u001b[32m")
-        self.__tela_condominio.mostra_mensagem("Tudo certo para a utilização do\u001b[34m CondoManager\u001b[32m")
+        self.__tela_condominio.mostra_mensagem("Tudo certo para a utilização do CondoManager")
 
     def alterar_condo(self):
         dados_alterados = self.__tela_condominio.pega_dados_condo(acao='alteracao')
@@ -135,7 +131,6 @@ class ControladorCondominio(Controlador):
     
     def listar_reservaveis(self):
         if len(self.reservaveis) == 0:
-            self.__tela_condominio.mostra_mensagem("\33[1;36m")
             self.__tela_condominio.mostra_mensagem("Não existem nenhum reservável cadastrado!")
         for reservavel in self.reservaveis:
             self.__tela_condominio.mostra_reservavel({
@@ -148,7 +143,6 @@ class ControladorCondominio(Controlador):
             if len(self.reservaveis) == 0:
                 raise Exception('Nenhum reservável registrado!')
 
-            self.__tela_condominio.mostra_mensagem("\33[1;36m")
             self.__tela_condominio.mostra_mensagem(
                 "<=======<<EDITAR RESERVÁVEL>>=======>")
             self.listar_reservaveis()
@@ -176,7 +170,6 @@ class ControladorCondominio(Controlador):
         try:
             if len(self.reservaveis) == 0:
                 raise Exception('Nenhum reservável registrado!')
-            self.__tela_condominio.mostra_mensagem("\33[1;36m")
             self.__tela_condominio.mostra_mensagem(
                 "<=======<<REMOVER RESERVÁVEL>>=======>")
             self.listar_reservaveis()

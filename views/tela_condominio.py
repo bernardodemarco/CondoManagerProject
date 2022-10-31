@@ -15,7 +15,6 @@ class TelaCondominio(Tela):
         return self.__controlador_condo
 
     def mostra_opcoes(self):
-        print("\033[1;36m")
         print("<=======<<CONDOMÍNIO>>=======>")
         print("    O que gostaria de fazer?")
         print("        1 - Alterar Condomínio")
@@ -23,11 +22,10 @@ class TelaCondominio(Tela):
         print("        3 - Outras opções")
         print("        4 - Resetar")
         print("        0 - Desligar")
-        print("<=======<<==========>>=======> \033[0m")
+        print("<=======<<==========>>=======>")
         return self.checa_opcao(4)
 
     def mostra_opcoes_2(self):
-        print("\033[1;36m")
         print("<=======<<OUTRAS OPÇÕES>>=======>")
         print("Para qual seção gostaria de ir?")
         print("        1 - Moradores")
@@ -37,11 +35,10 @@ class TelaCondominio(Tela):
         print("        5 - Reservas")
         print("        6 - Entregas")
         print("        0 - Condomínios")
-        print("<=======<<=============>>=======> \033[0m")
+        print("<=======<<=============>>=======>")
         return self.checa_opcao(6)
 
     def mostra_opcoes_reservavel(self):
-        print("\033[1;36m")
         print("<=======<<RESERVÁVEL>>=======>")
         print("Para qual seção gostaria de ir?")
         print("        1 - Incluir Reservável")
@@ -49,23 +46,21 @@ class TelaCondominio(Tela):
         print("        3 - Listar Reservável")
         print("        4 - Excluir Reservável")
         print("        0 - Retornar")
-        print("<=======<<============>>=======> \033[0m")
+        print("<=======<<============>>=======>")
         return self.checa_opcao(4)
 
     def mostra_condo(self, dados):
-        print("\033[1;36m")
         print("<=======<<DADOS DO CONDOMÍNIO>>=======>")
         print('NOME DO CONDOMÍNIO:', dados['nome'])
         print('CIDADE DO CONDOMÍNIO:', dados['cidade'])
         print('RUA DO CONDOMÍNIO:', dados['rua'])
         print('NÚMERO DO CONDOMÍNIO:', dados['numero'])
         print('APARTAMENTOS DISPONÍVEIS:', ", ".join(dados["apartamentos"]))
-        print("<=======<<===================>>=======> \033[0m")
+        print("<=======<<===================>>=======>")
 
     def seleciona_condo(self):
         while True:
             try:
-                print("\033[1;36m")
                 numero = int(
                     input("SELECIONE O CONDOMÍNIO (digite o numero): "))
                 if isinstance(numero, int) and numero > 0:
@@ -73,10 +68,9 @@ class TelaCondominio(Tela):
                 raise ValueError
             except ValueError:
                 print(
-                    "\033[0;31mERRO!: Número inválido, por favor, tente novamente: \033[1;36m")
+                    "ERRO!: Número inválido, por favor, tente novamente:")
 
     def pega_dados_condo(self, **kwargs):
-        print("\033[1;36m")
         print("<=======<<DADOS CONDOMÍNIO>>=======>")
         nome = input("Digite o nome do condomínio: ")
         while True:
@@ -85,9 +79,7 @@ class TelaCondominio(Tela):
                 if not cidade.isalpha():
                     raise ValueError
             except ValueError:
-                print("\033[0;31m")
                 print("ERRO!: Cidade inválida! Por favor, tente novamente!")
-                print("\033[1;36m")
             else:
                 break
         while True:
@@ -96,9 +88,7 @@ class TelaCondominio(Tela):
                 if rua.isdigit():
                     raise ValueError
             except ValueError:
-                print("\033[0;31m")
                 print("ERRO!: Rua inválida! Por favor, tente novamente!")
-                print("\033[1;36m")
             else:
                 break
         while True:
@@ -108,9 +98,7 @@ class TelaCondominio(Tela):
                 if numero <= 0:
                     raise ValueError
             except ValueError:
-                print("\033[0;31m")
                 print("ERRO!: Número inválido! Por favor, tente novamente!")
-                print("\033[1;36m")
             else:
                 break
         while True:
@@ -122,15 +110,12 @@ class TelaCondominio(Tela):
                             if int(apartamento) < i:
                                 raise ValueError
             except ValueError:
-                print("\033[0;31m")
                 print("ERRO!: Número inválido! Por favor, tente novamente!")
-                print("\033[1;36m")
             else:
                 break
         return {"nome": nome, "cidade": cidade, "rua": rua, "numero": numero,  "apartamento": apartamento}
 
     def pega_dados_reservavel(self, **kwargs):
-        print("\033[1;36m")
         print("<=======<<DADOS RESERVAVEL>>=======>")
         nome = input("Digite o nome do reservável: ")
         if kwargs['acao'] == 'alteracao':
@@ -145,22 +130,20 @@ class TelaCondominio(Tela):
                 except ValueError:
                     print("")
                     print(
-                        "\033[0;31mERRO!: Número inválido! Por favor, tente novamente!")
+                        "ERRO!: Número inválido! Por favor, tente novamente!")
                 else:
                     break
         return {"nome": nome, "id_reservavel": id_reservavel}
 
     def mostra_reservavel(self, dados):
-        print("\33[1;36m")
         print("<=======<<LISTAGEM DOS RESERVÁVEL>>=======>") 
         print('NOME DO RESERVÁVEL:', dados['nome'])
         print('ID DO RESERVÁVEL:', dados['id'])
-        print("<=======<<=======================>>=======> \033[0m")
+        print("<=======<<=======================>>=======>")
 
     def seleciona_reservavel(self):
         while True:
             try:
-                print("\33[1;36m")
                 id_reservavel = int(input(('SELECIONE O RESERVÁVEL (digite o ID): ')))
                 reservavel = self.__controlador_condo.pega_reservavel_por_id(id_reservavel)
                 if reservavel is not None:
@@ -169,6 +152,5 @@ class TelaCondominio(Tela):
                     raise ResourceNotFoundException("Reservável")
             except ResourceNotFoundException as err:
                 print(err)
-                print("\033[1;32m")
-                if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR\033[1;36m: ").lower() == 'cancelar':
+                if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR: ").lower() == 'cancelar':
                     return None

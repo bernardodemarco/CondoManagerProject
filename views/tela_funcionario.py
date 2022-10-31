@@ -12,7 +12,6 @@ class TelaFuncionario(Tela):
         self.__controlador_pessoa = controlador_pessoa
 
     def mostra_opcoes(self):
-        print("\033[1;36m")
         print("<=======<<FUNCIONÁRIOS>>=======>")
         print("    O que gostaria de fazer?")
         print("        1 - Incluir Funcionário")
@@ -24,7 +23,6 @@ class TelaFuncionario(Tela):
         return self.checa_opcao(5)
 
     def pega_dados_funcionario(self, **kwargs):
-        print("\033[1;36m")
         print("<=======<<DADOS FUNCIONÁRIO>>=======>")
         while True:
             try:
@@ -35,9 +33,7 @@ class TelaFuncionario(Tela):
                     nome = nome.title()
                     break
             except Exception:
-                print("\033[0;31m")
                 print("ERRO!: Nome inválido, por favor, tente novamente")
-                print("\033[1;36m")
         while True:
             try:
                 telefone = input("Digite o telefone do funcionário: ")
@@ -46,9 +42,7 @@ class TelaFuncionario(Tela):
                 else:
                     break
             except Exception:
-                print("\033[0;31m")
                 print("ERRO!: Telefone inválido, por favor, tente novamente")
-                print("\033[1;36m")
         if kwargs['acao'] == 'alteracao':
             cpf = kwargs['cpf']
         else:
@@ -59,9 +53,7 @@ class TelaFuncionario(Tela):
                     if self.__controlador_pessoa.pega_funcionario_por_cpf(cpf):
                         raise ResourceAlreadyExistsException("Funcionário")
                 except (InvalidCPFException, ResourceAlreadyExistsException) as err:
-                    print("\033[0;31m")
                     print(err)
-                    print("\033[1;36m")
                 else:
                     break
         while True:
@@ -73,9 +65,7 @@ class TelaFuncionario(Tela):
                     cargo = cargo.title()
                     break
             except Exception:
-                print("\033[0;31m")
                 print("ERRO!: Cargo inválido, por favor, tente novamente")
-                print("\033[1;36m")
         while True:
             try:
                 salario = float(input("Digite o valor do salário deste funcionário: "))
@@ -84,9 +74,7 @@ class TelaFuncionario(Tela):
                 else:
                     break
             except ValueError:
-                print("\033[0;31m")
                 print("ERRO!: Valor inválido, por favor, tente novamente")
-                print("\033[1;36m")
         print("<=======<<==================>>=======>")
         return {"nome": nome, "cpf": cpf, 'telefone': telefone, 'cargo': cargo, 'salario': salario}
 
@@ -102,7 +90,6 @@ class TelaFuncionario(Tela):
     def seleciona_funcionario(self):
         while True:
             try:
-                print("\33[1;36m")
                 cpf_funcionario = input(('SELECIONE O FUNCIONÁRIO (digite o CPF): '))
                 validate_cpf(cpf_funcionario)
                 if self.__controlador_pessoa.pega_funcionario_por_cpf(cpf_funcionario) is not None:
@@ -111,11 +98,9 @@ class TelaFuncionario(Tela):
                     raise ResourceNotFoundException("Funcionário")
             except InvalidCPFException as err:
                 print(err)
-                print("\033[1;32m")
-                if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR\033[1;36m: ").lower() == 'cancelar':
+                if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR ").lower() == 'cancelar':
                     return None
             except ResourceNotFoundException as err:
                 print(err)
-                print("\033[1;32m")
-                if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR\033[1;36m: ").lower() == 'cancelar':
+                if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR ").lower() == 'cancelar':
                     return None

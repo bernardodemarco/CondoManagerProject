@@ -1,8 +1,4 @@
-from models.funcionario import Funcionario
-
-
 class Condominio:
-
     def __init__(self, nome: str,
                  cidade: str,
                  rua: str,

@@ -17,7 +17,7 @@ class Tela(ABC):
             try:
                 print("")
                 opcao = int(
-                    input("\033[1;32mPor favor, informe a seção desejada:\033[0m "))
+                    input("Por favor, informe a seção desejada: "))
                 if 0 <= opcao <= valormax:
                     return opcao
                 else:
@@ -25,7 +25,7 @@ class Tela(ABC):
             except ValueError:
                 print("")
                 print(
-                    "\033[0;31mERRO!: Opção inválida, por favor, tente novamente: \033[0m")
+                    "ERRO!: Opção inválida, por favor, tente novamente: ")
                 time.sleep(1)
 
     def mostra_mensagem(self, mensagem: str):

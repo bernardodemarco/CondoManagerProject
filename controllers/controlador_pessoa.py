@@ -6,7 +6,6 @@ from views.tela_funcionario import TelaFuncionario
 from views.tela_morador import TelaMorador
 from collections import Counter
 from utils.ResourceNotFoundException import ResourceNotFoundException
-from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
 
 class ControladorPessoa(Controlador):
 
@@ -56,7 +55,6 @@ class ControladorPessoa(Controlador):
             if len(self.moradores) == 0:
                 raise Exception('Nenhum morador registrado!')
 
-            self.__tela_morador.mostra_mensagem("\33[1;36m")
             self.__tela_morador.mostra_mensagem(
                 "<=======<<EDITAR MORADOR>>=======>")
             morador = self.__tela_morador.seleciona_morador()
@@ -87,7 +85,6 @@ class ControladorPessoa(Controlador):
         try:
             if len(self.moradores) == 0:
                 raise Exception('Nenhum morador registrado!')
-            self.__tela_morador.mostra_mensagem("\33[1;36m")
             self.__tela_morador.mostra_mensagem(
                 "<=======<<REMOVER MORADOR>>=======>")
             morador = self.__tela_morador.seleciona_morador()
@@ -105,7 +102,6 @@ class ControladorPessoa(Controlador):
             self.__tela_morador.mostra_mensagem(err)
 
     def listar_moradores(self):
-        self.__tela_morador.mostra_mensagem("\33[1;36m")
         self.__tela_morador.mostra_mensagem("<=======<<LISTAGEM DOS MORADORES>>=======>")
         for pessoa in self.moradores:
             self.__tela_morador.mostra_morador({
@@ -163,7 +159,6 @@ class ControladorPessoa(Controlador):
             if len(morador.visitantes) == 0:
                 raise Exception('Nenhum visitante registrado!')
 
-            self.__tela_morador.mostra_mensagem("\33[1;36m")
             self.__tela_morador.mostra_mensagem(
                 "<=======<<EDITAR VISITANTE>>=======>")
             self.listar_visitantes(morador)
@@ -193,7 +188,6 @@ class ControladorPessoa(Controlador):
         try:
             if len(morador.visitantes) == 0:
                 raise Exception('Nenhum visitante registrado!')
-            self.__tela_morador.mostra_mensagem("\33[1;36m")
             self.__tela_morador.mostra_mensagem(
                 "<=======<<REMOVER VISITANTE>>=======>")
             self.listar_visitantes(morador)
@@ -216,7 +210,6 @@ class ControladorPessoa(Controlador):
             morador = args[0]
         else:
             morador = self.seleciona_morador()
-        self.__tela_morador.mostra_mensagem("\33[1;36m")
         self.__tela_morador.mostra_mensagem("<=======<<LISTAGEM DOS VISITANTES>>=======>")
         if len(morador.visitantes) == 0:
             self.__tela_morador.mostra_mensagem("Não existem visitantes para esse morador!")
@@ -267,7 +260,6 @@ class ControladorPessoa(Controlador):
             if len(self.funcionarios) == 0:
                 raise Exception('Nenhum funcionário registrado!')
 
-            self.__tela_funcionario.mostra_mensagem("\33[1;36m")
             self.__tela_funcionario.mostra_mensagem(
                 "<=======<<EDITAR FUNCIONÁRIO>>=======>")
             self.listar_funcionarios()
@@ -301,7 +293,6 @@ class ControladorPessoa(Controlador):
         try:
             if len(self.funcionarios) <= 1:
                 raise Exception('Não é possível excluir nenhum funcionário! O condomínio não pode funcionar sem funcionários!')
-            self.__tela_funcionario.mostra_mensagem("\33[1;36m")
             self.__tela_funcionario.mostra_mensagem(
                 "<=======<<REMOVER FUNCIONÁRIO>>=======>")
             self.listar_funcionarios()
@@ -320,7 +311,6 @@ class ControladorPessoa(Controlador):
             self.__tela_funcionario.mostra_mensagem(err)
 
     def listar_funcionarios(self):
-        self.__tela_funcionario.mostra_mensagem("\33[1;36m")
         self.__tela_funcionario.mostra_mensagem("<=======<<LISTAGEM DOS FUNCIONÁRIOS>>=======>")
         for funcionario in self.funcionarios:
             self.__tela_funcionario.mostra_funcionario({

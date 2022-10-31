@@ -130,6 +130,7 @@ class ControladorReserva(Controlador):
             horario_inicial, horario_final = dados_alterados_reserva['horario']
 
             if not self.checar_disponibilidade_horario(horario_inicial, horario_final, reservavel.horarios):
+                reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].append(reserva.horario)            
                 raise ValueError('Horário indisponível')
 
             self.marcar_horario(horario_inicial, horario_final, reservavel.horarios)
