@@ -30,20 +30,12 @@ class TelaReserva(Tela):
     def mostra_opcoes(self):
         self.init_opcoes()
         button, values = self.open()
-        if values['1']:
-            opcao = 1
-        if values['2']:
-            opcao = 2
-        if values['3']:
-            opcao = 3
-        if values['4']:
-            opcao = 4
-        if values['5']:
-            opcao = 5
         if button in (None, 'Retornar'):
-            opcao = 0
+            return 0
+        for key in values:
+            if values[key]:
+                return int(key)
         self.close()
-        return opcao
 
     def pega_dados_reserva(self, **kwargs):
         while True:
