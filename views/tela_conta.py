@@ -9,6 +9,7 @@ from datetime import date
 class TelaConta(Tela):
     def __init__(self) -> None:
         super().__init__()
+        self.__window = None
         self.init_opcoes()
 
     def init_opcoes(self):
@@ -26,7 +27,7 @@ class TelaConta(Tela):
             [sg.Radio('Gerar relatório das contas por mês', "RD1", key='9')],
             [sg.Button('Confirmar'), sg.Cancel('Retornar')]
         ]
-        self.window = sg.Window('Contas').Layout(layout)
+        self.__window = sg.Window('Contas').Layout(layout)
 
     def mostra_opcoes(self):
         self.init_opcoes()
@@ -56,7 +57,7 @@ class TelaConta(Tela):
                 layout.insert(
                     6, [sg.Text('ID (número inteiro positivo) para a conta:', size=(30, 1)), sg.InputText('', key='id_conta')]
                 )
-            self.window = sg.Window('Registro de contas').Layout(layout)
+            self.__window = sg.Window('Registro de contas').Layout(layout)
             button, values = self.open()
             try:
                 valor = float(values['valor'])
@@ -89,7 +90,7 @@ class TelaConta(Tela):
                 layout.insert(
                     2, [sg.Text('Digite um identificador (número inteiro positivo) para o tipo de conta:', size=(50, 1)), sg.InputText('', key='id_tipo')]
                 )
-            self.window = sg.Window('Cadastro de tipos de contas').Layout(layout)
+            self.__window = sg.Window('Cadastro de tipos de contas').Layout(layout)
             button, values = self.open()
             try:
                 if 'id_tipo' in values:
@@ -110,7 +111,7 @@ class TelaConta(Tela):
                 [sg.Text('Digite o ano:', size=(10, 1)), sg.InputText('', key='ano')],
                 [sg.Button('Enviar')]
             ]
-            self.window = sg.Window('Dados relatório de contas').Layout(layout)
+            self.__window = sg.Window('Dados relatório de contas').Layout(layout)
             button, values = self.open()
             try:
                 mes = int(values['mes'])
@@ -135,7 +136,7 @@ class TelaConta(Tela):
                 [sg.Radio(f'{tipo} de R${valor} da data: {data}', 'contas', key=str(conta['id']))]
             )
         layout.append([sg.Button('Confirmar')])
-        self.window = sg.Window('Seleção de contas').Layout(layout)
+        self.__window = sg.Window('Seleção de contas').Layout(layout)
 
         button, values = self.open()
         for id_conta in values:
@@ -153,7 +154,7 @@ class TelaConta(Tela):
                 [sg.Radio(f'{nome}', 'tipos_contas', key=str(tipo['id']))]
             )
         layout.append([sg.Button('Confirmar')])
-        self.window = sg.Window('Seleção de tipos de contas').Layout(layout)
+        self.__window = sg.Window('Seleção de tipos de contas').Layout(layout)
 
         button, values = self.open()
         for id_tipo in values:
@@ -190,3 +191,10 @@ class TelaConta(Tela):
 
     def mostra_mensagem(self, msg=''):
         sg.popup(msg)
+
+    def open(self):
+        button, values = self.__window.Read()
+        return button, values
+
+    def close(self):
+        self.__window.Close()

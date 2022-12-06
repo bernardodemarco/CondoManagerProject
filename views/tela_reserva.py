@@ -11,6 +11,7 @@ from utils.InvalidTimeException import InvalidTimeException
 class TelaReserva(Tela):
     def __init__(self):
         super().__init__()
+        self.__window = None
         self.init_opcoes()
 
     def init_opcoes(self):
@@ -24,7 +25,7 @@ class TelaReserva(Tela):
             [sg.Radio('Gerar relatório de reservas', "RD1", key='5')],
             [sg.Button('Confirmar'), sg.Cancel('Retornar')]
         ]
-        self.window = sg.Window('Sistema de reservas').Layout(layout)
+        self.__window = sg.Window('Sistema de reservas').Layout(layout)
 
     def mostra_opcoes(self):
         self.init_opcoes()
@@ -54,7 +55,7 @@ class TelaReserva(Tela):
                 layout.insert(
                     6, [sg.Text('Digite um identificador (número inteiro positivo) para a reserva:', size=(50, 1)), sg.InputText('', key='id_reserva')]
                 )
-            self.window = sg.Window('Registro de reservas').Layout(layout)
+            self.__window = sg.Window('Registro de reservas').Layout(layout)
 
             button, values = self.open()
             try:
@@ -93,7 +94,7 @@ class TelaReserva(Tela):
                 [sg.Radio(f'Reserva do {nome_reservavel} feita pelo {nome_morador} das {horario_inicial} até às {horario_final}', 'reservas', key=str(reserva['id']))]
             )
         layout.append([sg.Button('Confirmar')])
-        self.window = sg.Window('Seleção de reserva').Layout(layout)
+        self.__window = sg.Window('Seleção de reserva').Layout(layout)
 
         button, values = self.open()
         for id_reserva in values:
@@ -116,3 +117,10 @@ class TelaReserva(Tela):
 
     def mostra_mensagem(self, msg=''):
         sg.popup(msg)
+
+    def open(self):
+        button, values = self.__window.Read()
+        return button, values
+
+    def close(self):
+        self.__window.Close()

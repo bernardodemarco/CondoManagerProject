@@ -7,6 +7,7 @@ from utils.date_helpers import convert_datetime
 class TelaEntrega(Tela):
     def __init__(self) -> None:
         super().__init__()
+        self.__window = None
         self.init_opcoes()
 
     def init_opcoes(self):
@@ -25,7 +26,7 @@ class TelaEntrega(Tela):
             [sg.Radio('Registrar recebimento da entrega pelo morador', "RD1", key='10')],
             [sg.Button('Confirmar'), sg.Cancel('Retornar')]
         ]
-        self.window = sg.Window('Contas').Layout(layout)
+        self.__window = sg.Window('Contas').Layout(layout)
     
     def mostra_opcoes(self):
         self.init_opcoes()
@@ -45,7 +46,7 @@ class TelaEntrega(Tela):
                 [sg.Text('ID (número inteiro positivo) para a entrega:', size=(30, 1)), sg.InputText('', key='id_entrega')],
                 [sg.Button('Cadastrar Entrega')]
             ]
-            self.window = sg.Window('Cadastro de entregas').Layout(layout)
+            self.__window = sg.Window('Cadastro de entregas').Layout(layout)
             button, values = self.open()
             try:
                 id_entrega = int(values['id_entrega'])
@@ -71,7 +72,7 @@ class TelaEntrega(Tela):
                 layout.insert(
                     2, [sg.Text('Digite um identificador (número inteiro positivo) para o tipo de entrega:', size=(50, 1)), sg.InputText('', key='id_tipo')]
                 )
-            self.window = sg.Window('Cadastro de tipos de entregas').Layout(layout)
+            self.__window = sg.Window('Cadastro de tipos de entregas').Layout(layout)
             button, values = self.open()
             try:
                 if 'id_tipo' in values:
@@ -96,7 +97,7 @@ class TelaEntrega(Tela):
                 [sg.Radio(f'{tipo} ao morador(a) {destinatario} recebida pelo condomínio na data: {data}', 'entregas', key=str(entrega['id']))]
             )
         layout.append([sg.Button('Confirmar')])
-        self.window = sg.Window('Seleção de entregas').Layout(layout)
+        self.__window = sg.Window('Seleção de entregas').Layout(layout)
 
         button, values = self.open()
         for id_entrega in values:
@@ -114,7 +115,7 @@ class TelaEntrega(Tela):
                 [sg.Radio(f'{nome}', 'tipos_entregas', key=str(tipo['id']))]
             )
         layout.append([sg.Button('Confirmar')])
-        self.window = sg.Window('Seleção de tipos de entregas').Layout(layout)
+        self.__window = sg.Window('Seleção de tipos de entregas').Layout(layout)
 
         button, values = self.open()
         for id_tipo in values:
@@ -146,3 +147,10 @@ class TelaEntrega(Tela):
 
     def mostra_mensagem(self, msg=''):
         sg.popup(msg)
+
+    def open(self):
+        button, values = self.__window.Read()
+        return button, values
+
+    def close(self):
+        self.__window.Close()
