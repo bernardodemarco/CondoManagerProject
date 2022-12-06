@@ -75,16 +75,6 @@ class ControladorEntrega(Controlador):
         try:
             if len(self.entregas_pendentes()) == 0:
                 raise ResourceNotFoundException('Entregas pendentes')
-            # for entrega in self.__entregas:
-            #     if entrega.data_recebimento_morador == None:
-            #         self.__tela_entrega.mostra_entrega({
-            #             'destinatario': entrega.destinatario.nome,
-            #             'tipo': entrega.tipo.nome,
-            #             'data_recebimento_condominio': entrega.data_recebimento_condominio,
-            #             'data_recebimento_morador': entrega.data_recebimento_morador,
-            #             'id': entrega.id_entrega,
-            #             'tempo': entrega.tempo_pendente_entrega()
-            #         })
             dados_entregas = self.pega_dados_entregas(status='pendentes')
             self.__tela_entrega.mostra_entrega(dados_entregas)
         except ResourceNotFoundException as err:
@@ -121,7 +111,7 @@ class ControladorEntrega(Controlador):
             if entrega in self.__entregas:
                 raise ResourceAlreadyExistsException('Entrega')
             self.__entregas.append(entrega)
-
+            self.__tela_entrega.mostra_mensagem('ENTREGA CADASTRADA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -139,7 +129,7 @@ class ControladorEntrega(Controlador):
             if tipo in self.__tipos_entrega:
                 raise ResourceAlreadyExistsException('Tipo de entrega')
             self.__tipos_entrega.append(tipo)
-
+            self.__tela_entrega.mostra_mensagem('TIPO DE ENTREGA CADASTRADA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -176,7 +166,7 @@ class ControladorEntrega(Controlador):
             morador = self.__controlador_condominio.controlador_pessoa.seleciona_morador()
             entrega.destinatario = morador
             entrega.tipo = tipo
-
+            self.__tela_entrega.mostra_mensagem('ENTREGA ALTERADA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -199,7 +189,7 @@ class ControladorEntrega(Controlador):
                 acao='alteracao', id_tipo=id_tipo)
             tipo.nome = dados_alterados['nome_tipo']
             tipo.id_tipo = dados_alterados['id']
-
+            self.__tela_entrega.mostra_mensagem('TIPO DE ENTREGA ALTERADA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -217,7 +207,7 @@ class ControladorEntrega(Controlador):
             if entrega == None:
                 raise ResourceNotFoundException('Entrega')
             self.__entregas.remove(entrega)
-
+            self.__tela_entrega.mostra_mensagem('ENTREGA EXCLUÍDA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -235,7 +225,7 @@ class ControladorEntrega(Controlador):
             if tipo == None:
                 raise ResourceNotFoundException('Tipo de entrega')
             self.__tipos_entrega.remove(tipo)
-
+            self.__tela_entrega.mostra_mensagem('TIPO DE ENTREGA EXCLUÍDA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -254,8 +244,7 @@ class ControladorEntrega(Controlador):
             if entrega == None:
                 raise ResourceNotFoundException('Entrega')
             entrega.data_recebimento_morador = datetime.now()
-            self.__tela_entrega.mostra_mensagem(
-                "<=======<<DATA DE RECEBIMENTO DO MORADOR REGISTRADA COM SUCESSO>>=======>")
+            self.__tela_entrega.mostra_mensagem('RECEBIMENTO DO MORADOR REGISTRADO COM SUCESSO')
             self.__tela_entrega.mostra_entrega([{
                 'tipo': entrega.tipo.nome,
                 'destinatario': entrega.destinatario.nome,

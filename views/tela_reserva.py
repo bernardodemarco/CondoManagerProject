@@ -11,13 +11,12 @@ from utils.InvalidTimeException import InvalidTimeException
 class TelaReserva(Tela):
     def __init__(self):
         super().__init__()
-        self.__window = None
         self.init_opcoes()
 
     def init_opcoes(self):
         layout = [
             [sg.Text('-------- RESERVAS ----------', font=("Helvica", 25))],
-            [sg.Text('O que vocês gostaria de fazer?', font=("Helvica", 15))],
+            [sg.Text('O que você gostaria de fazer?', font=("Helvica", 15))],
             [sg.Radio('Incluir reserva', "RD1", key='1')],
             [sg.Radio('Alterar reserva', "RD1", key='2')],
             [sg.Radio('Excluir reserva', "RD1", key='3')],
@@ -25,7 +24,7 @@ class TelaReserva(Tela):
             [sg.Radio('Gerar relatório de reservas', "RD1", key='5')],
             [sg.Button('Confirmar'), sg.Cancel('Retornar')]
         ]
-        self.__window = sg.Window('Sistema de reservas').Layout(layout)
+        self.window = sg.Window('Sistema de reservas').Layout(layout)
 
     def mostra_opcoes(self):
         self.init_opcoes()
@@ -55,7 +54,7 @@ class TelaReserva(Tela):
                 layout.insert(
                     6, [sg.Text('Digite um identificador (número inteiro positivo) para a reserva:', size=(50, 1)), sg.InputText('', key='id_reserva')]
                 )
-            self.__window = sg.Window('Registro de reservas').Layout(layout)
+            self.window = sg.Window('Registro de reservas').Layout(layout)
 
             button, values = self.open()
             try:
@@ -94,7 +93,7 @@ class TelaReserva(Tela):
                 [sg.Radio(f'Reserva do {nome_reservavel} feita pelo {nome_morador} das {horario_inicial} até às {horario_final}', 'reservas', key=str(reserva['id']))]
             )
         layout.append([sg.Button('Confirmar')])
-        self.__window = sg.Window('Seleção de reserva').Layout(layout)
+        self.window = sg.Window('Seleção de reserva').Layout(layout)
 
         button, values = self.open()
         for id_reserva in values:
@@ -114,13 +113,6 @@ class TelaReserva(Tela):
 
     def mostra_relatorio(self, total_reservas: int, morador: str):
         sg.Popup(f'NOS REGISTROS DO CONDOMÍNIO CONSTAM QUE O(A) MORADOR(A) {morador} REALIZOU NO TOTAL {total_reservas} RESERVAS!')
-
-    def open(self):
-        button, values = self.__window.Read()
-        return button, values
-
-    def close(self):
-        self.__window.Close()
 
     def mostra_mensagem(self, msg=''):
         sg.popup(msg)
