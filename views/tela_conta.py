@@ -15,7 +15,7 @@ class TelaConta(Tela):
     def init_opcoes(self):
         layout = [
             [sg.Text('-------- CONTAS ----------', font=("Helvica", 25))],
-            [sg.Text('O que vocês gostaria de fazer?', font=("Helvica", 15))],
+            [sg.Text('O que você gostaria de fazer?', font=("Helvica", 15))],
             [sg.Radio('Incluir conta', "RD1", key='1')],
             [sg.Radio('Alterar conta', "RD1", key='2')],
             [sg.Radio('Excluir conta', "RD1", key='3')],
@@ -96,7 +96,7 @@ class TelaConta(Tela):
                 if 'id_tipo' in values:
                     id_tipo = int(values['id_tipo'])
                 self.close()
-                if (id_tipo > 0 and values['tipo'] != ''):
+                if (id_tipo > 0):
                     return {'nome_tipo': values['tipo'], 'id': id_tipo}
                 raise ValueError
             except ValueError:
@@ -189,12 +189,12 @@ class TelaConta(Tela):
             todos_dados += f'{key} -> R${val:.2f} \n'
         sg.Popup(todos_dados)
 
+    def mostra_mensagem(self, msg=''):
+        sg.popup(msg)
+
     def open(self):
         button, values = self.__window.Read()
         return button, values
 
     def close(self):
         self.__window.Close()
-
-    def mostra_mensagem(self, msg=''):
-        sg.popup(msg)
