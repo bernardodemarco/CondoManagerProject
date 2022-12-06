@@ -31,11 +31,12 @@ class TelaReserva(Tela):
         self.init_opcoes()
         button, values = self.open()
         if button in (None, 'Retornar'):
+            self.close()
             return 0
         for key in values:
             if values[key]:
+                self.close()
                 return int(key)
-        self.close()
 
     def pega_dados_reserva(self, **kwargs):
         while True:

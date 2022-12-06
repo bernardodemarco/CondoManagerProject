@@ -96,7 +96,7 @@ class TelaConta(Tela):
                 if 'id_tipo' in values:
                     id_tipo = int(values['id_tipo'])
                 self.close()
-                if (id_tipo > 0 and values['tipo'] != ''):
+                if (id_tipo > 0):
                     return {'nome_tipo': values['tipo'], 'id': id_tipo}
                 raise ValueError
             except ValueError:
