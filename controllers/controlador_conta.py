@@ -87,6 +87,7 @@ class ControladorConta(Controlador):
             if conta in self.__contas:
                 raise ResourceAlreadyExistsException('Conta')
             self.__contas.append(conta)
+            self.__tela_conta.mostra_mensagem('CONTA INCLUÍDA COM SUCESSO!')
 
         except ValueError:
             self.__tela_conta.mostra_mensagem(
@@ -105,6 +106,7 @@ class ControladorConta(Controlador):
             if tipo in self.__tipos_conta:
                 raise ResourceAlreadyExistsException('Tipo de conta')
             self.__tipos_conta.append(tipo)
+            self.__tela_conta.mostra_mensagem('TIPO DE CONTA INCLUÍDO COM SUCESSO!')
 
         except ValueError:
             self.__tela_conta.mostra_mensagem(

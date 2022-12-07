@@ -49,6 +49,8 @@ class TelaEntrega(Tela):
             self.__window = sg.Window('Cadastro de entregas').Layout(layout)
             button, values = self.open()
             try:
+                if button is None:
+                    raise ValueError
                 id_entrega = int(values['id_entrega'])
                 self.close()
                 if (id_entrega > 0):
@@ -75,6 +77,8 @@ class TelaEntrega(Tela):
             self.__window = sg.Window('Cadastro de tipos de entregas').Layout(layout)
             button, values = self.open()
             try:
+                if button is None:
+                    raise ValueError
                 if 'id_tipo' in values:
                     id_tipo = int(values['id_tipo'])
                 self.close()
@@ -86,42 +90,50 @@ class TelaEntrega(Tela):
                 self.mostra_mensagem('Valores inválidos, tente novamente!')
 
     def seleciona_entrega(self, dados_entregas):
-        layout = [
-            [sg.Text('SELECIONE A ENTREGA', font=('Helvica, 25'))]
-        ]
-        for entrega in dados_entregas:
-            tipo = entrega['tipo']
-            destinatario = entrega['destinatario']
-            data = convert_datetime(entrega['data_recebimento_condominio'])
-            layout.append(
-                [sg.Radio(f'{tipo} ao morador(a) {destinatario} recebida pelo condomínio na data: {data}', 'entregas', key=str(entrega['id']))]
-            )
-        layout.append([sg.Button('Confirmar')])
-        self.__window = sg.Window('Seleção de entregas').Layout(layout)
+        while True:
+            layout = [
+                [sg.Text('SELECIONE A ENTREGA', font=('Helvica, 25'))]
+            ]
+            for entrega in dados_entregas:
+                tipo = entrega['tipo']
+                destinatario = entrega['destinatario']
+                data = convert_datetime(entrega['data_recebimento_condominio'])
+                layout.append(
+                    [sg.Radio(f'{tipo} ao morador(a) {destinatario} recebida pelo condomínio na data: {data}', 'entregas', key=str(entrega['id']))]
+                )
+            layout.append([sg.Button('Confirmar')])
+            self.__window = sg.Window('Seleção de entregas').Layout(layout)
 
-        button, values = self.open()
-        for id_entrega in values:
-            if values[id_entrega]:
+            button, values = self.open()
+            for id_entrega in values:
+                if values[id_entrega]:
+                    self.close()
+                    return int(id_entrega)
+            if button in ('Confirmar', None):
+                self.mostra_mensagem('Valores inválidos')
                 self.close()
-                return int(id_entrega)
 
     def seleciona_tipo_entrega(self, dados_tipos):
-        layout = [
-            [sg.Text('SELECIONE O TIPO DA ENTREGA', font=('Helvica, 25'))]
-        ]
-        for tipo in dados_tipos:
-            nome = tipo['nome']
-            layout.append(
-                [sg.Radio(f'{nome}', 'tipos_entregas', key=str(tipo['id']))]
-            )
-        layout.append([sg.Button('Confirmar')])
-        self.__window = sg.Window('Seleção de tipos de entregas').Layout(layout)
+        while True:
+            layout = [
+                [sg.Text('SELECIONE O TIPO DA ENTREGA', font=('Helvica, 25'))]
+            ]
+            for tipo in dados_tipos:
+                nome = tipo['nome']
+                layout.append(
+                    [sg.Radio(f'{nome}', 'tipos_entregas', key=str(tipo['id']))]
+                )
+            layout.append([sg.Button('Confirmar')])
+            self.__window = sg.Window('Seleção de tipos de entregas').Layout(layout)
 
-        button, values = self.open()
-        for id_tipo in values:
-            if values[id_tipo]:
+            button, values = self.open()
+            for id_tipo in values:
+                if values[id_tipo]:
+                    self.close()
+                    return int(id_tipo)
+            if button in ('Confirmar', None):
+                self.mostra_mensagem('Valores inválidos')
                 self.close()
-                return int(id_tipo)
 
     def mostra_entrega(self, dados_entregas):
         todas_entregas = ''
