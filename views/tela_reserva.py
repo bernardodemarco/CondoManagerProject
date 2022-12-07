@@ -59,6 +59,8 @@ class TelaReserva(Tela):
 
             button, values = self.open()
             try:
+                if button is None:
+                    raise ValueError
                 dia = int(values['dia'])
                 mes = int(values['mes'])
                 ano = int(values['ano'])
@@ -83,24 +85,28 @@ class TelaReserva(Tela):
                 self.mostra_mensagem(err)
 
     def seleciona_reserva(self, dados_reservas):
-        layout = [
-            [sg.Text('SELECIONE A RESERVA', font=('Helvica, 25'))]
-        ]
-        for reserva in dados_reservas:
-            horario_inicial, horario_final = reserva['horario']
-            nome_reservavel = reserva['reservavel']
-            nome_morador = reserva['morador']
-            layout.append(
-                [sg.Radio(f'Reserva do {nome_reservavel} feita pelo {nome_morador} das {horario_inicial} até às {horario_final}', 'reservas', key=str(reserva['id']))]
-            )
-        layout.append([sg.Button('Confirmar')])
-        self.__window = sg.Window('Seleção de reserva').Layout(layout)
+        while True:
+            layout = [
+                [sg.Text('SELECIONE A RESERVA', font=('Helvica, 25'))]
+            ]
+            for reserva in dados_reservas:
+                horario_inicial, horario_final = reserva['horario']
+                nome_reservavel = reserva['reservavel']
+                nome_morador = reserva['morador']
+                layout.append(
+                    [sg.Radio(f'Reserva do {nome_reservavel} feita pelo {nome_morador} das {horario_inicial} até às {horario_final}', 'reservas', key=str(reserva['id']))]
+                )
+            layout.append([sg.Button('Confirmar')])
+            self.__window = sg.Window('Seleção de reserva').Layout(layout)
 
-        button, values = self.open()
-        for id_reserva in values:
-            if values[id_reserva]:
+            button, values = self.open()
+            for id_reserva in values:
+                if values[id_reserva]:
+                    self.close()
+                    return int(id_reserva)
+            if button in ('Confirmar', None):
+                self.mostra_mensagem('Valores inválidos')
                 self.close()
-                return int(id_reserva)
 
     def mostra_reserva(self, dados_reservas):
         todas_reservas = ''

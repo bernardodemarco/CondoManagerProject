@@ -189,7 +189,7 @@ class ControladorEntrega(Controlador):
                 acao='alteracao', id_tipo=id_tipo)
             tipo.nome = dados_alterados['nome_tipo']
             tipo.id_tipo = dados_alterados['id']
-            self.__tela_entrega.mostra_mensagem('TIPO DE ENTREGA ALTERADA COM SUCESSO!')
+            self.__tela_entrega.mostra_mensagem('TIPO DE ENTREGA ALTERADO COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
