@@ -195,6 +195,3 @@ class TelaConta(Tela):
 
     def close(self):
         self.__window.Close()
-
-    def mostra_mensagem(self, msg=''):
-        sg.popup(msg)

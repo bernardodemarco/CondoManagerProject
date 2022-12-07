@@ -1,3 +1,5 @@
+import PySimpleGUI as sg
+
 from multiprocessing.sharedctypes import Value
 from views.tela import Tela
 
@@ -9,165 +11,178 @@ class TelaCondominio(Tela):
     def __init__(self, controlador_condo):
         super().__init__()
         self.__controlador_condo = controlador_condo
+        self.__window = None
 
     @property
     def controlador_condo(self):
         return self.__controlador_condo
 
     def mostra_opcoes(self):
-        print("")
-        print("<=======<<CONDOMÍNIO>>=======>")
-        print("    O que gostaria de fazer?")
-        print("        1 - Alterar Condomínio")
-        print("        2 - Mostrar Dados")
-        print("        3 - Outras opções")
-        print("        4 - Resetar")
-        print("        0 - Desligar")
-        print("<=======<<==========>>=======>")
-        return self.checa_opcao(4)
+        layout = [
+            [sg.Text('-------- CONDOMÍNIO ----------', font=("Helvica", 25))],
+            [sg.Text('O que vocês gostaria de fazer?', font=("Helvica", 15))],
+            [sg.Radio('Alterar condomínio', "RD1", key='1')],
+            [sg.Radio('Mostrar dados do condomínio', "RD1", key='2')],
+            [sg.Radio('Outras opções', "RD1", key='3')],
+            [sg.Button('Confirmar'), sg.Cancel('Desligar'), sg.Button("Resetar")]
+        ]
+        self.__window = sg.Window('Condomínio').Layout(layout)
+        button, values = self.open()
+        if button in (None, 'Desligar'):
+            self.close()
+            return 0
+        elif button in (None, "Resetar"):
+            self.close()
+            return 4
+        for key in values:
+            if values[key]:
+                self.close()
+                return int(key)
 
     def mostra_opcoes_2(self):
-        print("")
-        print("<=======<<OUTRAS OPÇÕES>>=======>")
-        print("Para qual seção gostaria de ir?")
-        print("        1 - Moradores")
-        print("        2 - Funcionários")
-        print("        3 - Contas")
-        print("        4 - Reservável")
-        print("        5 - Reservas")
-        print("        6 - Entregas")
-        print("        0 - Condomínios")
-        print("<=======<<=============>>=======>")
-        return self.checa_opcao(6)
+        layout = [
+            [sg.Text('-------- OUTRAS OPÇÕES ----------', font=("Helvica", 25))],
+            [sg.Text('Para qual seção gostaria de ir?', font=("Helvica", 15))],
+            [sg.Radio('Moradores', "RD1", key='1')],
+            [sg.Radio('Funcionários', "RD1", key='2')],
+            [sg.Radio('Contas', "RD1", key='3')],
+            [sg.Radio('Reservável', "RD1", key='4')],
+            [sg.Radio('Reservas', "RD1", key='5')],
+            [sg.Radio('Entregas', "RD1", key='6')],
+            [sg.Button('Confirmar'), sg.Cancel('Retornar')]
+        ]
+        self.__window = sg.Window('Outras opções').Layout(layout)
+        button, values = self.open()
+        if button in (None, 'Retornar'):
+            self.close()
+            return 0
+        for key in values:
+            if values[key]:
+                self.close()
+                return int(key)
 
     def mostra_opcoes_reservavel(self):
-        print("")
-        print("<=======<<RESERVÁVEL>>=======>")
-        print("Para qual seção gostaria de ir?")
-        print("        1 - Incluir Reservável")
-        print("        2 - Alterar Reservável")
-        print("        3 - Listar Reservável")
-        print("        4 - Excluir Reservável")
-        print("        0 - Retornar")
-        print("<=======<<============>>=======>")
-        return self.checa_opcao(4)
+        layout = [
+            [sg.Text('-------- RESERVÁVEL ----------', font=("Helvica", 25))],
+            [sg.Text('Para qual seção gostaria de ir?', font=("Helvica", 15))],
+            [sg.Radio('Incluir reservável', "RD1", key='1')],
+            [sg.Radio('Alterar reservável', "RD1", key='2')],
+            [sg.Radio('Listar reservável', "RD1", key='3')],
+            [sg.Radio('Excluir reservável', "RD1", key='4')],
+            [sg.Button('Confirmar'), sg.Cancel('Retornar')]
+        ]
+        self.__window = sg.Window('Reservável').Layout(layout)
+        button, values = self.open()
+        if button in (None, 'Retornar'):
+            self.close()
+            return 0
+        for key in values:
+            if values[key]:
+                self.close()
+                return int(key)
 
     def mostra_condo(self, dados):
-        print("")
-        print("<=======<<DADOS DO CONDOMÍNIO>>=======>")
-        print('NOME DO CONDOMÍNIO:', dados['nome'])
-        print('CIDADE DO CONDOMÍNIO:', dados['cidade'])
-        print('RUA DO CONDOMÍNIO:', dados['rua'])
-        print('NÚMERO DO CONDOMÍNIO:', dados['numero'])
-        print('TOTAL DE APARTAMENTOS:', dados['total_ap'])
-        print('APARTAMENTOS INDIVIDUAIS INDISPONÍVEIS:', ", ".join(dados["apartamentos"]))
-        print("<=======<<===================>>=======>")
-
-    def seleciona_condo(self):
-        while True:
-            try:
-                numero = int(
-                    input("SELECIONE O CONDOMÍNIO (digite o numero): "))
-                if isinstance(numero, int) and numero > 0:
-                    return numero
-                raise ValueError
-            except ValueError:
-                print("")
-                print("ERRO!: Número inválido, por favor, tente novamente:")
-                print("")
+        sg.popup("Nome do condomínio:", dados["nome"],
+        "Cidade do condomínio:", dados["cidade"],
+        "Rua do condomínio:", dados["rua"],
+        "Número do condomínio:", dados["numero"],
+        "Total de apartamentos:", dados["total_ap"],
+        "Apartamentos individuais indisponíveis:", ", ".join(dados["apartamentos"]),
+         font = ("Halvica", 12), title = "Dados do condomínio")
 
     def pega_dados_condo(self, **kwargs):
-        print("")
-        print("<=======<<DADOS CONDOMÍNIO>>=======>")
-        nome = input("Digite o nome do condomínio: ")
+        layout = [
+            [sg.Text("DADOS DO CONDOMÍNIO", font=("Helvica", 25))],
+            [sg.Text("Digite o nome do condomínio:", size=(40, 1)), sg.InputText("", key="nome")],
+            [sg.Text("Digite a cidade do condomínio:", size=(40, 1)), sg.InputText("", key="cidade")],
+            [sg.Text("Digite a rua do condomínio:", size=(40, 1)), sg.InputText("", key="rua")],
+            [sg.Text("Digite o número do condomínio:", size=(40, 1)), sg.InputText("", key="numero")],
+            [sg.Text("Digite o número de apartamentos deste condomínio:", size=(40, 1)), sg.InputText("", key="apartamento")],
+            [sg.Button("Enviar")]
+        ]
+        self.__window = sg.Window("Dados do condomínio").Layout(layout)
         while True:
+            button, values = self.open()
             try:
-                cidade = input("Digite a cidade do condomínio: ")
-                if not cidade.isalpha():
+                values["numero"] = int(values["numero"])
+                values["apartamento"] = int(values["apartamento"])
+                if not values["cidade"].isalpha():
                     raise ValueError
-            except ValueError:
-                print("")
-                print("ERRO!: Cidade inválida! Por favor, tente novamente!")
-                print("")
-            else:
-                break
-        while True:
-            try:
-                rua = input("Digite a rua do condomínio: ")
-                if rua.isdigit():
+                if values["rua"].isdigit():
                     raise ValueError
-            except ValueError:
-                print("")
-                print("ERRO!: Rua inválida! Por favor, tente novamente!")
-                print("")
-            else:
-                break
-        while True:
-            try:
-                numero = int(
-                    input("Digite o número do condomínio: "))
-                if numero <= 0:
+                if values["numero"] <= 0:
                     raise ValueError
-            except ValueError:
-                print("")
-                print("ERRO!: Número inválido! Por favor, tente novamente!")
-                print("")
-            else:
-                break
-        while True:
-            try:
-                apartamento = int(input("Digite o número de apartamentos deste condomínio: "))         
+                if values["apartamento"] <= 0:
+                    raise ValueError
                 if kwargs['acao'] == 'alteracao':
                     for i in range(1, self.__controlador_condo.condominio.apartamentos[-1]):
                         if i not in self.__controlador_condo.condominio.apartamentos:
-                            if int(apartamento) < i:
+                            if int(values["apartamento"]) < i:
                                 raise ValueError
+                self.close()
             except ValueError:
-                print("")
-                print("ERRO!: Número inválido! Por favor, tente novamente!")
-                print("")
+                sg.popup("Valores inválidos! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
             else:
                 break
-        return {"nome": nome, "cidade": cidade, "rua": rua, "numero": numero,  "apartamento": apartamento}
+        return {"nome": values["nome"], "cidade": values["cidade"], "rua": values["rua"], "numero": values["numero"],  "apartamento": values["apartamento"]}
 
     def pega_dados_reservavel(self, **kwargs):
-        print("")
-        print("<=======<<DADOS RESERVAVEL>>=======>")
-        nome = input("Digite o nome do reservável: ")
+        layout = [
+            [sg.Text("DADOS DO RESERVÁVEL", font=("Helvica", 25))],
+            [sg.Text("Digite o nome do reservável:", size=(40, 1)), sg.InputText("", key="nome")],
+            
+            [sg.Button("Cadastrar reservável"), sg.Cancel("Retornar")]
+        ]
         if kwargs['acao'] == 'alteracao':
-            id_reservavel = kwargs['id_reservavel']
+            values["id_reservavel"] = kwargs['id_reservavel']
         else:
-            while True:
-                try:
-                    id_reservavel = int(
-                        input("Digite um número único (positivo) pro reservável: "))
-                    if id_reservavel <= 0:
-                        raise ValueError
-                except ValueError:
-                    print("")
-                    print("ERRO!: Número inválido! Por favor, tente novamente!")
-                    print("")
-                else:
-                    break
-        return {"nome": nome, "id_reservavel": id_reservavel}
+            layout.insert(
+                2, [sg.Text("Digite um número único (positivo) pro reservável:", size=(40, 1)), sg.InputText("", key="id_reservavel")]
+            )
+        self.__window = sg.Window("Dados do condomínio").Layout(layout)
+        while True:
+            button, values = self.open()
+            try:
+                values["id_reservavel"] = int(values["id_reservavel"])
+                if values["id_reservavel"] <= 0:
+                    raise ValueError
+                self.close()
+            except ValueError:
+                sg.popup("Valores inválidos! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+            else:
+                break
+        return {"nome": values["nome"], "id_reservavel": values["id_reservavel"]}
 
     def mostra_reservavel(self, dados):
-        print("")
-        print("<=======<<LISTAGEM DOS RESERVÁVEL>>=======>") 
-        print('NOME DO RESERVÁVEL:', dados['nome'])
-        print('ID DO RESERVÁVEL:', dados['id'])
-        print("<=======<<=======================>>=======>")
+        todos_reservaveis = ""
+        for reservavel in dados:
+            todos_reservaveis += "Nome do reservável: ", str(reservavel["nome"]) + '\n'
+            todos_reservaveis += "ID do reservável: ", str(reservavel["id_reservavel"]) + '\n\n'
+        sg.popup("LISTA DE TODOS OS RESERVÁVEIS", todos_reservaveis ,font = ("Halveca", 12), title = "Reserváveis")
 
-    def seleciona_reservavel(self):
-        while True:
-            try:
-                id_reservavel = int(input(('SELECIONE O RESERVÁVEL (digite o ID): ')))
-                reservavel = self.__controlador_condo.pega_reservavel_por_id(id_reservavel)
-                if reservavel is not None:
-                    return reservavel
-                else:
-                    raise ResourceNotFoundException("Reservável")
-            except ResourceNotFoundException as err:
-                print(err)
-                if input("Gostaria de tentar novamente? Caso não queira, digite CANCELAR: ").lower() == 'cancelar':
-                    return None
+    def seleciona_reservavel(self, dados):
+        layout = [
+            [sg.Text("SELECIONE O RESERVÁVEL", font=("Helvica", 25))]
+        ]
+        for reservavel in dados:
+            nome = reservavel["nome"]
+            id_reservavel = reservavel["id_reservavel"]
+            layout.append(
+                [sg.Radio(f"{nome}: ID {id_reservavel}")]
+            )
+        layout.append(sg.Button("Confirmar"))
+        self.__window = sg.Window("Seleção de reservável").Layout(layout)
+
+        button, values = self.open()
+        for id_reservavel in values:
+            if values[id_reservavel]:
+                self.close()
+                return int(id_reservavel)
+
+
+    def open(self):
+        button, values = self.__window.Read()
+        return button, values
+
+    def close(self):
+        self.__window.Close()

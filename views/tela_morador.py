@@ -1,3 +1,4 @@
+import PySimpleGUI as sg
 from views.tela import Tela
 from utils.InvalidCPFException import InvalidCPFException
 from utils.ResourceNotFoundException import ResourceNotFoundException
@@ -10,75 +11,69 @@ class TelaMorador(Tela):
     def __init__(self, controlador_pessoa):
         super().__init__()
         self.__controlador_pessoa = controlador_pessoa
+        self.__window = None
 
     def mostra_opcoes(self):
-        print("")
-        print("<=======<<MORADORES>>=======>")
-        print("    O que gostaria de fazer?")
-        print("        1 - Incluir Morador")
-        print("        2 - Alterar Morador")
-        print("        3 - Excluir Morador")
-        print("        4 - Listar Moradores")
-        print("        5 - Visitas")
-        print("        0 - Retornar")
-        print("<=======<<============>>=======>")
-        return self.checa_opcao(5)
+        layout = [
+            [sg.Text('-------- MORADORES ----------', font=("Helvica", 25))],
+            [sg.Text('O que gostaria de fazer?', font=("Helvica", 15))],
+            [sg.Radio('Incluir Morador', "RD1", key='1')],
+            [sg.Radio('Alterar Morador', "RD1", key='2')],
+            [sg.Radio('Excluir Morador', "RD1", key='3')],
+            [sg.Radio('Listar Moradores', "RD1", key='4')],
+            [sg.Radio('Visitas', "RD1", key='5')],
+            [sg.Button('Confirmar'), sg.Cancel('Retornar')]
+        ]
+        self.__window = sg.Window('Moradores').Layout(layout)
+        button, values = self.open()
+        if button in (None, 'Retornar'):
+            self.close()
+            return 0
+        for key in values:
+            if values[key]:
+                self.close()
+                return int(key)
 
     def pega_dados_morador(self, apartamentos, **kwargs):
-        print("")
-        print("<=======<<DADOS MORADOR>>=======>")
-        while True:
-            try:
-                nome = input("Digite o nome do morador: ")
-                if bool(re.match('[a-zA-Zà-ÿÀ-Ý\s]+$', nome)) == False:
-                    raise Exception
-                else:
-                    nome = nome.title()
-                    break
-            except Exception:
-                print("")
-                print("ERRO!: Nome inválido, por favor, tente novamente")
-                print("")
-        while True:
-            try:
-                telefone = input("Digite o telefone do morador: ")
-                if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', telefone)) == False:
-                    raise Exception
-                else:
-                    break
-            except Exception:
-                print("")
-                print("ERRO!: Telefone inválido, por favor, tente novamente")
-                print("")
+        layout = [
+            [sg.Text("DADOS DO MORADOR", font=("Helvica", 25))],
+            [sg.Text("Digite o nome do morador: ", size=(40, 1)), sg.InputText("", key="nome")],
+            [sg.Text("Digite o telefone do morador: ", size=(40, 1)), sg.InputText("", key="telefone")],
+            [sg.Text("Digite o apartamento do morador: ", size=(40, 1)), sg.InputText("", key="apartamento")],
+            [sg.Button("Enviar")]
+        ]
         if kwargs['acao'] == 'alteracao':
-            cpf = kwargs['cpf']
-            apartamento = kwargs['apartamento']
+            values["cpf"] = kwargs["cpf"]
         else:
-            while True:
-                cpf = input("Digite o CPF do morador: ")
-                try:
-                    validate_cpf(cpf)
-                    if self.__controlador_pessoa.pega_morador_por_cpf(cpf):
-                        raise ResourceAlreadyExistsException("Morador")
-                except (InvalidCPFException, ResourceAlreadyExistsException) as err:
-                    print("")
-                    print(err)
-                    print("")
-                else:
-                    break
-            while True:
-                try:
-                    apartamento = int(input("Digite o apartamento do morador: "))
-                    if apartamento not in apartamentos:
-                        raise Exception
-                    else:
-                        break
-                except Exception:
-                    print("")
-                    print("ERRO!: Número inválido! Por favor, tente novamente!")
-                    print("")
-        print("<=======<<==================>>=======>")        
-        return {"nome": nome, "cpf": cpf, 'telefone': telefone, 'apartamento': apartamento}
+            layout.insert(
+                3, [sg.Text("Digite o CPF do morador: ", size=(40, 1)), sg.InputText("", key="cpf")]
+            )
+        self.__window = sg.Window("Dados do morador").Layout(layout)
+        while True:
+            button, values = self.open()
+            try:
+                if bool(re.match('[a-zA-Zà-ÿÀ-Ý\s]+$', values["nome"])) == False:
+                    raise Exception
+                if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', values["telefone"])) == False:
+                    raise Exception
+                if apartamento not in apartamentos:
+                    raise Exception
+            except Exception:
+                sg.popup("Valores inválidos! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+                continue
+            try:
+                validate_cpf(values["cpf"])
+            except InvalidCPFException:
+                sg.popup("CPF inválido! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+                continue
+            try:
+                if self.__controlador_pessoa.pega_morador_por_cpf(cpf):
+                    raise ResourceAlreadyExistsException("Morador")
+            except (ResourceAlreadyExistsException) as err:
+                sg.popup(err, title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")  
+            else:
+                break            
+        return {"nome": values["nome"], "cpf": values["cpf"], 'telefone': values["telefone"], 'apartamento': values["apartamento"]}
 
     def mostra_morador(self, dados):
         print('NOME DO MORADOR:', dados['nome'])
@@ -199,3 +194,9 @@ class TelaMorador(Tela):
         print('CPF DO VISITANTE:', dados['cpf'])
         print("<=======<<======================>>=======>")
         
+    def open(self):
+        button, values = self.__window.Read()
+        return button, values
+
+    def close(self):
+        self.__window.Close()

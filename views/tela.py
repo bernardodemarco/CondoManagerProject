@@ -1,3 +1,5 @@
+import PySimpleGUI as sg
+
 from abc import ABC, abstractmethod
 import time
 
@@ -28,5 +30,5 @@ class Tela(ABC):
                     "ERRO!: Opção inválida, por favor, tente novamente: ")
                 time.sleep(1)
 
-    def mostra_mensagem(self, mensagem: str):
-        print(mensagem)
+    def mostra_mensagem(self, msg=''):
+        sg.popup(msg)
