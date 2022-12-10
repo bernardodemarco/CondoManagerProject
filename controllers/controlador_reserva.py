@@ -87,6 +87,8 @@ class ControladorReserva(Controlador):
             if reserva in self.__reservas:
                 raise ResourceAlreadyExistsException('Reserva')
             self.__reservas.append(reserva)
+            self.__tela_reserva.mostra_mensagem('RESERVA INCLUÍDA COM SUCESSO!')
+
         except (ResourceAlreadyExistsException, ResourceNotFoundException, ValueError) as err:
             self.__tela_reserva.mostra_mensagem(err)
         except TypeError:

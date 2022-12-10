@@ -10,17 +10,48 @@ from models.tipo_entrega import TipoEntrega
 from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
 from utils.ResourceNotFoundException import ResourceNotFoundException
 
+from DAOs.entrega_dao import EntregaDAO
+
 
 class ControladorEntrega(Controlador):
     def __init__(self, controlador_condominio):
         super().__init__()
         self.__controlador_condominio = controlador_condominio
         self.__tela_entrega = TelaEntrega()
-        self.__entregas = []
+        self.__entregas_dao = EntregaDAO()
+
         self.__tipos_entrega = []
 
+    def pega_dados_entregas(self, **kwargs):
+        entregas = None
+        if kwargs['status'] == 'todas':
+            entregas = self.__entregas_dao.get_all()
+        elif kwargs['status'] == 'pendentes':
+            entregas = self.entregas_pendentes()
+        dados_entregas = []
+        for entrega in entregas:
+            dados_entregas.append({
+                'destinatario': entrega.destinatario.nome,
+                'tipo': entrega.tipo.nome,
+                'data_recebimento_condominio': entrega.data_recebimento_condominio,
+                'data_recebimento_morador': entrega.data_recebimento_morador,
+                'tempo': entrega.tempo_pendente_entrega(),
+                'id': entrega.id_entrega
+            })
+        return dados_entregas
+
+    def pega_dados_tipos(self):
+        dados_tipos = []
+        for tipo in self.__tipos_entrega:
+            dados_tipos.append({
+                'nome': tipo.nome,
+                'id': tipo.id_tipo
+            })
+        return dados_tipos
+
     def pega_entrega_por_id(self, id_entrega: int):
-        for entrega in self.__entregas:
+        entregas = self.__entregas_dao.get_all()
+        for entrega in entregas:
             if entrega.id_entrega == id_entrega:
                 return entrega
         return None
@@ -33,24 +64,16 @@ class ControladorEntrega(Controlador):
 
     def entregas_pendentes(self):
         ''' Retorna lista de entregas que não foram coletadas pelos moradores '''
-        return [entrega for entrega in self.__entregas if not entrega.data_recebimento_morador]
+        entregas = self.__entregas_dao.get_all()
+        return [entrega for entrega in entregas if not entrega.data_recebimento_morador]
 
     def lista_entregas(self):
+        entregas = self.__entregas_dao.get_all()
         try:
-            if len(self.__entregas) == 0:
+            if len(entregas) == 0:
                 raise ResourceNotFoundException('Entrega')
-
-            self.__tela_entrega.mostra_mensagem(
-                '<=======<<TODAS ENTREGAS CADASTRADAS>>=======>')
-            for entrega in self.__entregas:
-                self.__tela_entrega.mostra_entrega({
-                    'destinatario': entrega.destinatario.nome,
-                    'tipo': entrega.tipo.nome,
-                    'data_recebimento_condominio': entrega.data_recebimento_condominio,
-                    'data_recebimento_morador': entrega.data_recebimento_morador,
-                    'id': entrega.id_entrega,
-                    'tempo': entrega.tempo_pendente_entrega()
-                })
+            dados_entregas = self.pega_dados_entregas(status='todas')
+            self.__tela_entrega.mostra_entrega(dados_entregas)
         except ResourceNotFoundException as err:
             self.__tela_entrega.mostra_mensagem(err)
 
@@ -58,19 +81,8 @@ class ControladorEntrega(Controlador):
         try:
             if len(self.entregas_pendentes()) == 0:
                 raise ResourceNotFoundException('Entregas pendentes')
-
-            self.__tela_entrega.mostra_mensagem(
-                '<=======<<TODAS ENTREGAS PENDENTES>>=======>')
-            for entrega in self.__entregas:
-                if entrega.data_recebimento_morador == None:
-                    self.__tela_entrega.mostra_entrega({
-                        'destinatario': entrega.destinatario.nome,
-                        'tipo': entrega.tipo.nome,
-                        'data_recebimento_condominio': entrega.data_recebimento_condominio,
-                        'data_recebimento_morador': entrega.data_recebimento_morador,
-                        'id': entrega.id_entrega,
-                        'tempo': entrega.tempo_pendente_entrega()
-                    })
+            dados_entregas = self.pega_dados_entregas(status='pendentes')
+            self.__tela_entrega.mostra_entrega(dados_entregas)
         except ResourceNotFoundException as err:
             self.__tela_entrega.mostra_mensagem(err)        
 
@@ -79,36 +91,34 @@ class ControladorEntrega(Controlador):
             if len(self.__tipos_entrega) == 0:
                 raise ResourceNotFoundException('Tipos de entrega')
 
-            self.__tela_entrega.mostra_mensagem(
-                '<=======<<TODAS OS TIPOS DE ENTREGA CADASTRADOS>>=======>')
-            for tipo in self.__tipos_entrega:
-                self.__tela_entrega.mostra_tipo_entrega({
-                    'nome': tipo.nome,
-                    'id': tipo.id_tipo
-                })
+            dados_tipos = self.pega_dados_tipos()
+            self.__tela_entrega.mostra_tipo_entrega(dados_tipos)
         except ResourceNotFoundException as err:
             self.__tela_entrega.mostra_mensagem(err)
 
     def incluir_entrega(self):
         try:
             if len(self.__tipos_entrega) == 0:
+                self.__tela_entrega.close()
                 self.__tela_entrega.mostra_mensagem(
                     'Cadastre um tipo de entrega primeiro!')
                 self.incluir_tipo_entrega()
 
             self.lista_tipos_entregas()
-            id_tipo = self.__tela_entrega.seleciona_tipo_entrega()
+            dados_tipos = self.pega_dados_tipos()
+            id_tipo = self.__tela_entrega.seleciona_tipo_entrega(dados_tipos)
             tipo = self.pega_tipo_por_id(id_tipo)
             if tipo == None:
                 raise ResourceNotFoundException('Tipo da entrega')
 
             morador = self.__controlador_condominio.controlador_pessoa.seleciona_morador()
-            dados = self.__tela_entrega.pega_dados_entrega(acao='criacao')
+            dados = self.__tela_entrega.pega_dados_entrega()
+            entregas = self.__entregas_dao.get_all()
             entrega = Entrega(tipo, morador, dados['id'])
-            if entrega in self.__entregas:
+            if entrega in entregas:
                 raise ResourceAlreadyExistsException('Entrega')
-            self.__entregas.append(entrega)
-
+            self.__entregas_dao.add(entrega)
+            self.__tela_entrega.mostra_mensagem('ENTREGA CADASTRADA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -126,7 +136,7 @@ class ControladorEntrega(Controlador):
             if tipo in self.__tipos_entrega:
                 raise ResourceAlreadyExistsException('Tipo de entrega')
             self.__tipos_entrega.append(tipo)
-
+            self.__tela_entrega.mostra_mensagem('TIPO DE ENTREGA CADASTRADA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -136,38 +146,36 @@ class ControladorEntrega(Controlador):
 
     def alterar_entrega(self):
         try:
-            if len(self.__entregas) == 0:
+            entregas = self.__entregas_dao.get_all()
+            if len(entregas) == 0:
                 raise Exception('Nenhuma entrega registrada!')
-
-            self.__tela_entrega.mostra_mensagem(
-                "<=======<<EDITAR ENTREGA>>=======>")
             self.lista_entregas()
-            id_entrega = self.__tela_entrega.seleciona_entrega()
+            dados_entregas = self.pega_dados_entregas(status='todas')
+            id_entrega = self.__tela_entrega.seleciona_entrega(dados_entregas)
             entrega = self.pega_entrega_por_id(id_entrega)
             if entrega == None:
                 raise ResourceNotFoundException('Entrega')
-            self.__tela_entrega.mostra_entrega({
+            self.__tela_entrega.mostra_entrega([{
                 'destinatario': entrega.destinatario.nome,
                 'tipo': entrega.tipo.nome,
                 'data_recebimento_condominio': entrega.data_recebimento_condominio,
                 'data_recebimento_morador': entrega.data_recebimento_morador,
                 'id': entrega.id_entrega,
                 'tempo': entrega.tempo_pendente_entrega()
-            })
+            }])
 
             self.lista_tipos_entregas()
-            id_tipo = self.__tela_entrega.seleciona_tipo_entrega()
+            dados_tipos = self.pega_dados_tipos()
+            id_tipo = self.__tela_entrega.seleciona_tipo_entrega(dados_tipos)
             tipo = self.pega_tipo_por_id(id_tipo)
             if tipo == None:
                 raise ResourceNotFoundException('Tipo da entrega')
 
             morador = self.__controlador_condominio.controlador_pessoa.seleciona_morador()
-            dados_alterados = self.__tela_entrega.pega_dados_entrega(
-                acao='alteracao', id_entrega=entrega.id_entrega)
             entrega.destinatario = morador
-            entrega.id_entrega = dados_alterados['id']
             entrega.tipo = tipo
-
+            self.__entregas_dao.update(entrega)
+            self.__tela_entrega.mostra_mensagem('ENTREGA ALTERADA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -179,10 +187,9 @@ class ControladorEntrega(Controlador):
             if len(self.__tipos_entrega) == 0:
                 raise Exception('Nenhum tipo de entrega registrado!')
 
-            self.__tela_entrega.mostra_mensagem(
-                "<=======<<EDITAR TIPO DE ENTREGA>>=======>")
             self.lista_tipos_entregas()
-            id_tipo = self.__tela_entrega.seleciona_tipo_entrega()
+            dados_tipos = self.pega_dados_tipos()
+            id_tipo = self.__tela_entrega.seleciona_tipo_entrega(dados_tipos)
             tipo = self.pega_tipo_por_id(id_tipo)
             if tipo == None:
                 raise ResourceNotFoundException('Tipo da entrega')
@@ -191,7 +198,7 @@ class ControladorEntrega(Controlador):
                 acao='alteracao', id_tipo=id_tipo)
             tipo.nome = dados_alterados['nome_tipo']
             tipo.id_tipo = dados_alterados['id']
-
+            self.__tela_entrega.mostra_mensagem('TIPO DE ENTREGA ALTERADO COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -200,18 +207,17 @@ class ControladorEntrega(Controlador):
 
     def excluir_entrega(self):
         try:
-            if len(self.__entregas) == 0:
+            entregas = self.__entregas_dao.get_all()
+            if len(entregas) == 0:
                 raise Exception('Nenhuma entrega registrada!')
-
-            self.__tela_entrega.mostra_mensagem(
-                "<=======<<REMOVER ENTREGA>>=======>")
             self.lista_entregas()
-            id_entrega = self.__tela_entrega.seleciona_entrega()
+            dados_entregas = self.pega_dados_entregas(status='todas') 
+            id_entrega = self.__tela_entrega.seleciona_entrega(dados_entregas)
             entrega = self.pega_entrega_por_id(id_entrega)
             if entrega == None:
                 raise ResourceNotFoundException('Entrega')
-            self.__entregas.remove(entrega)
-
+            self.__entregas_dao.remove(entrega)
+            self.__tela_entrega.mostra_mensagem('ENTREGA EXCLUÍDA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -222,16 +228,14 @@ class ControladorEntrega(Controlador):
         try:
             if len(self.__tipos_entrega) == 0:
                 raise Exception('Nenhum tipo de entrega registrado!')
-
-            self.__tela_entrega.mostra_mensagem(
-                "<=======<<REMOVER TIPO DE ENTREGA>>=======>")
             self.lista_tipos_entregas()
-            id_tipo = self.__tela_entrega.seleciona_tipo_entrega()
+            dados_tipos = self.pega_dados_tipos()
+            id_tipo = self.__tela_entrega.seleciona_tipo_entrega(dados_tipos)
             tipo = self.pega_tipo_por_id(id_tipo)
             if tipo == None:
                 raise ResourceNotFoundException('Tipo de entrega')
             self.__tipos_entrega.remove(tipo)
-
+            self.__tela_entrega.mostra_mensagem('TIPO DE ENTREGA EXCLUÍDA COM SUCESSO!')
         except ValueError:
             self.__tela_entrega.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -243,24 +247,23 @@ class ControladorEntrega(Controlador):
             if len(self.entregas_pendentes()) == 0:
                 raise ResourceNotFoundException('Entregas pendentes')
             
-            self.__tela_entrega.mostra_mensagem(
-                "<=======<<REGISTRANDO RECEBIMENTO DA ENTREGA PELO MORADOR>>=======>")
             self.lista_entregas_pendentes()
-            id_entrega = self.__tela_entrega.seleciona_entrega()
+            dados_entregas = self.pega_dados_entregas(status='pendentes')
+            id_entrega = self.__tela_entrega.seleciona_entrega(dados_entregas)
             entrega = self.pega_entrega_por_id(id_entrega)
             if entrega == None:
                 raise ResourceNotFoundException('Entrega')
             entrega.data_recebimento_morador = datetime.now()
-            self.__tela_entrega.mostra_mensagem(
-                "<=======<<DATA DE RECEBIMENTO DO MORADOR REGISTRADA COM SUCESSO>>=======>")
-            self.__tela_entrega.mostra_entrega({
+            self.__entregas_dao.update(entrega)
+            self.__tela_entrega.mostra_mensagem('RECEBIMENTO DO MORADOR REGISTRADO COM SUCESSO')
+            self.__tela_entrega.mostra_entrega([{
                 'tipo': entrega.tipo.nome,
                 'destinatario': entrega.destinatario.nome,
                 'data_recebimento_condominio': entrega.data_recebimento_condominio,
                 'data_recebimento_morador': entrega.data_recebimento_morador,
                 'id': entrega.id_entrega,
                 'tempo': entrega.tempo_pendente_entrega()
-            })
+            }])
             
         except (ResourceNotFoundException, ValueError) as err:
             self.__tela_entrega.mostra_mensagem(err)

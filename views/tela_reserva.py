@@ -17,7 +17,7 @@ class TelaReserva(Tela):
     def init_opcoes(self):
         layout = [
             [sg.Text('-------- RESERVAS ----------', font=("Helvica", 25))],
-            [sg.Text('O que vocês gostaria de fazer?', font=("Helvica", 15))],
+            [sg.Text('O que você gostaria de fazer?', font=("Helvica", 15))],
             [sg.Radio('Incluir reserva', "RD1", key='1')],
             [sg.Radio('Alterar reserva', "RD1", key='2')],
             [sg.Radio('Excluir reserva', "RD1", key='3')],
@@ -31,11 +31,12 @@ class TelaReserva(Tela):
         self.init_opcoes()
         button, values = self.open()
         if button in (None, 'Retornar'):
+            self.close()
             return 0
         for key in values:
             if values[key]:
+                self.close()
                 return int(key)
-        self.close()
 
     def pega_dados_reserva(self, **kwargs):
         while True:
@@ -58,6 +59,8 @@ class TelaReserva(Tela):
 
             button, values = self.open()
             try:
+                if button is None:
+                    raise ValueError
                 dia = int(values['dia'])
                 mes = int(values['mes'])
                 ano = int(values['ano'])
@@ -82,24 +85,28 @@ class TelaReserva(Tela):
                 self.mostra_mensagem(err)
 
     def seleciona_reserva(self, dados_reservas):
-        layout = [
-            [sg.Text('SELECIONE A RESERVA', font=('Helvica, 25'))]
-        ]
-        for reserva in dados_reservas:
-            horario_inicial, horario_final = reserva['horario']
-            nome_reservavel = reserva['reservavel']
-            nome_morador = reserva['morador']
-            layout.append(
-                [sg.Radio(f'Reserva do {nome_reservavel} feita pelo {nome_morador} das {horario_inicial} até às {horario_final}', 'reservas', key=str(reserva['id']))]
-            )
-        layout.append([sg.Button('Confirmar')])
-        self.__window = sg.Window('Seleção de reserva').Layout(layout)
+        while True:
+            layout = [
+                [sg.Text('SELECIONE A RESERVA', font=('Helvica, 25'))]
+            ]
+            for reserva in dados_reservas:
+                horario_inicial, horario_final = reserva['horario']
+                nome_reservavel = reserva['reservavel']
+                nome_morador = reserva['morador']
+                layout.append(
+                    [sg.Radio(f'Reserva do {nome_reservavel} feita pelo {nome_morador} das {horario_inicial} até às {horario_final}', 'reservas', key=str(reserva['id']))]
+                )
+            layout.append([sg.Button('Confirmar')])
+            self.__window = sg.Window('Seleção de reserva').Layout(layout)
 
-        button, values = self.open()
-        for id_reserva in values:
-            if values[id_reserva]:
+            button, values = self.open()
+            for id_reserva in values:
+                if values[id_reserva]:
+                    self.close()
+                    return int(id_reserva)
+            if button in ('Confirmar', None):
+                self.mostra_mensagem('Valores inválidos')
                 self.close()
-                return int(id_reserva)
 
     def mostra_reserva(self, dados_reservas):
         todas_reservas = ''
@@ -114,12 +121,12 @@ class TelaReserva(Tela):
     def mostra_relatorio(self, total_reservas: int, morador: str):
         sg.Popup(f'NOS REGISTROS DO CONDOMÍNIO CONSTAM QUE O(A) MORADOR(A) {morador} REALIZOU NO TOTAL {total_reservas} RESERVAS!')
 
+    def mostra_mensagem(self, msg=''):
+        sg.popup(msg)
+
     def open(self):
         button, values = self.__window.Read()
         return button, values
 
     def close(self):
         self.__window.Close()
-
-    def mostra_mensagem(self, msg=''):
-        sg.popup(msg)

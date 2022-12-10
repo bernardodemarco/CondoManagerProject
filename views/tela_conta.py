@@ -15,7 +15,7 @@ class TelaConta(Tela):
     def init_opcoes(self):
         layout = [
             [sg.Text('-------- CONTAS ----------', font=("Helvica", 25))],
-            [sg.Text('O que vocês gostaria de fazer?', font=("Helvica", 15))],
+            [sg.Text('O que você gostaria de fazer?', font=("Helvica", 15))],
             [sg.Radio('Incluir conta', "RD1", key='1')],
             [sg.Radio('Alterar conta', "RD1", key='2')],
             [sg.Radio('Excluir conta', "RD1", key='3')],
@@ -60,6 +60,8 @@ class TelaConta(Tela):
             self.__window = sg.Window('Registro de contas').Layout(layout)
             button, values = self.open()
             try:
+                if button is None:
+                    raise ValueError
                 valor = float(values['valor'])
                 dia = int(values['dia'])
                 mes = int(values['mes'])
@@ -93,10 +95,12 @@ class TelaConta(Tela):
             self.__window = sg.Window('Cadastro de tipos de contas').Layout(layout)
             button, values = self.open()
             try:
+                if button is None:
+                    raise ValueError
                 if 'id_tipo' in values:
                     id_tipo = int(values['id_tipo'])
                 self.close()
-                if (id_tipo > 0 and values['tipo'] != ''):
+                if (id_tipo > 0):
                     return {'nome_tipo': values['tipo'], 'id': id_tipo}
                 raise ValueError
             except ValueError:
@@ -114,6 +118,8 @@ class TelaConta(Tela):
             self.__window = sg.Window('Dados relatório de contas').Layout(layout)
             button, values = self.open()
             try:
+                if button is None:
+                    raise ValueError
                 mes = int(values['mes'])
                 ano = int(values['ano'])
                 self.close()
@@ -125,42 +131,50 @@ class TelaConta(Tela):
                 self.mostra_mensagem('Valores inválidos, tente novamente!')
 
     def seleciona_conta(self, dados_contas):
-        layout = [
-            [sg.Text('SELECIONE A CONTA', font=('Helvica, 25'))]
-        ]
-        for conta in dados_contas:
-            valor = conta['valor']
-            tipo = conta['tipo']
-            data = conta['data']
-            layout.append(
-                [sg.Radio(f'{tipo} de R${valor} da data: {data}', 'contas', key=str(conta['id']))]
-            )
-        layout.append([sg.Button('Confirmar')])
-        self.__window = sg.Window('Seleção de contas').Layout(layout)
+        while True:
+            layout = [
+                [sg.Text('SELECIONE A CONTA', font=('Helvica, 25'))]
+            ]
+            for conta in dados_contas:
+                valor = conta['valor']
+                tipo = conta['tipo']
+                data = conta['data']
+                layout.append(
+                    [sg.Radio(f'{tipo} de R${valor} da data: {data}', 'contas', key=str(conta['id']))]
+                )
+            layout.append([sg.Button('Confirmar')])
+            self.__window = sg.Window('Seleção de contas').Layout(layout)
 
-        button, values = self.open()
-        for id_conta in values:
-            if values[id_conta]:
+            button, values = self.open()
+            for id_conta in values:
+                if values[id_conta]:
+                    self.close()
+                    return int(id_conta)
+            if button in ('Confirmar', None):
+                self.mostra_mensagem('Valores inválidos')
                 self.close()
-                return int(id_conta)
 
     def seleciona_tipo_conta(self, dados_tipos):
-        layout = [
-            [sg.Text('SELECIONE O TIPO DA CONTA', font=('Helvica, 25'))]
-        ]
-        for tipo in dados_tipos:
-            nome = tipo['nome']
-            layout.append(
-                [sg.Radio(f'{nome}', 'tipos_contas', key=str(tipo['id']))]
-            )
-        layout.append([sg.Button('Confirmar')])
-        self.__window = sg.Window('Seleção de tipos de contas').Layout(layout)
+        while True:
+            layout = [
+                [sg.Text('SELECIONE O TIPO DA CONTA', font=('Helvica, 25'))]
+            ]
+            for tipo in dados_tipos:
+                nome = tipo['nome']
+                layout.append(
+                    [sg.Radio(f'{nome}', 'tipos_contas', key=str(tipo['id']))]
+                )
+            layout.append([sg.Button('Confirmar')])
+            self.__window = sg.Window('Seleção de tipos de contas').Layout(layout)
 
-        button, values = self.open()
-        for id_tipo in values:
-            if values[id_tipo]:
+            button, values = self.open()
+            for id_tipo in values:
+                if values[id_tipo]:
+                    self.close()
+                    return int(id_tipo)
+            if button in ('Confirmar', None):
+                self.mostra_mensagem('Valores inválidos')
                 self.close()
-                return int(id_tipo)
 
     def mostra_conta(self, dados_contas):
         todas_contas = ''
@@ -188,6 +202,9 @@ class TelaConta(Tela):
         for key, val in dados_relatorio.items():
             todos_dados += f'{key} -> R${val:.2f} \n'
         sg.Popup(todos_dados)
+
+    def mostra_mensagem(self, msg=''):
+        sg.popup(msg)
 
     def open(self):
         button, values = self.__window.Read()
