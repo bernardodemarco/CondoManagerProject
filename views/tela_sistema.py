@@ -29,7 +29,7 @@ class TelaSistema(Tela):
     def aviso_resetar(self):
         layout = [
             [sg.Text("ATENÇÃO!! Tem certeza de que deseja resetar o aplicativo?",
-             font=("Halvica", 25), text_color="DarkRed")]
+             font=("Halvica", 25), text_color="DarkRed")],
             [sg.Button("Confirmar"), sg.Cancel("Cancelar")]
         ]
         self.__window = sg.Window("RESET").Layout(layout)
@@ -37,6 +37,7 @@ class TelaSistema(Tela):
         if button in (None, "Confirmar"):
             self.close()
             return 1
+        self.close()
         return 0
 
     def open(self):

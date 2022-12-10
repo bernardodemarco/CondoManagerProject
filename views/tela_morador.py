@@ -68,7 +68,7 @@ class TelaMorador(Tela):
                     apartamento = int(values["apartamento"])
                 if bool(re.match('[a-zA-Zà-ÿÀ-Ý\s]+$', values["nome"])) == False:
                     raise ValueError
-                if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', values["telefone"])) == False:
+                if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', telefone)) == False:
                     raise ValueError
                 if not kwargs['acao'] == 'alteracao':
                     if apartamento not in apartamentos:
@@ -153,7 +153,10 @@ class TelaMorador(Tela):
             [sg.Button("Enviar")]
         ]
         if kwargs['acao'] == 'alteracao':
-            values["cpf"] = kwargs["cpf"]
+            cpf = kwargs["cpf"]
+            layout.insert(
+                3, [sg.Text(f"CPF do visitante: {cpf}")]
+            )        
         else:
             layout.insert(
                 3, [sg.Text("Digite o CPF do visitante: ", size=(40, 1)), sg.InputText("", key="cpf")]
@@ -162,6 +165,10 @@ class TelaMorador(Tela):
         while True:
             button, values = self.open()
             try:
+                nome = values["nome"]
+                telefone = values["telefone"]
+                if "cpf" in values:
+                    cpf = values["cpf"]
                 if bool(re.match('[a-zA-Zà-ÿÀ-Ý\s]+$', values["nome"])) == False:
                     raise ValueError
                 if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', values["telefone"])) == False:
@@ -170,21 +177,23 @@ class TelaMorador(Tela):
                 sg.popup("Valores inválidos! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
                 continue
             try:
-                validate_cpf(values["cpf"])
+                if not kwargs['acao'] == 'alteracao':
+                    validate_cpf(values["cpf"])
             except InvalidCPFException:
                 sg.popup("CPF inválido! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
                 continue
             try:
-                if self.__controlador_pessoa.pega_visitante_por_cpf(morador, values["cpf"]):
-                    raise ResourceAlreadyExistsException("Visitante")
+                if not kwargs['acao'] == 'alteracao':
+                    if self.__controlador_pessoa.pega_visitante_por_cpf(morador, values["cpf"]):
+                        raise ResourceAlreadyExistsException("Visitante")
             except (ResourceAlreadyExistsException) as err:
                 sg.popup(err, title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")   
             else:
                 self.close()
                 break            
-        return {"nome": values["nome"], "cpf": values["cpf"], 'telefone': values["telefone"]}
+        return {"nome": nome, "cpf": cpf, 'telefone': telefone}
     
-    def seleciona_visitante(self, morador, dados_visitantes):
+    def seleciona_visitante(self, dados_visitantes):
         layout = [
             [sg.Text("SELECIONE O VISITANTE", font = ("Halvica", 25))]
             ]
@@ -193,7 +202,7 @@ class TelaMorador(Tela):
             telefone = visitante["telefone"]
             cpf = visitante["cpf"]
             layout.append(
-                [sg.Radio(f"NOME: {nome}\n TEL: {telefone}\n CPF: {cpf}")]
+                [sg.Radio(f"NOME: {nome}\n TEL: {telefone}\n CPF: {cpf}", "visitantes", key=str(visitante['cpf']))]
             )
         layout.append([sg.Button('Confirmar')])
         self.__window = sg.Window('Seleção de visitante').Layout(layout)
@@ -205,10 +214,12 @@ class TelaMorador(Tela):
                 return cpf
 
     def mostra_visitante(self, dados):
-        print('NOME DO VISITANTE:', dados['nome'])
-        print('TELEFONE DO VISITANTE:', dados['telefone'])
-        print('CPF DO VISITANTE:', dados['cpf'])
-        print("<=======<<======================>>=======>")
+        todos_visitantes = ""
+        for visitante in dados:
+            todos_visitantes += "Nome do visitante: " + visitante['nome'] + "\n"
+            todos_visitantes += "Telefone do visitante: " + visitante['telefone'] + "\n"
+            todos_visitantes += "CPF do visitante: " + visitante['cpf'] + "\n\n"
+        sg.popup("LISTA DE TODOS OS VISITANTES", todos_visitantes)
         
     def open(self):
         button, values = self.__window.Read()
