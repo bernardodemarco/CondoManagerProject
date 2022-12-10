@@ -7,6 +7,8 @@ from controllers.controlador_reserva import ControladorReserva
 from models.reservavel import Reservavel
 from models.condominio import Condominio
 from views.tela_condominio import TelaCondominio
+from DAOs.condominio_dao import CondominioDAO
+from DAOs.reservavel_dao import ReservavelDAO
 import time
 
 
@@ -14,27 +16,23 @@ import time
 class ControladorCondominio(Controlador):
     def __init__(self, controlador_sistema):
         self.__controlador_sistema = controlador_sistema
-        self.__condominio = None
-        self.__reservaveis = []
         self.__controlador_conta = ControladorConta(self)
         self.__controlador_entrega = ControladorEntrega(self)
         self.__controlador_reserva = ControladorReserva(self)
         self.__controlador_pessoa = ControladorPessoa(self)
         self.__tela_condominio = TelaCondominio(self)
+        self.__reservavel_dao = ReservavelDAO()
+        self.__condominio_dao = CondominioDAO()
 
 #   GETTERS E SETTERS   #
 
     @property
-    def condominio(self):
-        return self.__condominio
+    def condominio_dao(self):
+        return self.__condominio_dao
 
     @property
     def reservaveis(self):
         return self.__reservaveis
-
-    @condominio.setter
-    def condominio(self, condo):
-        self.__condominio = condo
 
     @property
     def controlador_sistema(self):
@@ -67,35 +65,35 @@ class ControladorCondominio(Controlador):
                            dados_condo["numero"],
                            dados_condo["apartamento"])
 
-        self.condominio = condo
-        self.__tela_condominio.mostra_mensagem("")
+        self.__condominio_dao.add(condo)
         self.__tela_condominio.mostra_mensagem("É necessário o cadastro de um funcionário para o condomínio.")
         self.__controlador_pessoa.incluir_funcionario()
-        self.__tela_condominio.mostra_mensagem("")
         self.__tela_condominio.mostra_mensagem("Agora, é necessário o cadastro de um morador.")
-        self.__controlador_pessoa.incluir_morador(self.condominio.apartamentos)
-        self.__tela_condominio.mostra_mensagem("")
+        self.__controlador_pessoa.incluir_morador(condo.apartamentos)
         self.__tela_condominio.mostra_mensagem("Tudo certo para a utilização do CondoManager")
 
     def alterar_condo(self):
+        condo = self.__condominio_dao.get_all()[0]
         dados_alterados = self.__tela_condominio.pega_dados_condo(acao='alteracao')
-        self.condominio.nome = dados_alterados["nome"]
-        self.condominio.cidade = dados_alterados["cidade"]
-        self.condominio.rua = dados_alterados["rua"]
-        self.condominio.numero = dados_alterados["numero"]
-        self.condominio.apartamentos = dados_alterados["apartamento"]
+        condo.nome = dados_alterados["nome"]
+        condo.cidade = dados_alterados["cidade"]
+        condo.rua = dados_alterados["rua"]
+        condo.numero = dados_alterados["numero"]
+        condo.apartamentos = dados_alterados["apartamento"]
+        self.__condominio_dao.update(condo)
 
     def mostra_dados_condo(self):
         apartamentos_ocupado_str = []
-        for i in range(1, self.condominio.num_max_ap+1):
-            if not i in (self.condominio.apartamentos):
+        condo = self.__condominio_dao.get_all()[0]
+        for i in range(1, condo.num_max_ap+1):
+            if not i in (condo.apartamentos):
                 apartamentos_ocupado_str.append(str(i))
         self.__tela_condominio.mostra_condo({
-            "nome": self.condominio.nome,
-            "cidade": self.condominio.cidade,
-            "rua": self.condominio.rua,
-            "numero": self.condominio.numero,
-            "total_ap": self.condominio.num_max_ap,
+            "nome": condo.nome,
+            "cidade": condo.cidade,
+            "rua": condo.rua,
+            "numero": condo.numero,
+            "total_ap": condo.num_max_ap,
             "apartamentos": apartamentos_ocupado_str
         })
 
@@ -103,7 +101,8 @@ class ControladorCondominio(Controlador):
         self.controlador_sistema.resetar()
 
     def retorna_apartamento(self):
-        return self.condominio.apartamentos
+        condo = self.__condominio_dao.get_all()[0]
+        return condo.apartamentos
 
 #   RESERVAVEL  #
 
@@ -120,7 +119,8 @@ class ControladorCondominio(Controlador):
             switcher[int(self.__tela_condominio.mostra_opcoes_reservavel())]()
 
     def pega_reservavel_por_id(self, id: str):
-        for reservavel in self.reservaveis:
+        reservaveis = self.__reservavel_dao.get_all()
+        for reservavel in reservaveis:
             if (reservavel.id_reservavel == id):
                 return reservavel
         return None
@@ -135,27 +135,24 @@ class ControladorCondominio(Controlador):
         reservavel = Reservavel(dados_reservavel["nome"],
                                 dados_reservavel["id_reservavel"])
 
-        self.reservaveis.append(reservavel)
+        self.__reservavel_dao.add(reservavel)
     
     def listar_reservaveis(self):
-        if len(self.reservaveis) == 0:
-            self.__tela_condominio.mostra_mensagem("")
+        reservaveis = self.__reservavel_dao.get_all()
+        if len(reservaveis) == 0:
             self.__tela_condominio.mostra_mensagem("Não existem nenhum reservável cadastrado!")
-        for reservavel in self.reservaveis:
-            self.__tela_condominio.mostra_reservavel({
-                'nome': reservavel.nome,
-                'id': reservavel.id_reservavel,
-            })
+        dados_reservaveis = self.pega_dados_reservavel()
+        self.__tela_condominio.mostra_reservavel(dados_reservaveis)
 
     def alterar_reservavel(self):
         try:
-            if len(self.reservaveis) == 0:
+            reservaveis = self.__reservavel_dao.get_all()
+            if len(reservaveis) == 0:
                 raise Exception('Nenhum reservável registrado!')
-            self.__tela_condominio.mostra_mensagem("")
-            self.__tela_condominio.mostra_mensagem(
-                "<=======<<EDITAR RESERVÁVEL>>=======>")
             self.listar_reservaveis()
-            reservavel = self.__tela_condominio.seleciona_reservavel()
+            dados_reservavel = self.pega_dados_reservavel()
+            id_reservavel = self.__tela_condominio.seleciona_reservavel(dados_reservavel)
+            reservavel = self.pega_reservavel_por_id(id_reservavel)
             if reservavel == None:
                 raise ResourceNotFoundException('Reservável')
 
@@ -166,8 +163,8 @@ class ControladorCondominio(Controlador):
 
             dados_alterados = self.__tela_condominio.pega_dados_reservavel(acao='alteracao', id_reservavel = reservavel.id_reservavel)
             reservavel.nome = dados_alterados['nome']
-            reservavel.id_reservaveis = dados_alterados["id_reservavel"]
-
+            reservavel.id_reservavel = dados_alterados["id_reservavel"]
+            self.__reservavel_dao.update(reservavel)
         except ValueError as err:
             self.__tela_condominio.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -177,17 +174,16 @@ class ControladorCondominio(Controlador):
 
     def excluir_reservavel(self):
         try:
-            if len(self.reservaveis) == 0:
+            reservaveis = self.__reservavel_dao.get_all()            
+            if len(reservaveis) == 0:
                 raise Exception('Nenhum reservável registrado!')
-            self.__tela_condominio.mostra_mensagem("")
-            self.__tela_condominio.mostra_mensagem(
-                "<=======<<REMOVER RESERVÁVEL>>=======>")
             self.listar_reservaveis()
-            reservavel = self.__tela_condominio.seleciona_reservavel()
+            dados_reservavel = self.pega_dados_reservavel()
+            id_reservavel = self.__tela_condominio.seleciona_reservavel(dados_reservavel)
+            reservavel = self.pega_reservavel_por_id(id_reservavel)
             if reservavel == None:
                 raise ResourceNotFoundException('Reservável')
-            self.reservaveis.remove(reservavel)
-
+            self.__reservavel_dao.remove(reservavel)
         except ResourceNotFoundException as err:
             self.__tela_condominio.mostra_mensagem(err)
         except ValueError as err:
@@ -196,12 +192,24 @@ class ControladorCondominio(Controlador):
         except Exception as err:
             self.__tela_condominio.mostra_mensagem(err)
 
+    def pega_dados_reservavel(self):
+        reservaveis = self.__reservavel_dao.get_all()
+        dados_reservavel = []
+        for reservavel in reservaveis:
+            dados_reservavel.append({
+                "nome": reservavel.nome,
+                "id_reservavel": reservavel.id_reservavel
+            })
+        return dados_reservavel
+
     def ocupar_apartamento(self, apartamento):
-        self.condominio.apartamentos.remove(apartamento)
+        condo = self.__condominio_dao.get_all()[0]
+        condo.apartamentos.remove(apartamento)
 
     def desocupar_apartamento(self, apartamento):
-        self.condominio.apartamentos.append(apartamento)
-        self.condominio.apartamentos.sort()
+        condo = self.__condominio_dao.get_all()[0]
+        condo.apartamentos.append(apartamento)
+        condo.apartamentos.sort()
 
     def abre_tela_2(self):
         switcher = {

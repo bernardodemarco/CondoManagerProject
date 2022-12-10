@@ -1,3 +1,5 @@
+import PySimpleGUI as sg
+
 from abc import ABC, abstractmethod
 import time
 
@@ -24,22 +26,8 @@ class Tela(ABC):
     def mostra_opcoes(self):
         pass
 
-    # DEPOIS LEMBRAR DE TIRAR ESSE METODO
-    def checa_opcao(self, valormax):
-        while True:
-            try:
-                print("")
-                opcao = int(
-                    input("Por favor, informe a seção desejada: "))
-                if 0 <= opcao <= valormax:
-                    return opcao
-                else:
-                    raise ValueError
-            except ValueError:
-                print("")
-                print(
-                    "ERRO!: Opção inválida, por favor, tente novamente: ")
-                time.sleep(1)
+    def mostra_mensagem(self, msg=''):
+        sg.popup(msg)
 
     # def open(self):
     #     button, values = self.__window.Read()
@@ -49,5 +37,3 @@ class Tela(ABC):
     #     self.__window.Close()
 
     # DEPOIS DE TERMINAR AS INTERFACES LEMBRAR DE ALTERAR ESSE METODO E TIRAR OS QUE SOBREESCREVEM ELE NAS SUBCLASSES
-    def mostra_mensagem(self, mensagem: str):
-        print(mensagem)
