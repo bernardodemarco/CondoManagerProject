@@ -26,23 +26,6 @@ class Tela(ABC):
     def mostra_opcoes(self):
         pass
 
-    # DEPOIS LEMBRAR DE TIRAR ESSE METODO
-    def checa_opcao(self, valormax):
-        while True:
-            try:
-                print("")
-                opcao = int(
-                    input("Por favor, informe a seção desejada: "))
-                if 0 <= opcao <= valormax:
-                    return opcao
-                else:
-                    raise ValueError
-            except ValueError:
-                print("")
-                print(
-                    "ERRO!: Opção inválida, por favor, tente novamente: ")
-                time.sleep(1)
-
     def mostra_mensagem(self, msg=''):
         sg.popup(msg)
 

@@ -4,7 +4,7 @@ from multiprocessing.sharedctypes import Value
 from views.tela import Tela
 
 from utils.ResourceNotFoundException import ResourceNotFoundException
-
+from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
 
 class TelaCondominio(Tela):
 
@@ -18,6 +18,7 @@ class TelaCondominio(Tela):
         return self.__controlador_condo
 
     def mostra_opcoes(self):
+        sg.theme("DarkBlue2")
         layout = [
             [sg.Text('-------- CONDOMÍNIO ----------', font=("Helvica", 25))],
             [sg.Text('O que vocês gostaria de fazer?', font=("Helvica", 15))],
@@ -115,8 +116,9 @@ class TelaCondominio(Tela):
                 if values["apartamento"] <= 0:
                     raise ValueError
                 if kwargs['acao'] == 'alteracao':
-                    for i in range(1, self.__controlador_condo.condominio.apartamentos[-1]):
-                        if i not in self.__controlador_condo.condominio.apartamentos:
+                    condo = self.__controlador_condo.condominio_dao.get_all()[0]
+                    for i in range(1, condo.apartamentos[-1]):
+                        if i not in condo.apartamentos:
                             if int(values["apartamento"]) < i:
                                 raise ValueError
                 self.close()
@@ -130,11 +132,13 @@ class TelaCondominio(Tela):
         layout = [
             [sg.Text("DADOS DO RESERVÁVEL", font=("Helvica", 25))],
             [sg.Text("Digite o nome do reservável:", size=(40, 1)), sg.InputText("", key="nome")],
-            
             [sg.Button("Cadastrar reservável"), sg.Cancel("Retornar")]
         ]
         if kwargs['acao'] == 'alteracao':
-            values["id_reservavel"] = kwargs['id_reservavel']
+            id_reservavel = kwargs['id_reservavel']
+            layout.insert(
+                2, [sg.Text(f"ID do reservável: {id_reservavel}")]
+            )
         else:
             layout.insert(
                 2, [sg.Text("Digite um número único (positivo) pro reservável:", size=(40, 1)), sg.InputText("", key="id_reservavel")]
@@ -143,15 +147,23 @@ class TelaCondominio(Tela):
         while True:
             button, values = self.open()
             try:
-                values["id_reservavel"] = int(values["id_reservavel"])
-                if values["id_reservavel"] <= 0:
+                nome = values["nome"]
+                if id_reservavel in values:
+                    id_reservavel = int(values["id_reservavel"])
+                if id_reservavel <= 0:
                     raise ValueError
                 self.close()
             except ValueError:
                 sg.popup("Valores inválidos! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+            try:
+                if not kwargs['acao'] == 'alteracao':
+                    if self.__controlador_condo.pega_reservavel_por_id(id_reservavel):
+                        raise ResourceAlreadyExistsException("Reservável")
+            except ResourceAlreadyExistsException as err:
+                sg.popup(err, title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
             else:
                 break
-        return {"nome": values["nome"], "id_reservavel": values["id_reservavel"]}
+        return {"nome": nome, "id_reservavel": id_reservavel}
 
     def mostra_reservavel(self, dados):
         todos_reservaveis = ""

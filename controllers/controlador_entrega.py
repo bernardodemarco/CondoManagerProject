@@ -19,7 +19,7 @@ class ControladorEntrega(Controlador):
         self.__controlador_condominio = controlador_condominio
         self.__tela_entrega = TelaEntrega()
         self.__entregas_dao = EntregaDAO()
-
+        
         self.__tipos_entrega = []
 
     def pega_dados_entregas(self, **kwargs):

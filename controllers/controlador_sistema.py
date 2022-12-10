@@ -2,7 +2,6 @@ from controllers.controlador import Controlador
 from controllers.controlador_condominio import ControladorCondominio
 from views.tela_sistema import TelaSistema
 
-
 class ControladorSistema(Controlador):
 
     def __init__(self):
@@ -19,7 +18,7 @@ class ControladorSistema(Controlador):
         return self.__controlador_condominio
 
     def inicializar(self):
-        if not self.__controlador_condominio.condominio:
+        if len(self.controlador_condominio.condominio_dao.get_all()[0]) == 0:
             self.abre_tela()
             self.__controlador_condominio.cadastro_inicial()
             self.ir_condo()
