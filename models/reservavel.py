@@ -23,3 +23,8 @@ class Reservavel:
     @property
     def horarios(self) -> dict:
         return self.__horarios
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Reservavel):
+            return self.__id_reservavel == other.id_reservavel
+        return False

@@ -8,23 +8,27 @@ from utils.ResourceNotFoundException import ResourceNotFoundException
 from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
 from utils.date_helpers import convert_date
 
+from DAOs.reserva_dao import ReservaDAO
+from DAOs.reservavel_dao import ReservavelDAO
+
 
 class ControladorReserva(Controlador):
     def __init__(self, controlador_condominio):
         super().__init__()
         self.__controlador_condominio = controlador_condominio
         self.__tela_reserva = TelaReserva()
-        self.__reservas = []
+        self.__reservas_dao = ReservaDAO()
+        self.__reservavel_dao = ReservavelDAO()
 
     def pega_reserva_por_id(self, id_reserva):
-        for reserva in self.__reservas:
+        for reserva in self.__reservas_dao.get_all():
             if reserva.id_reserva == id_reserva:
                 return reserva
         return None
 
     def pega_dados_reservas(self):
         dados_reservas = []
-        for reserva in self.__reservas:
+        for reserva in self.__reservas_dao.get_all():
             dados_reservas.append({
                 'reservavel': reserva.reservavel.nome,
                 'morador': reserva.morador.nome,
@@ -56,7 +60,7 @@ class ControladorReserva(Controlador):
 
     def lista_reservas(self):
         try:
-            if len(self.__reservas) == 0:
+            if len(self.__reservas_dao.get_all()) == 0:
                 raise ResourceNotFoundException('Reserva')
             dados_reservas = self.pega_dados_reservas()
             self.__tela_reserva.mostra_reserva(dados_reservas)
@@ -82,11 +86,12 @@ class ControladorReserva(Controlador):
             if not self.checar_disponibilidade_horario(horario_inicial, horario_final, reservavel.horarios):
                 raise ValueError('Horário indisponível')
             self.marcar_horario(horario_inicial, horario_final, reservavel.horarios)
-                    
+            self.__reservavel_dao.update(reservavel)       
             reserva = Reserva(dados_reserva['id'], (horario_inicial, horario_final), reservavel, morador)
-            if reserva in self.__reservas:
+            reservas = self.__reservas_dao.get_all()
+            if reserva in reservas:
                 raise ResourceAlreadyExistsException('Reserva')
-            self.__reservas.append(reserva)
+            self.__reservas_dao.add(reserva)
             self.__tela_reserva.mostra_mensagem('RESERVA INCLUÍDA COM SUCESSO!')
 
         except (ResourceAlreadyExistsException, ResourceNotFoundException, ValueError) as err:
@@ -96,7 +101,7 @@ class ControladorReserva(Controlador):
 
     def alterar_reserva(self):
         try:
-            if len(self.__reservas) == 0:
+            if len(self.__reservas_dao.get_all()) == 0:
                 raise Exception('Nenhuma reserva registrada!')
 
             self.lista_reservas()
@@ -116,33 +121,37 @@ class ControladorReserva(Controlador):
             if morador == None:
                 raise ResourceNotFoundException('Morador')
 
-            if len(self.__controlador_condominio.reservaveis) == 0:
+            if len(self.__reservavel_dao.get_all()) == 0:
                 raise ResourceNotFoundException('Reservavel')
                 
             reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].remove(reserva.horario)
+            self.__reservavel_dao.update(reserva.reservavel)
             reservavel = self.__controlador_condominio.seleciona_reservavel()
             if reservavel == None:
                 reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].append(reserva.horario)
+                self.__reservavel_dao.update(reserva.reservavel)
                 raise ResourceNotFoundException('Reservavel')
 
             dados_alterados_reserva = self.__tela_reserva.pega_dados_reserva(acao='alteracao', id_reserva=reserva.id_reserva)
             horario_inicial, horario_final = dados_alterados_reserva['horario']
             if not self.checar_disponibilidade_horario(horario_inicial, horario_final, reservavel.horarios):
                 reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].append(reserva.horario)            
+                self.__reservavel_dao.update(reserva.reservavel)
                 raise ValueError('Horário indisponível')
             self.marcar_horario(horario_inicial, horario_final, reservavel.horarios)
-            
+            self.__reservavel_dao.update(reservavel)
             reserva.id_reserva = dados_alterados_reserva['id']
             reserva.horario = (horario_inicial, horario_final)
             reserva.reservavel = reservavel
             reserva.morador = morador
+            self.__reservas_dao.update(reserva)
             self.__tela_reserva.mostra_mensagem('RESERVA ATUALIZADA COM SUCESSO!')
         except (ResourceNotFoundException, ValueError, Exception) as err:
             self.__tela_reserva.mostra_mensagem(err)
 
     def excluir_reserva(self):
         try:
-            if len(self.__reservas) == 0:
+            if len(self.__reservas_dao.get_all()) == 0:
                 raise Exception('Nenhuma reserva registrada!')
 
             self.lista_reservas()
@@ -154,7 +163,8 @@ class ControladorReserva(Controlador):
             
             horario_reserva = reserva.horario
             reserva.reservavel.horarios[convert_date(horario_reserva[0].date())].remove(horario_reserva)
-            self.__reservas.remove(reserva)
+            self.__reservavel_dao.update(reserva.reservavel)
+            self.__reservas_dao.remove(reserva)
             self.__tela_reserva.mostra_mensagem('RESERVA EXCLUIDA COM SUCESSO!')
         except ValueError as err:
             self.__tela_reserva.mostra_mensagem(
@@ -165,7 +175,8 @@ class ControladorReserva(Controlador):
     def gerar_relatorio_reservas(self):
         ''' Geração de relatório informando quantas vezes um dado morador realizou reservas '''
         try:
-            if len(self.__reservas) == 0:
+            reservas = self.__reservas_dao.get_all()
+            if len(reservas) == 0:
                 raise ResourceNotFoundException('Reserva')   
 
             morador = self.__controlador_condominio.controlador_pessoa.seleciona_morador()
@@ -173,7 +184,7 @@ class ControladorReserva(Controlador):
                 raise ResourceNotFoundException('Morador')
 
             total_reservas = 0
-            for reserva in self.__reservas:
+            for reserva in reservas:
                 if reserva.morador.cpf == morador.cpf:
                     total_reservas += 1
             self.__tela_reserva.mostra_relatorio(total_reservas, morador.nome)
