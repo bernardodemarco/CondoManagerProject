@@ -33,17 +33,15 @@ class TelaSistema(Tela):
             [sg.Button("Confirmar"), sg.Cancel("Cancelar")]
         ]
         self.__window = sg.Window("RESET").Layout(layout)
-        print("")
-        print("ATENÇÃO!! Tem certeza de que deseja resetar o aplicativo?")
-        print("")
-        time.sleep(1)
-        if input("Digite: QUERO RESETAR: ").lower() == "quero resetar":
-            print("")
-            print("OPERAÇÃO ACEITA!! Até mais!")
-            time.sleep(1)
-            return True
-        else:
-            print("")
-            print("OPERAÇÃO ABORTADA!! COMANDO INVÁLIDO")
-            time.sleep(1)
-            return False
+        button, values = self.open()
+        if button in (None, "Confirmar"):
+            self.close()
+            return 1
+        return 0
+
+    def open(self):
+        button, values = self.__window.Read()
+        return button, values
+
+    def close(self):
+        self.__window.Close()

@@ -54,24 +54,14 @@ class ControladorPessoa(Controlador):
         try:
             if len(self.moradores) == 0:
                 raise Exception('Nenhum morador registrado!')
-
-            self.__tela_morador.mostra_mensagem(
-                "<=======<<EDITAR MORADOR>>=======>")
-            morador = self.__tela_morador.seleciona_morador()
+            morador = self.seleciona_morador()
             if morador == None:
                 raise ResourceNotFoundException('Morador')
             if len(self.moradores) == 0:
                 self.__tela_morador.mostra_mensagem("Não existem moradores no condomínio!")
-                self.__tela_morador.mostra_mensagem("<=======<<======================>>=======>")
-            else:
-                self.__tela_morador.mostra_morador({
-                    'nome': morador.nome,
-                    'telefone': morador.telefone,
-                    'cpf': morador.cpf,
-                    'apartamento': morador.apartamento
-                })
 
-            dados_alterados = self.__tela_morador.pega_dados_morador(apartamentos, acao='alteracao', cpf = morador.cpf, apartamento = morador.apartamento)
+            dados_alterados = self.__tela_morador.pega_dados_morador(apartamentos,
+             acao='alteracao', cpf = morador.cpf, apartamento = morador.apartamento)
             morador.nome = dados_alterados['nome']
             morador.telefone = dados_alterados['telefone']
 
@@ -85,9 +75,7 @@ class ControladorPessoa(Controlador):
         try:
             if len(self.moradores) == 0:
                 raise Exception('Nenhum morador registrado!')
-            self.__tela_morador.mostra_mensagem(
-                "<=======<<REMOVER MORADOR>>=======>")
-            morador = self.__tela_morador.seleciona_morador()
+            morador = self.seleciona_morador()
             if morador == None and not isinstance(morador, Morador):
                 raise ResourceNotFoundException('Morador')
             self.controlador_condominio.desocupar_apartamento(morador.apartamento)
@@ -102,19 +90,19 @@ class ControladorPessoa(Controlador):
             self.__tela_morador.mostra_mensagem(err)
 
     def listar_moradores(self):
-        self.__tela_morador.mostra_mensagem("<=======<<LISTAGEM DOS MORADORES>>=======>")
-        for pessoa in self.moradores:
-            self.__tela_morador.mostra_morador({
-                'nome': pessoa.nome,
-                'cpf': pessoa.cpf,
-                'telefone': pessoa.telefone,
-                'apartamento': pessoa.apartamento
-            })
+        try:
+            if len(self.__moradores) == 0:
+                raise ResourceNotFoundException("Moradores")
+            dados_moradores = self.pega_dados_morador()
+            self.__tela_morador.mostra_morador(dados_moradores)
+        except ResourceNotFoundException as err:
+            self.__tela_morador.mostra_mensagem(err)
 
     def seleciona_morador(self):
-        self.listar_moradores()
-        cpf_morador = self.__tela_morador.seleciona_morador()
-        return self.pega_morador_por_cpf(cpf_morador)
+        dados_moradores = self.pega_dados_morador()
+        cpf_morador = self.__tela_morador.seleciona_morador(dados_moradores)
+        morador = self.pega_morador_por_cpf(cpf_morador)
+        return morador
      
     def abre_tela(self):
         switcher = {
@@ -134,6 +122,17 @@ class ControladorPessoa(Controlador):
                 switcher[2](self.pega_apartamento())
             else:
                 switcher[opcao]()
+
+    def pega_dados_morador(self):
+        dados_moradores = []
+        for morador in self.__moradores:
+            dados_moradores.append({
+                "nome": morador.nome,
+                "cpf": morador.cpf,
+                "telefone": morador.telefone,
+                "apartamento": morador.apartamento
+            })
+        return dados_moradores
 
 #   VISITANTE #
 
@@ -159,8 +158,6 @@ class ControladorPessoa(Controlador):
             if len(morador.visitantes) == 0:
                 raise Exception('Nenhum visitante registrado!')
 
-            self.__tela_morador.mostra_mensagem(
-                "<=======<<EDITAR VISITANTE>>=======>")
             self.listar_visitantes(morador)
             cpf = self.__tela_morador.seleciona_visitante(morador)
             visitante = self.pega_visitante_por_cpf(morador, cpf)
@@ -188,8 +185,7 @@ class ControladorPessoa(Controlador):
         try:
             if len(morador.visitantes) == 0:
                 raise Exception('Nenhum visitante registrado!')
-            self.__tela_morador.mostra_mensagem(
-                "<=======<<REMOVER VISITANTE>>=======>")
+
             self.listar_visitantes(morador)
             cpf = self.__tela_morador.seleciona_visitante(morador)
             visitante = self.pega_visitante_por_cpf(morador, cpf)
@@ -210,10 +206,10 @@ class ControladorPessoa(Controlador):
             morador = args[0]
         else:
             morador = self.seleciona_morador()
-        self.__tela_morador.mostra_mensagem("<=======<<LISTAGEM DOS VISITANTES>>=======>")
+
         if len(morador.visitantes) == 0:
             self.__tela_morador.mostra_mensagem("Não existem visitantes para esse morador!")
-            self.__tela_morador.mostra_mensagem("<=======<<======================>>=======>")
+
         else:
             for visitante in morador.visitantes:
                 self.__tela_morador.mostra_visitante({
@@ -233,6 +229,16 @@ class ControladorPessoa(Controlador):
 
         while True:
             switcher[int(self.__tela_morador.mostra_opcoes_visitantes())]()
+
+    def pega_dados_visitante(self, morador):
+        dados_visitantes = []
+        for visitante in morador.visitantes:
+            dados_visitantes.append({
+                "nome": visitante.nome,
+                "cpf": visitante.cpf,
+                "telefone": visitante.telefone
+            })
+        return dados_visitantes
 
 #   FUNCIONARIO #
 
@@ -260,8 +266,7 @@ class ControladorPessoa(Controlador):
             if len(self.funcionarios) == 0:
                 raise Exception('Nenhum funcionário registrado!')
 
-            self.__tela_funcionario.mostra_mensagem(
-                "<=======<<EDITAR FUNCIONÁRIO>>=======>")
+
             self.listar_funcionarios()
             cpf = self.__tela_funcionario.seleciona_funcionario()
             funcionario = self.pega_funcionario_por_cpf(cpf)
@@ -293,8 +298,7 @@ class ControladorPessoa(Controlador):
         try:
             if len(self.funcionarios) <= 1:
                 raise Exception('Não é possível excluir nenhum funcionário! O condomínio não pode funcionar sem funcionários!')
-            self.__tela_funcionario.mostra_mensagem(
-                "<=======<<REMOVER FUNCIONÁRIO>>=======>")
+
             self.listar_funcionarios()
             cpf = self.__tela_funcionario.seleciona_funcionario()
             funcionario = self.pega_funcionario_por_cpf(cpf)
@@ -311,7 +315,7 @@ class ControladorPessoa(Controlador):
             self.__tela_funcionario.mostra_mensagem(err)
 
     def listar_funcionarios(self):
-        self.__tela_funcionario.mostra_mensagem("<=======<<LISTAGEM DOS FUNCIONÁRIOS>>=======>")
+
         for funcionario in self.funcionarios:
             self.__tela_funcionario.mostra_funcionario({
                 'nome': funcionario.nome,
@@ -346,3 +350,14 @@ class ControladorPessoa(Controlador):
         apartamentos = self.controlador_condominio.retorna_apartamento()
         return apartamentos
     
+    def pega_dados_funcionarios(self):
+        dados_funcionarios = []
+        for funcionario in self.__funcionarios:
+            dados_funcionarios.append({
+                "nome": funcionario.nome,
+                "cpf": funcionario.cpf,
+                "telefone": funcionario.telefone,
+                "cargo": funcionario.cargo,
+                "salario": funcionario.salario
+            })
+        return dados_funcionarios
