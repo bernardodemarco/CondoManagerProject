@@ -85,11 +85,11 @@ class ControladorReserva(Controlador):
 
             if not self.checar_disponibilidade_horario(horario_inicial, horario_final, reservavel.horarios):
                 raise ValueError('Horário indisponível')
+
             self.marcar_horario(horario_inicial, horario_final, reservavel.horarios)
             self.__reservavel_dao.update(reservavel)       
             reserva = Reserva(dados_reserva['id'], (horario_inicial, horario_final), reservavel, morador)
-            reservas = self.__reservas_dao.get_all()
-            if reserva in reservas:
+            if reserva in self.__reservas_dao.get_all():
                 raise ResourceAlreadyExistsException('Reserva')
             self.__reservas_dao.add(reserva)
             self.__tela_reserva.mostra_mensagem('RESERVA INCLUÍDA COM SUCESSO!')
