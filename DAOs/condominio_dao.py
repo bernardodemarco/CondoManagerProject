@@ -5,7 +5,6 @@ from models.condominio import Condominio
 class CondominioDAO(DAO):
     def __init__(self) -> None:
         super().__init__('condominio.pkl')
-        # self.__cache = []
 
     def add(self, condominio: Condominio):
         if condominio is not None and isinstance(condominio, Condominio):

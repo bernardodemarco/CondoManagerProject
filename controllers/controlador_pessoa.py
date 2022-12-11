@@ -145,7 +145,7 @@ class ControladorPessoa(Controlador):
 #   VISITANTE #
 
     def pega_visitante_por_cpf(self, morador, cpf):
-        visitantes = morador.visitantes_dao()
+        visitantes = morador.visitantes_dao.get_all()
         for visitante in visitantes:
             if visitante.cpf == cpf:
                 return visitante

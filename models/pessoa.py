@@ -28,9 +28,6 @@ class Pessoa(ABC):
     def telefone(self, telefone):
         self.__telefone = telefone
 
-    def __str__(self):
-        return f"Esse morador é o {self.nome}"
-
     def __eq__(self, other) -> bool:
         if isinstance(other, Pessoa):
             return self.__cpf == other.cpf

@@ -1,7 +1,7 @@
 from controllers.controlador import Controlador
 from controllers.controlador_condominio import ControladorCondominio
 from views.tela_sistema import TelaSistema
-
+import os
 class ControladorSistema(Controlador):
 
     def __init__(self):

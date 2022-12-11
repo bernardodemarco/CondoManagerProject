@@ -5,7 +5,6 @@ from models.funcionario import Funcionario
 class FuncionarioDAO(DAO):
     def __init__(self) -> None:
         super().__init__('funcionario.pkl')
-        self.__cache = []
 
     def add(self, funcionario: Funcionario):
         if funcionario is not None and isinstance(funcionario, Funcionario):

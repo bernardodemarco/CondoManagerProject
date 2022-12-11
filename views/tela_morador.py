@@ -186,8 +186,8 @@ class TelaMorador(Tela):
                 if not kwargs['acao'] == 'alteracao':
                     if self.__controlador_pessoa.pega_visitante_por_cpf(morador, cpf):
                         raise ResourceAlreadyExistsException("Visitante")
-            except (ResourceAlreadyExistsException) as err:
-                sg.popup(err, title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")   
+            except ResourceAlreadyExistsException as err:
+                sg.popup(err, title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
             else:
                 self.close()
                 break            
