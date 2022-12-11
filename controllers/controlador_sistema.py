@@ -18,7 +18,7 @@ class ControladorSistema(Controlador):
         return self.__controlador_condominio
 
     def inicializar(self):
-        if len(self.controlador_condominio.condominio_dao.get_all()[0]) == 0:
+        if len(self.controlador_condominio.condominio_dao.get_all()) == 0:
             self.abre_tela()
             self.__controlador_condominio.cadastro_inicial()
             self.ir_condo()

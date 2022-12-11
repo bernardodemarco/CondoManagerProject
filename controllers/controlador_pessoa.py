@@ -44,7 +44,7 @@ class ControladorPessoa(Controlador):
                           dados_morador["telefone"],
                           dados_morador["apartamento"])
 
-        self.moradores.append(morador)
+        self.__moradores_dao.add(morador)
         self.controlador_condominio.ocupar_apartamento(morador.apartamento)
 
     def alterar_morador(self, apartamentos):
@@ -62,6 +62,7 @@ class ControladorPessoa(Controlador):
              acao='alteracao', cpf = morador.cpf, apartamento = morador.apartamento)
             morador.nome = dados_alterados['nome']
             morador.telefone = dados_alterados['telefone']
+            self.__moradores_dao.update(morador)
 
         except ValueError as err:
             self.__tela_morador.mostra_mensagem(
@@ -71,14 +72,15 @@ class ControladorPessoa(Controlador):
             self.__tela_morador.close()
             
     def excluir_morador(self):
+        moradores = self.__moradores_dao.get_all()
         try:
-            if len(self.moradores) == 0:
+            if len(moradores) == 0:
                 raise Exception('Nenhum morador registrado!')
             morador = self.seleciona_morador()
             if morador == None and not isinstance(morador, Morador):
                 raise ResourceNotFoundException('Morador')
             self.controlador_condominio.desocupar_apartamento(morador.apartamento)
-            self.moradores.remove(morador)
+            self.__moradores_dao.remove(morador)
 
         except ResourceNotFoundException as err:
             self.__tela_morador.mostra_mensagem(err)
@@ -143,7 +145,8 @@ class ControladorPessoa(Controlador):
 #   VISITANTE #
 
     def pega_visitante_por_cpf(self, morador, cpf):
-        for visitante in morador.visitantes:
+        visitantes = morador.visitantes_dao()
+        for visitante in visitantes:
             if visitante.cpf == cpf:
                 return visitante
         return None
@@ -156,12 +159,13 @@ class ControladorPessoa(Controlador):
                           dados_visitante["cpf"],
                           dados_visitante["telefone"])
 
-        morador.visitantes.append(visitante)
+        morador.visitantes_dao.add(visitante)
 
     def alterar_visitante(self):
         morador = self.seleciona_morador()
+        visitantes = morador.visitantes_dao.get_all()
         try:
-            if len(morador.visitantes) == 0:
+            if len(visitantes) == 0:
                 raise Exception('Nenhum visitante registrado!')
             dados_visitantes = self.pega_dados_visitante(morador)
             cpf_visitante = self.__tela_morador.seleciona_visitante(dados_visitantes)
@@ -170,6 +174,7 @@ class ControladorPessoa(Controlador):
             dados_alterados = self.__tela_morador.pega_dados_visitante(morador, acao='alteracao', cpf = visitante.cpf)
             visitante.nome = dados_alterados['nome']
             visitante.telefone = dados_alterados['telefone']
+            morador.visitantes_dao.update(visitante)
 
         except ValueError as err:
             self.__tela_morador.mostra_mensagem(
@@ -180,8 +185,9 @@ class ControladorPessoa(Controlador):
 
     def excluir_visitante(self):
         morador = self.seleciona_morador()
+        visitantes = morador.visitantes_dao.get_all()
         try:
-            if len(morador.visitantes) == 0:
+            if len(visitantes) == 0:
                 raise Exception('Nenhum visitante registrado!')
 
             dados_visitantes = self.pega_dados_visitante(morador)
@@ -189,7 +195,7 @@ class ControladorPessoa(Controlador):
             visitante = self.pega_visitante_por_cpf(morador, cpf_visitante)
             if visitante == None and not isinstance(visitante, Visitante):
                 raise ResourceNotFoundException('Visitante')
-            morador.visitantes.remove(visitante)
+            morador.visitantes_dao.remove(visitante)
 
         except ResourceNotFoundException as err:
             self.__tela_morador.mostra_mensagem(err)
@@ -206,7 +212,9 @@ class ControladorPessoa(Controlador):
         else:
             morador = self.seleciona_morador()
 
-        if len(morador.visitantes) == 0:
+        visitantes = morador.visitantes_dao.get_all()
+
+        if len(visitantes) == 0:
             self.__tela_morador.mostra_mensagem("Não existem visitantes para esse morador!")
 
         else:
@@ -226,8 +234,9 @@ class ControladorPessoa(Controlador):
             switcher[int(self.__tela_morador.mostra_opcoes_visitantes())]()
 
     def pega_dados_visitante(self, morador):
+        visitantes = morador.visitantes_dao.get_all()
         dados_visitantes = []
-        for visitante in morador.visitantes:
+        for visitante in visitantes:
             dados_visitantes.append({
                 "nome": visitante.nome,
                 "cpf": visitante.cpf,
@@ -238,7 +247,8 @@ class ControladorPessoa(Controlador):
 #   FUNCIONARIO #
 
     def pega_funcionario_por_cpf(self, cpf):
-        for funcionario in self.funcionarios:
+        funcionarios = self.__funcionarios_dao.get_all()
+        for funcionario in funcionarios:
             if funcionario.cpf == cpf:
                 return funcionario
         return None
@@ -254,11 +264,12 @@ class ControladorPessoa(Controlador):
                                   dados_funcionario["cargo"],
                                   dados_funcionario["salario"])
 
-        self.funcionarios.append(funcionario)
+        self.__funcionarios_dao.add(funcionario)
 
     def alterar_funcionario(self):
+        funcionarios = self.__funcionarios_dao.get_all()
         try:
-            if len(self.funcionarios) == 0:
+            if len(funcionarios) == 0:
                 raise Exception('Nenhum funcionário registrado!')
 
             dados_funcionario = self.pega_dados_funcionario()
@@ -274,6 +285,7 @@ class ControladorPessoa(Controlador):
             funcionario.cargo = dados_alterados['cargo']
             funcionario.salario = dados_alterados['salario']
 
+            self.__funcionarios_dao.update(funcionario)
         except ValueError as err:
             self.__tela_funcionario.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -283,8 +295,9 @@ class ControladorPessoa(Controlador):
             
 
     def excluir_funcionario(self):
+        funcionarios = self.__funcionarios_dao.get_all()
         try:
-            if len(self.funcionarios) <= 1:
+            if len(funcionarios) <= 1:
                 raise Exception('Não é possível excluir nenhum funcionário! O condomínio não pode funcionar sem funcionários!')
 
             dados_funcionario = self.pega_dados_funcionario()
@@ -292,7 +305,7 @@ class ControladorPessoa(Controlador):
             funcionario = self.pega_funcionario_por_cpf(cpf_funcionario)
             if funcionario == None:
                 raise ResourceNotFoundException('Funcionario')
-            self.funcionarios.remove(funcionario)
+            self.__funcionarios_dao.remove(funcionario)
 
         except ResourceNotFoundException as err:
             self.__tela_funcionario.mostra_mensagem(err)
@@ -324,7 +337,8 @@ class ControladorPessoa(Controlador):
         self.__controlador_condominio.abre_tela()
 
     def pega_funcionario_por_cpf(self, cpf):
-        for funcionario in self.funcionarios:
+        funcionarios = self.__funcionarios_dao.get_all()
+        for funcionario in funcionarios:
             if funcionario.cpf == cpf:
                 return funcionario
         return None
