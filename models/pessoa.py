@@ -30,3 +30,8 @@ class Pessoa(ABC):
 
     def __str__(self):
         return f"Esse morador é o {self.nome}"
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Pessoa):
+            return self.__cpf == other.cpf
+        return False
