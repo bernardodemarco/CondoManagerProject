@@ -10,9 +10,7 @@ from DAOs.morador_dao import MoradorDAO
 from DAOs.funcionario_dao import FuncionarioDAO
 
 
-
 class ControladorPessoa(Controlador):
-
     def __init__(self, controlador_condominio):
         super().__init__()
         self.__controlador_condominio = controlador_condominio
@@ -26,6 +24,10 @@ class ControladorPessoa(Controlador):
     @property
     def controlador_condominio(self):
         return self.__controlador_condominio
+
+    @property
+    def tela_morador(self):
+        return self.__tela_morador
 
 #   MORADOR #
 

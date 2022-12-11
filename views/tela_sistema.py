@@ -1,7 +1,6 @@
 import PySimpleGUI as sg
 
 from views.tela import Tela
-import time
 
 
 class TelaSistema(Tela):

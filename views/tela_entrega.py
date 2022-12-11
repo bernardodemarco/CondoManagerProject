@@ -4,6 +4,7 @@ from views.tela import Tela
 
 from utils.date_helpers import convert_datetime
 
+
 class TelaEntrega(Tela):
     def __init__(self) -> None:
         super().__init__()

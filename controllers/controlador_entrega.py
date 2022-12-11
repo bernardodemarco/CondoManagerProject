@@ -109,6 +109,9 @@ class ControladorEntrega(Controlador):
                 raise ResourceNotFoundException('Tipo da entrega')
 
             morador = self.__controlador_condominio.controlador_pessoa.seleciona_morador()
+            if morador == None:
+                self.__controlador_condominio.controlador_pessoa.tela_morador.close()
+                raise ResourceNotFoundException('Morador')
             dados = self.__tela_entrega.pega_dados_entrega()
             entregas = self.__entregas_dao.get_all()
             entrega = Entrega(tipo, morador, dados['id'])
@@ -169,6 +172,9 @@ class ControladorEntrega(Controlador):
                 raise ResourceNotFoundException('Tipo da entrega')
 
             morador = self.__controlador_condominio.controlador_pessoa.seleciona_morador()
+            if morador == None:
+                self.__controlador_condominio.controlador_pessoa.tela_morador.close()
+                raise ResourceNotFoundException('Morador')
             entrega.destinatario = morador
             entrega.tipo = tipo
             self.__entregas_dao.update(entrega)

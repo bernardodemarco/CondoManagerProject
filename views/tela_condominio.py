@@ -1,6 +1,5 @@
 import PySimpleGUI as sg
 
-from multiprocessing.sharedctypes import Value
 from views.tela import Tela
 
 from utils.ResourceNotFoundException import ResourceNotFoundException

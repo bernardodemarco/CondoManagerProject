@@ -1,9 +1,9 @@
 from controllers.controlador import Controlador
 from controllers.controlador_condominio import ControladorCondominio
 from views.tela_sistema import TelaSistema
-import os
-class ControladorSistema(Controlador):
 
+
+class ControladorSistema(Controlador):
     def __init__(self):
         super().__init__()
         self.__tela_sistema = TelaSistema()

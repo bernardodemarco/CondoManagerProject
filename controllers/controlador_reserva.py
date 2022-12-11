@@ -9,7 +9,6 @@ from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
 from utils.date_helpers import convert_date
 
 from DAOs.reserva_dao import ReservaDAO
-from DAOs.reservavel_dao import ReservavelDAO
 
 
 class ControladorReserva(Controlador):
@@ -71,6 +70,7 @@ class ControladorReserva(Controlador):
         try:    
             morador = self.__controlador_condominio.controlador_pessoa.seleciona_morador()
             if morador == None:
+                self.__controlador_condominio.controlador_pessoa.tela_morador.close()
                 raise ResourceNotFoundException('Morador')
 
             if len(self.__reservavel_dao.get_all()) == 0:
@@ -79,6 +79,7 @@ class ControladorReserva(Controlador):
             id_reservavel = self.__controlador_condominio.seleciona_reservavel()
             reservavel = self.__controlador_condominio.pega_reservavel_por_id(id_reservavel)
             if reservavel == None:
+                self.__controlador_condominio.tela_condominio.close()
                 raise ResourceNotFoundException('Reservavel')
 
             dados_reserva = self.__tela_reserva.pega_dados_reserva(acao='criacao')
@@ -120,6 +121,7 @@ class ControladorReserva(Controlador):
             
             morador = self.__controlador_condominio.controlador_pessoa.seleciona_morador()
             if morador == None:
+                self.__controlador_condominio.controlador_pessoa.tela_morador.close()
                 raise ResourceNotFoundException('Morador')
 
             if len(self.__reservavel_dao.get_all()) == 0:
@@ -132,6 +134,7 @@ class ControladorReserva(Controlador):
             if reservavel == None:
                 reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].append(reserva.horario)
                 self.__reservavel_dao.update(reserva.reservavel)
+                self.__controlador_condominio.tela_condominio.close()
                 raise ResourceNotFoundException('Reservavel')
 
             dados_alterados_reserva = self.__tela_reserva.pega_dados_reserva(acao='alteracao', id_reserva=reserva.id_reserva)
@@ -183,6 +186,7 @@ class ControladorReserva(Controlador):
 
             morador = self.__controlador_condominio.controlador_pessoa.seleciona_morador()
             if morador == None:
+                self.__controlador_condominio.controlador_pessoa.tela_morador.close()
                 raise ResourceNotFoundException('Morador')
 
             total_reservas = 0

@@ -9,8 +9,6 @@ from models.condominio import Condominio
 from views.tela_condominio import TelaCondominio
 from DAOs.condominio_dao import CondominioDAO
 from DAOs.reservavel_dao import ReservavelDAO
-import time
-
 
 
 class ControladorCondominio(Controlador):
@@ -41,6 +39,10 @@ class ControladorCondominio(Controlador):
     @property
     def controlador_pessoa(self) -> ControladorPessoa:
         return self.__controlador_pessoa
+
+    @property
+    def tela_condominio(self):
+        return self.__tela_condominio
 
 #   CONDOMÍNIO  #
 
