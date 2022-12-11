@@ -6,6 +6,10 @@ from views.tela_funcionario import TelaFuncionario
 from views.tela_morador import TelaMorador
 from collections import Counter
 from utils.ResourceNotFoundException import ResourceNotFoundException
+from DAOs.morador_dao import MoradorDAO
+from DAOs.funcionario_dao import FuncionarioDAO
+
+
 
 class ControladorPessoa(Controlador):
 
@@ -14,8 +18,8 @@ class ControladorPessoa(Controlador):
         self.__controlador_condominio = controlador_condominio
         self.__tela_morador = TelaMorador(self)
         self.__tela_funcionario = TelaFuncionario(self)
-        self.__moradores = []
-        self.__funcionarios = []
+        self.__moradores_dao = MoradorDAO
+        self.__funcionarios_dao = FuncionarioDAO
 
 #   GETTERS E SETTERS   #
 
@@ -23,18 +27,11 @@ class ControladorPessoa(Controlador):
     def controlador_condominio(self):
         return self.__controlador_condominio
 
-    @property
-    def funcionarios(self):
-        return self.__funcionarios
-
-    @property
-    def moradores(self):
-        return self.__moradores
-
 #   MORADOR #
 
     def pega_morador_por_cpf(self, cpf):
-        for morador in self.moradores:
+        moradores = self.__moradores_dao.get_all()
+        for morador in moradores:
             if morador.cpf == cpf:
                 return morador
         return None
@@ -51,13 +48,14 @@ class ControladorPessoa(Controlador):
         self.controlador_condominio.ocupar_apartamento(morador.apartamento)
 
     def alterar_morador(self, apartamentos):
+        moradores = self.__moradores_dao.get_all()
         try:
-            if len(self.moradores) == 0:
+            if len(moradores) == 0:
                 raise Exception('Nenhum morador registrado!')
             morador = self.seleciona_morador()
             if morador == None:
                 raise ResourceNotFoundException('Morador')
-            if len(self.moradores) == 0:
+            if len(moradores) == 0:
                 self.__tela_morador.mostra_mensagem("Não existem moradores no condomínio!")
 
             dados_alterados = self.__tela_morador.pega_dados_morador(apartamentos,
@@ -131,8 +129,9 @@ class ControladorPessoa(Controlador):
                 continue
 
     def pega_dados_morador(self):
+        moradores = self.__moradores_dao.get_all()
         dados_moradores = []
-        for morador in self.__moradores:
+        for morador in moradores:
             dados_moradores.append({
                 "nome": morador.nome,
                 "cpf": morador.cpf,
