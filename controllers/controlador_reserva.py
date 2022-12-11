@@ -13,12 +13,12 @@ from DAOs.reservavel_dao import ReservavelDAO
 
 
 class ControladorReserva(Controlador):
-    def __init__(self, controlador_condominio):
+    def __init__(self, controlador_condominio, reservavel_dao):
         super().__init__()
         self.__controlador_condominio = controlador_condominio
         self.__tela_reserva = TelaReserva()
         self.__reservas_dao = ReservaDAO()
-        self.__reservavel_dao = ReservavelDAO()
+        self.__reservavel_dao = reservavel_dao
 
     def pega_reserva_por_id(self, id_reserva):
         for reserva in self.__reservas_dao.get_all():
@@ -73,10 +73,11 @@ class ControladorReserva(Controlador):
             if morador == None:
                 raise ResourceNotFoundException('Morador')
 
-            if len(self.__controlador_condominio.reservaveis) == 0:
+            if len(self.__reservavel_dao.get_all()) == 0:
                 raise ResourceNotFoundException('Reservavel')
 
-            reservavel = self.__controlador_condominio.seleciona_reservavel()
+            id_reservavel = self.__controlador_condominio.seleciona_reservavel()
+            reservavel = self.__controlador_condominio.pega_reservavel_por_id(id_reservavel)
             if reservavel == None:
                 raise ResourceNotFoundException('Reservavel')
 
@@ -126,7 +127,8 @@ class ControladorReserva(Controlador):
                 
             reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].remove(reserva.horario)
             self.__reservavel_dao.update(reserva.reservavel)
-            reservavel = self.__controlador_condominio.seleciona_reservavel()
+            id_reservavel = self.__controlador_condominio.seleciona_reservavel()
+            reservavel = self.__controlador_condominio.pega_reservavel_por_id(id_reservavel)
             if reservavel == None:
                 reserva.reservavel.horarios[convert_date(reserva.horario[0].date())].append(reserva.horario)
                 self.__reservavel_dao.update(reserva.reservavel)

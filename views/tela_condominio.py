@@ -148,7 +148,7 @@ class TelaCondominio(Tela):
             button, values = self.open()
             try:
                 nome = values["nome"]
-                if id_reservavel in values:
+                if 'id_reservavel' in values:
                     id_reservavel = int(values["id_reservavel"])
                 if id_reservavel <= 0:
                     raise ValueError
@@ -168,8 +168,8 @@ class TelaCondominio(Tela):
     def mostra_reservavel(self, dados):
         todos_reservaveis = ""
         for reservavel in dados:
-            todos_reservaveis += "Nome do reservável: ", str(reservavel["nome"]) + '\n'
-            todos_reservaveis += "ID do reservável: ", str(reservavel["id_reservavel"]) + '\n\n'
+            todos_reservaveis += "Nome do reservável: " + str(reservavel["nome"]) + '\n'
+            todos_reservaveis += "ID do reservável: " + str(reservavel["id_reservavel"]) + '\n\n'
         sg.popup("LISTA DE TODOS OS RESERVÁVEIS", todos_reservaveis ,font = ("Halveca", 12), title = "Reserváveis")
 
     def seleciona_reservavel(self, dados):
@@ -180,9 +180,9 @@ class TelaCondominio(Tela):
             nome = reservavel["nome"]
             id_reservavel = reservavel["id_reservavel"]
             layout.append(
-                [sg.Radio(f"{nome}: ID {id_reservavel}")]
+                [sg.Radio(f"{nome}: ID {id_reservavel}", 'reservavel', key=str(id_reservavel))]
             )
-        layout.append(sg.Button("Confirmar"))
+        layout.append([sg.Button("Confirmar")])
         self.__window = sg.Window("Seleção de reservável").Layout(layout)
 
         button, values = self.open()

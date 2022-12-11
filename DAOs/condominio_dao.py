@@ -5,7 +5,7 @@ from models.condominio import Condominio
 class CondominioDAO(DAO):
     def __init__(self) -> None:
         super().__init__('condominio.pkl')
-        self.__cache = []
+        # self.__cache = []
 
     def add(self, condominio: Condominio):
         if condominio is not None and isinstance(condominio, Condominio):
@@ -13,8 +13,8 @@ class CondominioDAO(DAO):
 
     def update(self, condominio: Condominio):
         if condominio is not None and isinstance(condominio, Condominio):
-            self.__cache[0] = condominio
-            self.__dump()
+            self._DAO__cache[0] = condominio
+            self._DAO__dump()
 
     def remove(self, condominio: Condominio):
         if condominio is not None and isinstance(condominio, Condominio):

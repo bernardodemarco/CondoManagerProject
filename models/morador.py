@@ -5,7 +5,7 @@ class Morador(Pessoa):
     def __init__(self, nome: str, cpf: str, telefone: int, apartamento: int): 
         super().__init__(nome, cpf, telefone)
         self.__apartamento = apartamento
-        self.__visitantes_dao = VisitanteDAO
+        self.__visitantes_dao = VisitanteDAO()
 
     @property
     def visitantes_dao(self) -> list:

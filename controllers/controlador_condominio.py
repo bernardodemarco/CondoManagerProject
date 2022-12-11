@@ -18,10 +18,10 @@ class ControladorCondominio(Controlador):
         self.__controlador_sistema = controlador_sistema
         self.__controlador_conta = ControladorConta(self)
         self.__controlador_entrega = ControladorEntrega(self)
-        self.__controlador_reserva = ControladorReserva(self)
+        self.__reservavel_dao = ReservavelDAO()
+        self.__controlador_reserva = ControladorReserva(self, self.__reservavel_dao)
         self.__controlador_pessoa = ControladorPessoa(self)
         self.__tela_condominio = TelaCondominio(self)
-        self.__reservavel_dao = ReservavelDAO()
         self.__condominio_dao = CondominioDAO()
 
 #   GETTERS E SETTERS   #
@@ -32,7 +32,7 @@ class ControladorCondominio(Controlador):
 
     @property
     def reservaveis(self):
-        return self.__reservaveis
+        return self.__reservavel_dao.get_all()
 
     @property
     def controlador_sistema(self):
@@ -118,7 +118,7 @@ class ControladorCondominio(Controlador):
         while True:
             switcher[int(self.__tela_condominio.mostra_opcoes_reservavel())]()
 
-    def pega_reservavel_por_id(self, id: str):
+    def pega_reservavel_por_id(self, id):
         reservaveis = self.__reservavel_dao.get_all()
         for reservavel in reservaveis:
             if (reservavel.id_reservavel == id):
@@ -127,7 +127,7 @@ class ControladorCondominio(Controlador):
 
     def seleciona_reservavel(self):
         self.listar_reservaveis()
-        return self.__tela_condominio.seleciona_reservavel()
+        return self.__tela_condominio.seleciona_reservavel(self.pega_dados_reservavel())
 
     def incluir_reservavel(self):
         dados_reservavel = self.__tela_condominio.pega_dados_reservavel(acao="criacao")
@@ -156,10 +156,10 @@ class ControladorCondominio(Controlador):
             if reservavel == None:
                 raise ResourceNotFoundException('Reservável')
 
-            self.__tela_condominio.mostra_reservavel({
+            self.__tela_condominio.mostra_reservavel([{
                 'nome': reservavel.nome,
-                'id': reservavel.id_reservavel,
-            })
+                'id_reservavel': reservavel.id_reservavel,
+            }])
 
             dados_alterados = self.__tela_condominio.pega_dados_reservavel(acao='alteracao', id_reservavel = reservavel.id_reservavel)
             reservavel.nome = dados_alterados['nome']

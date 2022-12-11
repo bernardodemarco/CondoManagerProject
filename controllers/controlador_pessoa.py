@@ -18,8 +18,8 @@ class ControladorPessoa(Controlador):
         self.__controlador_condominio = controlador_condominio
         self.__tela_morador = TelaMorador(self)
         self.__tela_funcionario = TelaFuncionario(self)
-        self.__moradores_dao = MoradorDAO
-        self.__funcionarios_dao = FuncionarioDAO
+        self.__moradores_dao = MoradorDAO()
+        self.__funcionarios_dao = FuncionarioDAO()
 
 #   GETTERS E SETTERS   #
 
