@@ -93,7 +93,7 @@ class ControladorPessoa(Controlador):
 
     def listar_moradores(self):
         try:
-            if len(self.__moradores) == 0:
+            if len(self.__moradores_dao.get_all()) == 0:
                 raise ResourceNotFoundException("Moradores")
             dados_moradores = self.pega_dados_morador()
             self.__tela_morador.mostra_morador(dados_moradores)
@@ -349,7 +349,7 @@ class ControladorPessoa(Controlador):
     
     def pega_dados_funcionario(self):
         dados_funcionarios = []
-        for funcionario in self.__funcionarios:
+        for funcionario in self.__funcionarios_dao.get_all():
             dados_funcionarios.append({
                 "nome": funcionario.nome,
                 "cpf": funcionario.cpf,
