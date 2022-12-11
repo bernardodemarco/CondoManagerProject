@@ -131,7 +131,6 @@ class ControladorCondominio(Controlador):
 
     def incluir_reservavel(self):
         dados_reservavel = self.__tela_condominio.pega_dados_reservavel(acao="criacao")
-
         reservavel = Reservavel(dados_reservavel["nome"],
                                 dados_reservavel["id_reservavel"])
 
@@ -149,17 +148,11 @@ class ControladorCondominio(Controlador):
             reservaveis = self.__reservavel_dao.get_all()
             if len(reservaveis) == 0:
                 raise Exception('Nenhum reservável registrado!')
-            self.listar_reservaveis()
             dados_reservavel = self.pega_dados_reservavel()
             id_reservavel = self.__tela_condominio.seleciona_reservavel(dados_reservavel)
             reservavel = self.pega_reservavel_por_id(id_reservavel)
             if reservavel == None:
                 raise ResourceNotFoundException('Reservável')
-
-            self.__tela_condominio.mostra_reservavel([{
-                'nome': reservavel.nome,
-                'id_reservavel': reservavel.id_reservavel,
-            }])
 
             dados_alterados = self.__tela_condominio.pega_dados_reservavel(acao='alteracao', id_reservavel = reservavel.id_reservavel)
             reservavel.nome = dados_alterados['nome']
@@ -177,7 +170,6 @@ class ControladorCondominio(Controlador):
             reservaveis = self.__reservavel_dao.get_all()            
             if len(reservaveis) == 0:
                 raise Exception('Nenhum reservável registrado!')
-            self.listar_reservaveis()
             dados_reservavel = self.pega_dados_reservavel()
             id_reservavel = self.__tela_condominio.seleciona_reservavel(dados_reservavel)
             reservavel = self.pega_reservavel_por_id(id_reservavel)

@@ -132,7 +132,7 @@ class TelaCondominio(Tela):
         layout = [
             [sg.Text("DADOS DO RESERVÁVEL", font=("Helvica", 25))],
             [sg.Text("Digite o nome do reservável:", size=(40, 1)), sg.InputText("", key="nome")],
-            [sg.Button("Cadastrar reservável"), sg.Cancel("Retornar")]
+            [sg.Button("Cadastrar reservável"), sg.Cancel("Cancelar")]
         ]
         if kwargs['acao'] == 'alteracao':
             id_reservavel = kwargs['id_reservavel']
@@ -152,16 +152,18 @@ class TelaCondominio(Tela):
                     id_reservavel = int(values["id_reservavel"])
                 if id_reservavel <= 0:
                     raise ValueError
-                self.close()
             except ValueError:
                 sg.popup("Valores inválidos! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+                continue
             try:
                 if not kwargs['acao'] == 'alteracao':
                     if self.__controlador_condo.pega_reservavel_por_id(id_reservavel):
                         raise ResourceAlreadyExistsException("Reservável")
             except ResourceAlreadyExistsException as err:
                 sg.popup(err, title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+                continue
             else:
+                self.close()
                 break
         return {"nome": nome, "id_reservavel": id_reservavel}
 
