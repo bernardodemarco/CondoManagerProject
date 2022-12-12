@@ -5,6 +5,7 @@ from views.tela import Tela
 from utils.ResourceNotFoundException import ResourceNotFoundException
 from utils.ResourceAlreadyExistsException import ResourceAlreadyExistsException
 
+
 class TelaCondominio(Tela):
 
     def __init__(self, controlador_condo):
@@ -24,7 +25,8 @@ class TelaCondominio(Tela):
             [sg.Radio('Alterar condomínio', "RD1", key='1')],
             [sg.Radio('Mostrar dados do condomínio', "RD1", key='2')],
             [sg.Radio('Outras opções', "RD1", key='3')],
-            [sg.Button('Confirmar'), sg.Cancel('Desligar'), sg.Button("Resetar")]
+            [sg.Button('Confirmar'), sg.Cancel(
+                'Desligar'), sg.Button("Resetar")]
         ]
         self.__window = sg.Window('Condomínio').Layout(layout)
         button, values = self.open()
@@ -83,21 +85,27 @@ class TelaCondominio(Tela):
 
     def mostra_condo(self, dados):
         sg.popup("Nome do condomínio:", dados["nome"],
-        "Cidade do condomínio:", dados["cidade"],
-        "Rua do condomínio:", dados["rua"],
-        "Número do condomínio:", dados["numero"],
-        "Total de apartamentos:", dados["total_ap"],
-        "Apartamentos individuais indisponíveis:", ", ".join(dados["apartamentos"]),
-         font = ("Halvica", 12), title = "Dados do condomínio")
+                 "Cidade do condomínio:", dados["cidade"],
+                 "Rua do condomínio:", dados["rua"],
+                 "Número do condomínio:", dados["numero"],
+                 "Total de apartamentos:", dados["total_ap"],
+                 "Apartamentos individuais indisponíveis:", ", ".join(
+                     dados["apartamentos"]),
+                 font=("Halvica", 12), title="Dados do condomínio")
 
     def pega_dados_condo(self, **kwargs):
         layout = [
             [sg.Text("DADOS DO CONDOMÍNIO", font=("Helvica", 25))],
-            [sg.Text("Digite o nome do condomínio:", size=(40, 1)), sg.InputText("", key="nome")],
-            [sg.Text("Digite a cidade do condomínio:", size=(40, 1)), sg.InputText("", key="cidade")],
-            [sg.Text("Digite a rua do condomínio:", size=(40, 1)), sg.InputText("", key="rua")],
-            [sg.Text("Digite o número do condomínio:", size=(40, 1)), sg.InputText("", key="numero")],
-            [sg.Text("Digite o número de apartamentos deste condomínio:", size=(40, 1)), sg.InputText("", key="apartamento")],
+            [sg.Text("Digite o nome do condomínio:", size=(40, 1)),
+             sg.InputText("", key="nome")],
+            [sg.Text("Digite a cidade do condomínio:", size=(40, 1)),
+             sg.InputText("", key="cidade")],
+            [sg.Text("Digite a rua do condomínio:", size=(40, 1)),
+             sg.InputText("", key="rua")],
+            [sg.Text("Digite o número do condomínio:", size=(40, 1)),
+             sg.InputText("", key="numero")],
+            [sg.Text("Digite o número de apartamentos deste condomínio:",
+                     size=(40, 1)), sg.InputText("", key="apartamento")],
             [sg.Button("Enviar")]
         ]
         self.__window = sg.Window("Dados do condomínio").Layout(layout)
@@ -115,14 +123,16 @@ class TelaCondominio(Tela):
                 if values["apartamento"] <= 0:
                     raise ValueError
                 if kwargs['acao'] == 'alteracao':
-                    condo = self.__controlador_condo.condominio_dao.get_all()[0]
+                    condo = self.__controlador_condo.condominio_dao.get_all()[
+                        0]
                     for i in range(1, condo.apartamentos[-1]):
                         if i not in condo.apartamentos:
                             if int(values["apartamento"]) < i:
                                 raise ValueError
                 self.close()
             except ValueError:
-                sg.popup("Valores inválidos! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+                sg.popup("Valores inválidos! Tente novamente!", title="ERRO! Tente novamente", font=(
+                    "Halvica", 12), text_color="red")
             else:
                 break
         return {"nome": values["nome"], "cidade": values["cidade"], "rua": values["rua"], "numero": values["numero"],  "apartamento": values["apartamento"]}
@@ -130,7 +140,8 @@ class TelaCondominio(Tela):
     def pega_dados_reservavel(self, **kwargs):
         layout = [
             [sg.Text("DADOS DO RESERVÁVEL", font=("Helvica", 25))],
-            [sg.Text("Digite o nome do reservável:", size=(40, 1)), sg.InputText("", key="nome")],
+            [sg.Text("Digite o nome do reservável:", size=(40, 1)),
+             sg.InputText("", key="nome")],
             [sg.Button("Cadastrar reservável"), sg.Cancel("Cancelar")]
         ]
         if kwargs['acao'] == 'alteracao':
@@ -140,7 +151,8 @@ class TelaCondominio(Tela):
             )
         else:
             layout.insert(
-                2, [sg.Text("Digite um número único (positivo) pro reservável:", size=(40, 1)), sg.InputText("", key="id_reservavel")]
+                2, [sg.Text("Digite um número único (positivo) pro reservável:", size=(
+                    40, 1)), sg.InputText("", key="id_reservavel")]
             )
         self.__window = sg.Window("Dados do condomínio").Layout(layout)
         while True:
@@ -152,14 +164,16 @@ class TelaCondominio(Tela):
                 if id_reservavel <= 0:
                     raise ValueError
             except ValueError:
-                sg.popup("Valores inválidos! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+                sg.popup("Valores inválidos! Tente novamente!", title="ERRO! Tente novamente", font=(
+                    "Halvica", 12), text_color="red")
                 continue
             try:
                 if not kwargs['acao'] == 'alteracao':
                     if self.__controlador_condo.pega_reservavel_por_id(id_reservavel):
                         raise ResourceAlreadyExistsException("Reservável")
             except ResourceAlreadyExistsException as err:
-                sg.popup(err, title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+                sg.popup(err, title="ERRO! Tente novamente",
+                         font=("Halvica", 12), text_color="red")
                 continue
             else:
                 self.close()
@@ -169,9 +183,12 @@ class TelaCondominio(Tela):
     def mostra_reservavel(self, dados):
         todos_reservaveis = ""
         for reservavel in dados:
-            todos_reservaveis += "Nome do reservável: " + str(reservavel["nome"]) + '\n'
-            todos_reservaveis += "ID do reservável: " + str(reservavel["id_reservavel"]) + '\n\n'
-        sg.popup("LISTA DE TODOS OS RESERVÁVEIS", todos_reservaveis ,font = ("Halveca", 12), title = "Reserváveis")
+            todos_reservaveis += "Nome do reservável: " + \
+                str(reservavel["nome"]) + '\n'
+            todos_reservaveis += "ID do reservável: " + \
+                str(reservavel["id_reservavel"]) + '\n\n'
+        sg.popup("LISTA DE TODOS OS RESERVÁVEIS", todos_reservaveis,
+                 font=("Halveca", 12), title="Reserváveis")
 
     def seleciona_reservavel(self, dados):
         layout = [
@@ -181,7 +198,8 @@ class TelaCondominio(Tela):
             nome = reservavel["nome"]
             id_reservavel = reservavel["id_reservavel"]
             layout.append(
-                [sg.Radio(f"{nome}: ID {id_reservavel}", 'reservavel', key=str(id_reservavel))]
+                [sg.Radio(f"{nome}: ID {id_reservavel}",
+                          'reservavel', key=str(id_reservavel))]
             )
         layout.append([sg.Button("Confirmar")])
         self.__window = sg.Window("Seleção de reservável").Layout(layout)
@@ -191,7 +209,6 @@ class TelaCondominio(Tela):
             if values[id_reservavel]:
                 self.close()
                 return int(id_reservavel)
-
 
     def open(self):
         button, values = self.__window.Read()

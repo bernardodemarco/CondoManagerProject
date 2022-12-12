@@ -109,7 +109,8 @@ class ControladorConta(Controlador):
             if tipo in self.__tipos_dao.get_all():
                 raise ResourceAlreadyExistsException('Tipo de conta')
             self.__tipos_dao.add(tipo)
-            self.__tela_conta.mostra_mensagem('TIPO DE CONTA INCLUÍDO COM SUCESSO!')
+            self.__tela_conta.mostra_mensagem(
+                'TIPO DE CONTA INCLUÍDO COM SUCESSO!')
 
         except ValueError:
             self.__tela_conta.mostra_mensagem(
@@ -172,7 +173,8 @@ class ControladorConta(Controlador):
             tipo.nome = dados_alterados['nome_tipo']
             tipo.id_tipo = dados_alterados['id']
             self.__tipos_dao.update(tipo)
-            self.__tela_conta.mostra_mensagem('TIPO DE CONTA ATUALIZADO COM SUCESSO!')
+            self.__tela_conta.mostra_mensagem(
+                'TIPO DE CONTA ATUALIZADO COM SUCESSO!')
         except ValueError:
             self.__tela_conta.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -209,7 +211,8 @@ class ControladorConta(Controlador):
             if tipo == None:
                 raise ResourceNotFoundException('Tipo de conta')
             self.__tipos_dao.remove(tipo)
-            self.__tela_conta.mostra_mensagem('TIPO DE CONTA EXCLUÍDO COM SUCESSO!')
+            self.__tela_conta.mostra_mensagem(
+                'TIPO DE CONTA EXCLUÍDO COM SUCESSO!')
         except ValueError:
             self.__tela_conta.mostra_mensagem(
                 'Valores inválidos, tente novamente!')
@@ -217,28 +220,30 @@ class ControladorConta(Controlador):
             self.__tela_conta.mostra_mensagem(err)
 
     def gerar_relatorio_mes(self):
-        ''' Geração de relatório de contas de um mês e ano específico ''' 
+        ''' Geração de relatório de contas de um mês e ano específico '''
         try:
             contas = self.__contas_dao.get_all()
             if len(contas) == 0:
                 raise ResourceNotFoundException('Conta')
 
-            dados_relatorio = self.__tela_conta.pega_dados_relatorio()  
+            dados_relatorio = self.__tela_conta.pega_dados_relatorio()
             mes = dados_relatorio['mes']
-            ano = dados_relatorio['ano']       
-            contas_relatorio = [conta for conta in contas if conta.data.year == ano and conta.data.month == mes]       
+            ano = dados_relatorio['ano']
+            contas_relatorio = [
+                conta for conta in contas if conta.data.year == ano and conta.data.month == mes]
             total = 0
             dados = dict()
             dados['mes'] = mes
             dados['ano'] = ano
             for conta in contas_relatorio:
-                dados[conta.tipo.nome] = dados.get(conta.tipo.nome, 0) + conta.valor
+                dados[conta.tipo.nome] = dados.get(
+                    conta.tipo.nome, 0) + conta.valor
                 total += conta.valor
             dados['TOTAL'] = total
             self.__tela_conta.mostra_relatorio(dados)
         except ResourceNotFoundException as err:
             self.__tela_conta.mostra_mensagem(err)
-    
+
     def retornar(self):
         self.__controlador_condominio.abre_tela_2()
 

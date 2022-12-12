@@ -8,7 +8,8 @@ class DAO(ABC):
     @abstractmethod
     def __init__(self, datasource) -> None:
         self.__cache = []
-        self.__datasource = os.path.join(os.path.dirname(__file__), f'..\\pickle_files\\{datasource}')
+        self.__datasource = os.path.join(os.path.dirname(
+            __file__), f'..\\pickle_files\\{datasource}')
         try:
             self.__load()
         except FileNotFoundError:

@@ -7,7 +7,6 @@ class Tela(ABC):
     @abstractmethod
     def __init__(self):
         pass
-    
     @abstractmethod
     def mostra_opcoes(self):
         pass

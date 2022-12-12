@@ -17,7 +17,8 @@ class ControladorCondominio(Controlador):
         self.__controlador_conta = ControladorConta(self)
         self.__controlador_entrega = ControladorEntrega(self)
         self.__reservavel_dao = ReservavelDAO()
-        self.__controlador_reserva = ControladorReserva(self, self.__reservavel_dao)
+        self.__controlador_reserva = ControladorReserva(
+            self, self.__reservavel_dao)
         self.__controlador_pessoa = ControladorPessoa(self)
         self.__tela_condominio = TelaCondominio(self)
         self.__condominio_dao = CondominioDAO()
@@ -57,8 +58,7 @@ class ControladorCondominio(Controlador):
 
         while True:
             switcher[int(self.__tela_condominio.mostra_opcoes())]()
-            
-       
+
     def cadastro_inicial(self):
         dados_condo = self.__tela_condominio.pega_dados_condo(acao='criacao')
 
@@ -69,15 +69,19 @@ class ControladorCondominio(Controlador):
                            dados_condo["apartamento"])
 
         self.__condominio_dao.add(condo)
-        self.__tela_condominio.mostra_mensagem("É necessário o cadastro de um funcionário para o condomínio.")
+        self.__tela_condominio.mostra_mensagem(
+            "É necessário o cadastro de um funcionário para o condomínio.")
         self.__controlador_pessoa.incluir_funcionario()
-        self.__tela_condominio.mostra_mensagem("Agora, é necessário o cadastro de um morador.")
+        self.__tela_condominio.mostra_mensagem(
+            "Agora, é necessário o cadastro de um morador.")
         self.__controlador_pessoa.incluir_morador(condo.apartamentos)
-        self.__tela_condominio.mostra_mensagem("Tudo certo para a utilização do CondoManager")
+        self.__tela_condominio.mostra_mensagem(
+            "Tudo certo para a utilização do CondoManager")
 
     def alterar_condo(self):
         condo = self.__condominio_dao.get_all()[0]
-        dados_alterados = self.__tela_condominio.pega_dados_condo(acao='alteracao')
+        dados_alterados = self.__tela_condominio.pega_dados_condo(
+            acao='alteracao')
         condo.nome = dados_alterados["nome"]
         condo.cidade = dados_alterados["cidade"]
         condo.rua = dados_alterados["rua"]
@@ -133,16 +137,18 @@ class ControladorCondominio(Controlador):
         return self.__tela_condominio.seleciona_reservavel(self.pega_dados_reservavel())
 
     def incluir_reservavel(self):
-        dados_reservavel = self.__tela_condominio.pega_dados_reservavel(acao="criacao")
+        dados_reservavel = self.__tela_condominio.pega_dados_reservavel(
+            acao="criacao")
         reservavel = Reservavel(dados_reservavel["nome"],
                                 dados_reservavel["id_reservavel"])
 
         self.__reservavel_dao.add(reservavel)
-    
+
     def listar_reservaveis(self):
         reservaveis = self.__reservavel_dao.get_all()
         if len(reservaveis) == 0:
-            self.__tela_condominio.mostra_mensagem("Não existem nenhum reservável cadastrado!")
+            self.__tela_condominio.mostra_mensagem(
+                "Não existem nenhum reservável cadastrado!")
         dados_reservaveis = self.pega_dados_reservavel()
         self.__tela_condominio.mostra_reservavel(dados_reservaveis)
 
@@ -152,12 +158,14 @@ class ControladorCondominio(Controlador):
             if len(reservaveis) == 0:
                 raise Exception('Nenhum reservável registrado!')
             dados_reservavel = self.pega_dados_reservavel()
-            id_reservavel = self.__tela_condominio.seleciona_reservavel(dados_reservavel)
+            id_reservavel = self.__tela_condominio.seleciona_reservavel(
+                dados_reservavel)
             reservavel = self.pega_reservavel_por_id(id_reservavel)
             if reservavel == None:
                 raise ResourceNotFoundException('Reservável')
 
-            dados_alterados = self.__tela_condominio.pega_dados_reservavel(acao='alteracao', id_reservavel = reservavel.id_reservavel)
+            dados_alterados = self.__tela_condominio.pega_dados_reservavel(
+                acao='alteracao', id_reservavel=reservavel.id_reservavel)
             reservavel.nome = dados_alterados['nome']
             reservavel.id_reservavel = dados_alterados["id_reservavel"]
             self.__reservavel_dao.update(reservavel)
@@ -166,15 +174,15 @@ class ControladorCondominio(Controlador):
                 'Valores inválidos, tente novamente!')
         except (ResourceNotFoundException, Exception) as err:
             self.__tela_condominio.mostra_mensagem(err)
-            
 
     def excluir_reservavel(self):
         try:
-            reservaveis = self.__reservavel_dao.get_all()            
+            reservaveis = self.__reservavel_dao.get_all()
             if len(reservaveis) == 0:
                 raise Exception('Nenhum reservável registrado!')
             dados_reservavel = self.pega_dados_reservavel()
-            id_reservavel = self.__tela_condominio.seleciona_reservavel(dados_reservavel)
+            id_reservavel = self.__tela_condominio.seleciona_reservavel(
+                dados_reservavel)
             reservavel = self.pega_reservavel_por_id(id_reservavel)
             if reservavel == None:
                 raise ResourceNotFoundException('Reservável')

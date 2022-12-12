@@ -30,7 +30,7 @@ class Condominio:
     @property
     def rua(self):
         return self.__rua
-    
+
     @rua.setter
     def rua(self, rua):
         self.__rua = rua
