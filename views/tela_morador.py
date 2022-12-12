@@ -72,7 +72,7 @@ class TelaMorador(Tela):
                     raise ValueError
                 if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', values["telefone"])) == False:
                     raise ValueError
-                nome = values["nome"]
+                nome = values["nome"].title()
                 telefone = ''.join(re.findall('[0-9]+', values["telefone"]))
                 if not kwargs['acao'] == 'alteracao':
                     if apartamento not in apartamentos:
@@ -184,7 +184,7 @@ class TelaMorador(Tela):
                     raise ValueError
                 if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', values["telefone"])) == False:
                     raise ValueError
-                nome = values["nome"]
+                nome = values["nome"].title()
                 telefone = ''.join(re.findall('[0-9]+', values["telefone"]))
             except ValueError:
                 sg.popup("Valores inválidos! Tente novamente!", title="ERRO! Tente novamente", font=(

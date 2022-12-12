@@ -68,7 +68,7 @@ class TelaFuncionario(Tela):
                     raise ValueError
                 if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', values["telefone"])) == False:
                     raise ValueError
-                nome = values["nome"]
+                nome = values["nome"].title()
                 telefone = ''.join(re.findall('[0-9]+', values["telefone"]))
                 cargo = values["cargo"]
                 salario = float(values["salario"])
