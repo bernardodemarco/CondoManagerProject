@@ -3,6 +3,8 @@ from controllers.controlador_condominio import ControladorCondominio
 from controllers.controlador_pessoa import ControladorPessoa
 from views.tela_sistema import TelaSistema
 
+import os
+
 
 class ControladorSistema(Controlador):
     def __init__(self):
