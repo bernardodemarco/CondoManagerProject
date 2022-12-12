@@ -16,15 +16,15 @@ class TelaSistema(Tela):
     def tutorial_cadastro(self):
         sg.theme("DarkBlue2")
         sg.popup("Olá! Parece que essa é sua primeira vez utilizando o CondoManager...",
-         "Antes de tudo, é necessário o cadastro de um condomínio!",
-          "Será necessário um nome, a cidade do condomínio, a rua do condomínio, o número do condomínio e o número de apartamentos do condomínio!",
-          title = "CondoManager",
-          font = ("Halvica", 12))
+                 "Antes de tudo, é necessário o cadastro de um condomínio!",
+                 "Será necessário um nome, a cidade do condomínio, a rua do condomínio, o número do condomínio e o número de apartamentos do condomínio!",
+                 title="CondoManager",
+                 font=("Halvica", 12))
 
     def aviso_desligar(self):
         sg.popup("Até mais! Obrigado por usar o CondoManager!",
-        title = "CondoManager",
-        font = ("Halvica", 12))
+                 title="CondoManager",
+                 font=("Halvica", 12))
 
     def aviso_resetar(self):
         layout = [

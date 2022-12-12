@@ -41,19 +41,23 @@ class TelaReserva(Tela):
     def pega_dados_reserva(self, **kwargs):
         while True:
             layout = [
-                [sg.Text('-------- REGISTRO DE RESERVAS ----------', font=("Helvica", 25))],
+                [sg.Text('-------- REGISTRO DE RESERVAS ----------',
+                         font=("Helvica", 25))],
                 [sg.Text('Dia:', size=(50, 1)), sg.InputText('', key='dia')],
                 [sg.Text('Mês:', size=(50, 1)), sg.InputText('', key='mes')],
                 [sg.Text('Ano:', size=(50, 1)), sg.InputText('', key='ano')],
-                [sg.Text('Horário (horas:minutos):', size=(50, 1)), sg.InputText('', key='raw_horario')],
-                [sg.Text('Por quantas horas você deseja reservar?', size=(50, 1)), sg.InputText('', key='quantidade_horas')],
+                [sg.Text('Horário (horas:minutos):', size=(50, 1)),
+                 sg.InputText('', key='raw_horario')],
+                [sg.Text('Por quantas horas você deseja reservar?', size=(
+                    50, 1)), sg.InputText('', key='quantidade_horas')],
                 [sg.Button('Registrar Reserva')]
             ]
             if kwargs['acao'] == 'alteracao':
                 id_reserva = kwargs['id_reserva']
             else:
                 layout.insert(
-                    6, [sg.Text('Digite um identificador (número inteiro positivo) para a reserva:', size=(50, 1)), sg.InputText('', key='id_reserva')]
+                    6, [sg.Text('Digite um identificador (número inteiro positivo) para a reserva:', size=(
+                        50, 1)), sg.InputText('', key='id_reserva')]
                 )
             self.__window = sg.Window('Registro de reservas').Layout(layout)
 
@@ -67,13 +71,15 @@ class TelaReserva(Tela):
                 if 'id_reserva' in values:
                     id_reserva = int(values['id_reserva'])
                 quantidade_horas = int(values['quantidade_horas'])
-                horas, minutos = validate_horario(values['raw_horario'].strip())
+                horas, minutos = validate_horario(
+                    values['raw_horario'].strip())
                 horario_inicial = datetime(ano, mes, dia, horas, minutos)
-                horario_final = horario_inicial + timedelta(hours=quantidade_horas)
+                horario_final = horario_inicial + \
+                    timedelta(hours=quantidade_horas)
                 self.close()
                 if (isinstance(id_reserva, int) and id_reserva > 0
-                        and  (22 > horario_final.hour >= 7 or
-                        horario_final.hour == 22 and horario_final.minute == 0)):
+                        and (22 > horario_final.hour >= 7 or
+                             horario_final.hour == 22 and horario_final.minute == 0)):
                     return {'id': id_reserva, 'horario': (horario_inicial, horario_final)}
                 else:
                     raise ValueError
@@ -94,7 +100,8 @@ class TelaReserva(Tela):
                 nome_reservavel = reserva['reservavel']
                 nome_morador = reserva['morador']
                 layout.append(
-                    [sg.Radio(f'Reserva do {nome_reservavel} feita pelo {nome_morador} das {horario_inicial} até às {horario_final}', 'reservas', key=str(reserva['id']))]
+                    [sg.Radio(f'Reserva do {nome_reservavel} feita pelo {nome_morador} das {horario_inicial} até às {horario_final}', 'reservas', key=str(
+                        reserva['id']))]
                 )
             layout.append([sg.Button('Confirmar')])
             self.__window = sg.Window('Seleção de reserva').Layout(layout)
@@ -112,14 +119,17 @@ class TelaReserva(Tela):
         todas_reservas = ''
         for reserva in dados_reservas:
             (horario_inicial, horario_final) = reserva['horario']
-            todas_reservas += 'Nome do reservável: ' + reserva['reservavel'] + '\n'
+            todas_reservas += 'Nome do reservável: ' + \
+                reserva['reservavel'] + '\n'
             todas_reservas += 'Nome do morador: ' + reserva['morador'] + '\n'
             todas_reservas += f'A reserva vai das {convert_datetime(horario_inicial)} até as {convert_datetime(horario_final)}!\n'
-            todas_reservas += 'O identificador da reserva é: ' + str(reserva['id']) + '\n\n'
+            todas_reservas += 'O identificador da reserva é: ' + \
+                str(reserva['id']) + '\n\n'
         sg.Popup('LISTA DE TODAS AS RESERVAS REGISTRADAS', todas_reservas)
 
     def mostra_relatorio(self, total_reservas: int, morador: str):
-        sg.Popup(f'NOS REGISTROS DO CONDOMÍNIO CONSTAM QUE O(A) MORADOR(A) {morador} REALIZOU NO TOTAL {total_reservas} RESERVAS!')
+        sg.Popup(
+            f'NOS REGISTROS DO CONDOMÍNIO CONSTAM QUE O(A) MORADOR(A) {morador} REALIZOU NO TOTAL {total_reservas} RESERVAS!')
 
     def mostra_mensagem(self, msg=''):
         sg.popup(msg)

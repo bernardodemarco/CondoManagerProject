@@ -1,6 +1,5 @@
 from controllers.controlador import Controlador
 from controllers.controlador_condominio import ControladorCondominio
-from controllers.controlador_pessoa import ControladorPessoa
 from views.tela_sistema import TelaSistema
 import os
 class ControladorSistema(Controlador):
@@ -9,8 +8,6 @@ class ControladorSistema(Controlador):
         super().__init__()
         self.__tela_sistema = TelaSistema()
         self.__controlador_condominio = ControladorCondominio(self)
-        self.__controlador_pessoa = ControladorPessoa(self)
-
     @property
     def tela_sistema(self):
         return self.__tela_sistema

@@ -37,10 +37,14 @@ class TelaFuncionario(Tela):
     def pega_dados_funcionario(self, **kwargs):
         layout = [
             [sg.Text("DADOS DO FUNCIONÁRIO", font=("Helvica", 25))],
-            [sg.Text("Digite o nome do funcionário: ", size=(40, 1)), sg.InputText("", key="nome")],
-            [sg.Text("Digite o telefone do funcionário: ", size=(40, 1)), sg.InputText("", key="telefone")],
-            [sg.Text("Digite o cargo do funcionário: ", size=(40, 1)), sg.InputText("", key="cargo")],
-            [sg.Text("Digite o salário do funcionário: ", size=(40, 1)), sg.InputText("", key="salario")],
+            [sg.Text("Digite o nome do funcionário: ", size=(40, 1)),
+             sg.InputText("", key="nome")],
+            [sg.Text("Digite o telefone do funcionário: ", size=(
+                40, 1)), sg.InputText("", key="telefone")],
+            [sg.Text("Digite o cargo do funcionário: ", size=(40, 1)),
+             sg.InputText("", key="cargo")],
+            [sg.Text("Digite o salário do funcionário: ", size=(
+                40, 1)), sg.InputText("", key="salario")],
             [sg.Button("Enviar")]
         ]
         if kwargs['acao'] == 'alteracao':
@@ -50,7 +54,8 @@ class TelaFuncionario(Tela):
             )
         else:
             layout.insert(
-                3, [sg.Text("Digite o CPF do funcionário: ", size=(40, 1)), sg.InputText("", key="cpf")]
+                3, [sg.Text("Digite o CPF do funcionário: ", size=(
+                    40, 1)), sg.InputText("", key="cpf")]
             )
         self.__window = sg.Window("Dados do funcionário").Layout(layout)
 
@@ -68,39 +73,45 @@ class TelaFuncionario(Tela):
                 cargo = values["cargo"]
                 salario = float(values["salario"])
             except ValueError:
-                sg.popup("Valores inválidos! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+                sg.popup("Valores inválidos! Tente novamente!", title="ERRO! Tente novamente", font=(
+                    "Halvica", 12), text_color="red")
                 continue
             try:
                 if not kwargs['acao'] == 'alteracao':
                     validate_cpf(values["cpf"])
             except InvalidCPFException:
-                sg.popup("CPF inválido! Tente novamente!", title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")
+                sg.popup("CPF inválido! Tente novamente!", title="ERRO! Tente novamente", font=(
+                    "Halvica", 12), text_color="red")
                 continue
             try:
-                if not kwargs['acao'] == 'alteracao':                
+                if not kwargs['acao'] == 'alteracao':
                     if self.__controlador_pessoa.pega_funcionario_por_cpf(values["cpf"]):
                         raise ResourceAlreadyExistsException("Funcionário")
             except (ResourceAlreadyExistsException) as err:
-                sg.popup(err, title = "ERRO! Tente novamente", font = ("Halvica", 12), text_color="red")   
+                sg.popup(err, title="ERRO! Tente novamente",
+                         font=("Halvica", 12), text_color="red")
             else:
                 self.close()
-                break            
+                break
         return {"nome": nome, "cpf": cpf, 'telefone': telefone, 'cargo': cargo, 'salario': salario}
 
     def mostra_funcionario(self, dados):
         todos_funcionario = ""
         for funcionario in dados:
-            todos_funcionario += "Nome do morador: " + funcionario['nome'] + "\n"
-            todos_funcionario += "Telefone do morador: " + funcionario['telefone'] + "\n"
+            todos_funcionario += "Nome do morador: " + \
+                funcionario['nome'] + "\n"
+            todos_funcionario += "Telefone do morador: " + \
+                funcionario['telefone'] + "\n"
             todos_funcionario += "CPF do morador: " + funcionario['cpf'] + "\n"
-            todos_funcionario += "Cargo do morador: " + funcionario['cargo'] + "\n"
+            todos_funcionario += "Cargo do morador: " + \
+                funcionario['cargo'] + "\n"
             todos_funcionario += f"Salário do morador: {float(funcionario['salario']):.2f} \n\n"
-        sg.popup("LISTA DE TODOS OS FUNCIONÁRIOS", todos_funcionario)        
+        sg.popup("LISTA DE TODOS OS FUNCIONÁRIOS", todos_funcionario)
 
     def seleciona_funcionario(self, dados_funcionarios):
         layout = [
-            [sg.Text("SELECIONE O FUNCIONÁRIO", font = ("Halvica", 25))]
-            ]
+            [sg.Text("SELECIONE O FUNCIONÁRIO", font=("Halvica", 25))]
+        ]
         for funcionario in dados_funcionarios:
             nome = funcionario["nome"]
             telefone = funcionario["telefone"]
@@ -108,7 +119,8 @@ class TelaFuncionario(Tela):
             cargo = funcionario["cargo"]
             salario = funcionario["salario"]
             layout.append(
-                [sg.Radio(f" NOME: {nome}\n TEL: {telefone}\n CPF: {cpf}\n CARGO: {cargo}\n SALÁRIO: {salario:.2f}", "funcionarios", key=str(funcionario['cpf']))]
+                [sg.Radio(f" NOME: {nome}\n TEL: {telefone}\n CPF: {cpf}\n CARGO: {cargo}\n SALÁRIO: {salario:.2f}",
+                          "funcionarios", key=str(funcionario['cpf']))]
             )
         layout.append([sg.Button('Confirmar')])
         self.__window = sg.Window('Seleção de funcionário').Layout(layout)
@@ -118,7 +130,7 @@ class TelaFuncionario(Tela):
             if values[cpf]:
                 self.close()
                 return cpf
-        
+
     def open(self):
         button, values = self.__window.Read()
         return button, values

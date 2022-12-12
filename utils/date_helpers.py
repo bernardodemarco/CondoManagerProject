@@ -2,13 +2,16 @@ import re
 
 from utils.InvalidTimeException import InvalidTimeException
 
+
 def convert_datetime(data) -> str:
     ''' Converte datetime para string compreensível '''
     return data.strftime('%d/%m/%Y - %H:%M')
 
+
 def convert_date(data) -> str:
     ''' Converte date para string compreensível '''
     return data.strftime('%d/%m/%Y')
+
 
 def validate_horario(horario: str) -> bool:
     ''' 
