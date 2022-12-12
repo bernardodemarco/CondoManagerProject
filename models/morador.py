@@ -9,6 +9,7 @@ class Morador(Pessoa):
 
     @property
     def visitantes_dao(self) -> list:
+        self.__visitantes_dao = VisitanteDAO(self)
         return self.__visitantes_dao
 
     @property
@@ -18,3 +19,6 @@ class Morador(Pessoa):
     @apartamento.setter
     def apartamento(self):
         return self.__apartamento
+
+    def get_visitantes_pickle(self):
+            self.__visitantes_dao = VisitanteDAO(self)

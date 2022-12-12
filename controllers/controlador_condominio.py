@@ -55,6 +55,7 @@ class ControladorCondominio(Controlador):
 
         while True:
             switcher[int(self.__tela_condominio.mostra_opcoes())]()
+            
        
     def cadastro_inicial(self):
         dados_condo = self.__tela_condominio.pega_dados_condo(acao='criacao')
@@ -215,7 +216,11 @@ class ControladorCondominio(Controlador):
         }
 
         while True:
-            switcher[int(self.__tela_condominio.mostra_opcoes_2())]()
+            try:
+                switcher[int(self.__tela_condominio.mostra_opcoes_2())]()
+            except TypeError:
+                self.__tela_condominio.close()
+                continue
 
 #   TELAS   #
 

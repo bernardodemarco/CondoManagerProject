@@ -8,6 +8,7 @@ from collections import Counter
 from utils.ResourceNotFoundException import ResourceNotFoundException
 from DAOs.morador_dao import MoradorDAO
 from DAOs.funcionario_dao import FuncionarioDAO
+import os
 
 
 
@@ -26,6 +27,10 @@ class ControladorPessoa(Controlador):
     @property
     def controlador_condominio(self):
         return self.__controlador_condominio
+
+    @property
+    def moradores_dao(self):
+        return self.__moradores_dao
 
 #   MORADOR #
 
@@ -80,6 +85,8 @@ class ControladorPessoa(Controlador):
             if morador == None and not isinstance(morador, Morador):
                 raise ResourceNotFoundException('Morador')
             self.controlador_condominio.desocupar_apartamento(morador.apartamento)
+            path = os.path.join(os.path.dirname(__file__), f'..\\pickle_files\\visitante_{morador.cpf}.pkl')
+            os.remove(path)
             self.__moradores_dao.remove(morador)
 
         except ResourceNotFoundException as err:
