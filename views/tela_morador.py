@@ -66,7 +66,7 @@ class TelaMorador(Tela):
                     apartamento = int(values["apartamento"])
                 if bool(re.match('[a-zA-Zà-ÿÀ-Ý\s]+$', values["nome"])) == False:
                     raise ValueError
-                if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', telefone)) == False:
+                if bool(re.match(r'\(?[1-9]{2}\)?\ ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', values["telefone"])) == False:
                     raise ValueError
                 nome = values["nome"]
                 telefone = ''.join(re.findall('[0-9]+', values["telefone"]))
