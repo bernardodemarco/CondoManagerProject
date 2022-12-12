@@ -158,9 +158,6 @@ class TelaEntrega(Tela):
             todos_tipos += 'O identificador do tipo é: ' + str(tipo['id']) + '\n\n'
         sg.Popup('LISTA DE TODAS OS TIPOS DE ENTREGAS CADASTRADOS', todos_tipos)
 
-    def mostra_mensagem(self, msg=''):
-        sg.popup(msg)
-
     def open(self):
         button, values = self.__window.Read()
         return button, values

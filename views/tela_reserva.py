@@ -121,9 +121,6 @@ class TelaReserva(Tela):
     def mostra_relatorio(self, total_reservas: int, morador: str):
         sg.Popup(f'NOS REGISTROS DO CONDOMÍNIO CONSTAM QUE O(A) MORADOR(A) {morador} REALIZOU NO TOTAL {total_reservas} RESERVAS!')
 
-    def mostra_mensagem(self, msg=''):
-        sg.popup(msg)
-
     def open(self):
         button, values = self.__window.Read()
         return button, values

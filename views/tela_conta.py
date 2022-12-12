@@ -203,9 +203,6 @@ class TelaConta(Tela):
             todos_dados += f'{key} -> R${val:.2f} \n'
         sg.Popup(todos_dados)
 
-    def mostra_mensagem(self, msg=''):
-        sg.popup(msg)
-
     def open(self):
         button, values = self.__window.Read()
         return button, values
