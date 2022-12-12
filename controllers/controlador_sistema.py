@@ -34,8 +34,9 @@ class ControladorSistema(Controlador):
         if self.tela_sistema.aviso_resetar():
             path = os.path.join(os.path.dirname(__file__), f'..\\pickle_files')
             for file in os.listdir(path):
-                path_to_file = os.path.join(path, file)
-                os.remove(path_to_file)
+                if not file == ".placeholder":
+                    path_to_file = os.path.join(path, file)
+                    os.remove(path_to_file)
             exit(0)
         else:
             return None
