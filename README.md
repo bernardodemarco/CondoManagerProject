@@ -1,39 +1,44 @@
 # CondoManager
 
+O CondoManager é um sistema desenvolvido por Bernardo de Marco Gonçalves e José Victor Machado de Vasconcelos como atividade avaliativa da disciplina Desenvolvimento de Sistemas Orientados a Objetos I (INE5605) do curso de Sistemas de Informação da [UFSC](https://ufsc.br/).
+
+O sistema foi desenvolvido com o objetivo de praticar os conteúdos que foram passados aos discentes durante as aulas, tais como:
+
+- Programação Orientada a Objetos (em Python);
+- UML e MVC;
+- Interface Gráfica do Usuário;
+- Persistência de Dados.
+
 ## Sobre
-O CondoManager é um simples projeto criado por Bernardo de Marco e José Victor Vasconcelos, como atividade avaliativa no curso de Sistemas de Informação, na Universidade Federal de Santa Catarina.
 
-O aplicativo fui desenvolvido para melhor entender os seguintes itens em desenvolvimento de software:
+O CondoManager foi desenvolvido com o intuito de auxiliar na gestão de condomínios. Para isso, é possível salvar os dados do condomínio, realizar o cadastro de moradores, funcionários, espaços reserváveis (locais disponíveis para reserva no condomínio, como salões de festas), registrar as contas, reservas e entregas aos moradores.
 
-* Python
-* UML e VCT
-* Interface simples
-* Permanência em arquivos
+Além disso, é possível gerar relatórios das contas de um determinado mês e da quantidade de reservas feitas por morador.
 
 ## 🛠 Feito com
 
 - **Python**
 - **PySimpleGUI**
+- **Módulo pickle (persistência dos dados)**
 
 ## 💻 Setup
 
-Copie este repositório:
+Clone este repositório:
 
 ```bash
   # clonar repositório
   git clone https://github.com/bernardodemarco/CondoManagerProject
 ```
 
-Com python instalado:
-Dentro da pasta do projeto, rode o seguinte código:
+Dentro da pasta do projeto, rode o seguinte comando:
 
 ```bash
   # instalar o PySimpleGui
   pip install pysimplegui
 
+  # inicie a aplicação
+  python3 main.py
+
 ```
 
-E rode o arquivo "main.py"
-
-
-##### Bernardo De Marco Gonçalves, José Victor Machado de Vasconcelos, Dezembro 2022.
+##### Bernardo De Marco Gonçalves, José Victor Machado de Vasconcelos, Dezembro 2022
